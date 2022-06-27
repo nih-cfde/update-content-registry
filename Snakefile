@@ -28,16 +28,11 @@ rule gene_json:
     input:
         "output_pieces_gene/00-appyter",
         "output_pieces_gene/10-expression",
+        "output_pieces_gene/20-transcripts",
+        "output_pieces_gene/30-alias",
     output:
         json = "upload_json/gene.json",
     shell: """
-        #./scripts/build-markdown-pieces.py gene ../markdown_automation/003_term_lists_for_markdown_attachment/gene_IDs_for_transcripts_widget.txt transcripts_widget
-        #./scripts/build-markdown-pieces-gene-translate.py gene ../markdown_automation/003_term_lists_for_markdown_attachment/gene_IDs_for_transcripts_widget.txt ../markdown_automation/001_data_sources/gene_alias_file_from_Mano/Homo_sapiens.gene_info_20220304.txt_conv_wNCBI_AC.txt
-
-        ##
-        ## add new script calls above this line.
-        ##
-    
         ./scripts/aggregate-markdown-pieces.py {input} -o {output.json}
     """
 
@@ -109,6 +104,37 @@ rule gene_json_expression_widget:
            --output-dir {output}
     """
 
+
+rule gene_json_transcript_widget:
+    message: "build transcript widgets for genes"
+    input:
+        script = "scripts/build-markdown-pieces.py",
+        id_list = "data/inputs/gene_IDs_for_transcripts_widget.txt",
+    output:
+        directory("output_pieces_gene/20-transcripts")
+    params:
+        widget_name = "20-transcripts"
+    shell: """
+        {input.script} gene {input.id_list} \
+           --widget-name transcripts_widget \
+           --output-dir {output}
+    """
+
+rule gene_json_alias_widget:
+    message: "build alias widgets for genes"
+    input:
+        script = "scripts/build-markdown-pieces-gene-translate.py",
+        id_list = "data/inputs/gene_IDs_for_alias_tables.txt",
+        alias_info = "data/inputs/Homo_sapiens.gene_info_20220304.txt_conv_wNCBI_AC.txt",
+    output:
+        directory("output_pieces_gene/30-alias")
+    params:
+        widget_name = "30-alias",
+    shell: """
+        {input.script} gene {input.id_list} {input.alias_info} \
+            --widget-name alias_table \
+            --output-dir {output}
+    """
 
 rule anatomy_json_expression_widget:
     message: "build expression widgets for anatomy terms"

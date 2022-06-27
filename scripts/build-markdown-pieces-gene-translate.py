@@ -7,12 +7,7 @@ import urllib.parse
 import os.path
 from collections import defaultdict
 
-
-ALLOWED_TERMS = set(['anatomy', 'compound', 'disease', 'gene'])
-
-REF_FILES = {
-    'gene': '../markdown_automation/002_C2M2_term_DBs/ensembl_genes.tsv',
-    }
+import cfde_common
 
 
 def main():
@@ -20,12 +15,15 @@ def main():
     p.add_argument('term')
     p.add_argument('id_list')
     p.add_argument('alias_file')
-    p.add_argument('--output-dir', '-o')
+    p.add_argument('--output-dir', '-o',
+                   help="output directory, defaults to 'output_pieces_{termtype}")
+    p.add_argument('--widget-name', default="widget",
+                   help="widget name, used to set the output filename(s)")
     args = p.parse_args()
 
     # validate term
     term = args.term
-    if term not in ALLOWED_TERMS:
+    if term not in cfde_common.REF_FILES:
         print(f"ERROR: unknown term type '{term}'", file=sys.stderr)
         sys.exit(-1)
 
@@ -40,7 +38,7 @@ def main():
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
 
-    ref_file = REF_FILES.get(term)
+    ref_file = cfde_common.REF_FILES.get(term)
     if ref_file is None:
         print(f"ERROR: no ref file for term. Dying terribly.", file=sys.stderr)
         sys.exit(-1)
@@ -139,14 +137,9 @@ def main():
         
         assert resource_markdown is not None
 
-        output_filename = f"{template_name}_{urllib.parse.quote(cv_id)}.json"
-        output_filename = os.path.join(output_dir, output_filename)
-
-        with open(output_filename, 'wt') as fp:
-            d = dict(id=cv_id, resource_markdown=resource_markdown)
-            json.dump(d, fp)
-
-        print(f"Wrote to {output_filename}")
+        # write out JSON pieces for aggregation & upload
+        cfde_common.write_output_pieces(output_dir, args.widget_name,
+                                        cv_id, resource_markdown)
 
 
 if __name__ == '__main__':
