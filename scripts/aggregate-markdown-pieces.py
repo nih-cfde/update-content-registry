@@ -8,16 +8,22 @@ from collections import defaultdict
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument('pieces_dir')
+    p.add_argument('pieces_dirs', nargs="+")
     p.add_argument('--output-json', '-o', required=True)
     args = p.parse_args()
 
-    if not os.path.isdir(args.pieces_dir):
-        print(f"ERROR: '{args.pieces_dir}' is not a directory.", file=sys.stderr)
-        sys.exit(-1)
+    for pieces_dir in args.pieces_dirs:
+        if not os.path.isdir(pieces_dir):
+            print(f"ERROR: '{pieces_dir}' is not a directory.", file=sys.stderr)
+            sys.exit(-1)
+
+    def walk_em_all(dirlist):
+        for dirname in dirlist:
+            for x in os.walk(dirname):
+                yield x
 
     chunks_by_cv_id = defaultdict(list)
-    for (dirpath, dirnames, filenames) in os.walk(args.pieces_dir):
+    for (dirpath, dirnames, filenames) in walk_em_all(args.pieces_dirs):
         for filename in filenames:
             if not filename.endswith('.json'):
                 print(f"skipping {filename} - does not end with .json")
