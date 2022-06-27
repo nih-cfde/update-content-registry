@@ -26,11 +26,11 @@ rule gene_json:
     message:
         "build markdown content for genes."
     input:
-        "output_pieces_gene/00appyter"
+        "output_pieces_gene/00-appyter",
+        "output_pieces_gene/10-expression",
     output:
         json = "upload_json/gene.json",
     shell: """
-        #./scripts/build-markdown-pieces.py gene ../markdown_automation/003_term_lists_for_markdown_attachment/gene_IDs_for_expression_widget.txt expression_widget
         #./scripts/build-markdown-pieces.py gene ../markdown_automation/003_term_lists_for_markdown_attachment/gene_IDs_for_transcripts_widget.txt transcripts_widget
         #./scripts/build-markdown-pieces-gene-translate.py gene ../markdown_automation/003_term_lists_for_markdown_attachment/gene_IDs_for_transcripts_widget.txt ../markdown_automation/001_data_sources/gene_alias_file_from_Mano/Homo_sapiens.gene_info_20220304.txt_conv_wNCBI_AC.txt
 
@@ -45,12 +45,12 @@ rule gene_json:
 rule anatomy_json:
     message:
         "build markdown content for anatomy terms."
+    input:
+        "output_pieces_anatomy/10-expression"
     output:
         json = "upload_json/anatomy.json",
-        pieces_dir = directory('output_pieces_anatomy'),
     shell: """
-        ./scripts/build-markdown-pieces.py anatomy ../markdown_automation/003_term_lists_for_markdown_attachment/anatomy_IDs_for_expression_widget.txt expression_widget
-        ./scripts/xaggregate-markdown-pieces.py {output.pieces_dir} -o {output.json}
+        ./scripts/aggregate-markdown-pieces.py {input} -o {output.json}
     """
 
 
@@ -79,15 +79,48 @@ rule compound_json:
 
 
 rule gene_json_appyter_link:
+    message: "build gene/appyter links for genes"
     input:
         script = "scripts/build-appyter-gene-links.py",
         id_list = "data/inputs/gene_IDs_for_transcripts_widget.txt",
     output:
-        directory("output_pieces_gene/00appyter")
+        directory("output_pieces_gene/00-appyter")
     params:
-        widget_name = "00appyter"
+        widget_name = "00-appyter"
     shell: """
         {input.script} gene {input.id_list} \
            --widget-name {params.widget_name} \
+           --output-dir {output}
+    """
+
+
+rule gene_json_expression_widget:
+    message: "build expression widgets for genes"
+    input:
+        script = "scripts/build-markdown-pieces.py",
+        id_list = "data/inputs/gene_IDs_for_expression_widget.txt",
+    output:
+        directory("output_pieces_gene/10-expression")
+    params:
+        widget_name = "10-expression"
+    shell: """
+        {input.script} gene {input.id_list} \
+           --widget-name expression_widget \
+           --output-dir {output}
+    """
+
+
+rule anatomy_json_expression_widget:
+    message: "build expression widgets for anatomy terms"
+    input:
+        script = "scripts/build-markdown-pieces.py",
+        id_list = "data/inputs/anatomy_IDs_for_expression_widget.txt",
+    output:
+        directory("output_pieces_anatomy/10-expression")
+    params:
+        widget_name = "10-expression"
+    shell: """
+        {input.script} anatomy {input.id_list} \
+           --widget-name expression_widget \
            --output-dir {output}
     """
