@@ -57,7 +57,7 @@ issue!
 ### FIRST: write a script that builds custom Markdown for one or more CV terms.
 
 The first step is to write some code that builds the requisite Markdown.
-The script [scripts/build-appyter-gene-links.py](https://github.com/nih-cfde/update-content-registry/blob/add/initial_workflow/scripts/build-appyter-gene-links.py) creates a custom linkout that looks like this:
+The script [scripts/build-appyter-gene-links.py](https://github.com/nih-cfde/update-content-registry/blob/main/scripts/build-appyter-gene-links.py) creates a custom linkout that looks like this:
 
 ```
 [CFDE Gene Partnership Appyter](https://appyters.maayanlab.cloud/CFDE-Gene-Partnership/#?args.gene={cv_id}&submit)
@@ -96,7 +96,7 @@ Markdown.
 
 We use [snakemake](https://snakemake.readthedocs.io/) for this, and
 while you're welcome to look at
-[the workflow definition](https://github.com/nih-cfde/update-content-registry/blob/add/initial_workflow/Snakefile)
+[the workflow definition](https://github.com/nih-cfde/update-content-registry/blob/main/Snakefile)
 in detail, you don't really need to know snakemake very well at all to
 add to it.
 
