@@ -26,8 +26,20 @@ its annotations.
 
 ## Example: transcript list
 
+This content introduces an iframe that encloses a custom app. The app
+uses the GTEx API to generate a view of the different isoforms known
+for this gene.
+
+This content is produced by the script [build-markdown-pieces.py](https://github.com/nih-cfde/update-content-registry/blob/main/scripts/build-markdown-pieces.py).
+
 ![](gallery/example-transcript-list.png)
 
 ## Example: gene expression widget
+
+This content introduces an iframe that encloses a custom app. The app
+uses the GTEx API to generate an interactive JavaScript widget showing
+expression data for that gene.
+
+This content is produced by the script [build-markdown-pieces.py](https://github.com/nih-cfde/update-content-registry/blob/main/scripts/build-markdown-pieces.py)
 
 ![](gallery/example-gene-expression-widget.png)
