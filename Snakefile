@@ -88,7 +88,7 @@ rule gene_json_appyter_link:
            --widget-name {params.widget_name} \
            --output-dir {output}
     """
-    
+
 rule gene_json_ncbigene_link:
     message: "build ncbi gene links for genes"
     input:
