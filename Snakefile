@@ -30,6 +30,7 @@ rule gene_json:
         "output_pieces_gene/10-expression",
         "output_pieces_gene/20-transcripts",
         "output_pieces_gene/30-alias",
+        "output_pieces_gene/40-ncbi",
     output:
         json = "upload_json/gene.json",
     shell: """
