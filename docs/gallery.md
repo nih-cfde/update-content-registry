@@ -24,3 +24,10 @@ its annotations.
 
 ![](gallery/example-alias-table.png)
 
+## Example: transcript list
+
+![](gallery/example-transcript-list.png)
+
+## Example: gene expression widget
+
+![](gallery/example-gene-expression-widget.png)
