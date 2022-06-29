@@ -1,7 +1,7 @@
 name: run workflow build
 on: push
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -17,4 +17,4 @@ jobs:
         run: |
           python3 -m pip install --upgrade pip     # install pip
           python3 -m pip install snakemake         # ...and snakemake
-          - run: snakemake -j 1
+      - run: snakemake -j 1
