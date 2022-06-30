@@ -84,6 +84,8 @@ rule gene_json_ucsc_genome_browser_widget:
         directory("output_pieces_gene/70-ucsc")
     params:
         widget_name = "70-ucsc"
+    conda:
+        "envs/perl.yml"
     shell: """
         {input.script} \
            	{input.id_list} \
