@@ -26,10 +26,11 @@ rule gene_json:
     message:
         "build markdown content for genes."
     input:
+        "output_pieces_gene/30-alias",
         "output_pieces_gene/00-appyter",
         "output_pieces_gene/10-expression",
         "output_pieces_gene/20-transcripts",
-        "output_pieces_gene/30-alias",
+
     output:
         json = "upload_json/gene.json",
     shell: """
