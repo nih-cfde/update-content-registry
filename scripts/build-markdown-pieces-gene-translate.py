@@ -112,7 +112,7 @@ def main():
                         x.append(f"[{uniprot_id}](https://www.uniprot.org/uniprot/{uniprot_id})")
                     uniprot_str = ", ".join(x)
 
-                alias_md = f""":span:Links to external resources for {ensembl_id}:/span:{{.caption-match style=\"font-size:24px;font-weight:bold\"}}\n\n| Resource | Links |\n| --- | --- |\n| Ensembl | [{ensembl_id}](http://www.ensembl.org/id/{ensembl_id}) |\n| NCBI Gene | [{entrez_id}](https://www.ncbi.nlm.nih.gov/gene/{entrez_id}) |\n | Human Gene Nomenclature (HGNC) | {hgncIDString}  {hgncSymbolString}  {hgncGeneNameString} |\n  | OMIM | [{mim_id}](https://omim.org/entry/{mim_id}) |\n| RefSeq | {refseq_str} |\n| UniProtKB | {uniprot_str} |\n| Appyter | [CFDE Gene Centric Appyter for Common Fund APIs: {ensembl_id}](https://appyters.maayanlab.cloud/CFDE-Gene-Partnership/#?args.gene={ensembl_id}&submit)|\n|\n"""
+                alias_md = f""":span:Links to external resources for {ensembl_id}:/span:{{.caption-match style=\"font-size:24px;font-weight:bold\"}}\n\n| Resource | Links |\n| --- | --- |\n| Ensembl | [{ensembl_id}](http://www.ensembl.org/id/{ensembl_id}) |\n| NCBI Gene | [{entrez_id}](https://www.ncbi.nlm.nih.gov/gene/{entrez_id}) |\n | Human Gene Nomenclature (HGNC) | {hgncIDString}  {hgncSymbolString}  {hgncGeneNameString} |\n  | OMIM | [{mim_id}](https://omim.org/entry/{mim_id}) |\n| RefSeq | {refseq_str} |\n| UniProtKB | {uniprot_str} |\n| CFDE Gene Partnership Appyter | [{ensembl_id}](https://appyters.maayanlab.cloud/CFDE-Gene-Partnership/#?args.gene={ensembl_id}&submit)|\n|\n"""
 
                 alias_info[ensembl_id] = alias_md
 
