@@ -30,7 +30,6 @@ rule gene_json:
         "output_pieces_gene/10-expression",
         "output_pieces_gene/20-transcripts",
         "output_pieces_gene/30-alias",
-        "output_pieces_gene/40-ncbi",
     output:
         json = "upload_json/gene.json",
     shell: """
@@ -89,20 +88,6 @@ rule gene_json_appyter_link:
            --output-dir {output}
     """
 
-rule gene_json_ncbigene_link:
-    message: "build ncbi gene links for genes"
-    input:
-        script = "scripts/build-ncbi-gene-links.py",
-        id_list = "data/inputs/gene_IDs_for_transcripts_widget.txt",
-    output:
-        directory("output_pieces_gene/40-ncbi")
-    params:
-        widget_name = "40-ncbi"
-    shell: """
-        {input.script} gene {input.id_list} \
-           --widget-name {params.widget_name} \
-           --output-dir {output}
-    """    
 
 
 rule gene_json_expression_widget:
