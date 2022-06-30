@@ -78,7 +78,7 @@ rule gene_json_appyter_link:
     message: "build gene/appyter links for genes"
     input:
         script = "scripts/build-appyter-gene-links.py",
-        id_list = "data/inputs/gene_IDs_for_transcripts_widget.txt",
+        id_list = "data/inputs/genes-with-biosamples-30.06.2022.txt",
     output:
         directory("output_pieces_gene/00-appyter")
     params:

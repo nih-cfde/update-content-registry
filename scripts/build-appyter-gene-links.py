@@ -74,7 +74,9 @@ def main():
             if line:
                 if line not in ref_id_list:
                     print(f"ERROR: requested input id {line} not found in ref_id_list", file=sys.stderr)
-                    sys.exit(-1)
+                    print(f"skipping!", file=sys.stderr)
+                    continue
+                    #sys.exit(-1)
 
                 id_list.add(line)
 
