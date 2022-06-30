@@ -112,7 +112,7 @@ def main():
                         x.append(f"[{uniprot_id}](https://www.uniprot.org/uniprot/{uniprot_id})")
                     uniprot_str = ", ".join(x)
 
-                alias_md = f""":span:IDs and other metadata for {ensembl_id} (curated by Metabolomics Workbench):/span:{{.caption-match style=\"font-size:24px;font-weight:bold\"}}\n\n| Ensembl ID | NCBI Gene (Entrez) ID | HGNC ID | HGNC symbol | HGNC name | MIM ID | RefSeq accessions (gene sequences and protein products) | UniProtKB accessions (protein products) |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n| [{ensembl_id}](http://www.ensembl.org/id/{ensembl_id}) | [{entrez_id}](https://www.ncbi.nlm.nih.gov/gene/{entrez_id}) | {hgncIDString} | {hgncSymbolString} | {hgncGeneNameString} | [{mim_id}](https://omim.org/entry/{mim_id}) | {refseq_str} | {uniprot_str} |\n\n"""
+                alias_md = f""":span:Links to external resources for {ensembl_id}:/span:{{.caption-match style=\"font-size:24px;font-weight:bold\"}}\n\n| Ensembl ID | NCBI Gene (Entrez) ID | HGNC ID | HGNC symbol | HGNC name | MIM ID | RefSeq accessions (gene sequences and protein products) | UniProtKB accessions (protein products) |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n| [{ensembl_id}](http://www.ensembl.org/id/{ensembl_id}) | [{entrez_id}](https://www.ncbi.nlm.nih.gov/gene/{entrez_id}) | {hgncIDString} | {hgncSymbolString} | {hgncGeneNameString} | [{mim_id}](https://omim.org/entry/{mim_id}) | {refseq_str} | {uniprot_str} |\n\n"""
 
                 alias_info[ensembl_id] = alias_md
 
