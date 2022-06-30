@@ -55,7 +55,7 @@ def main():
           file=sys.stderr)
 
     # load in alias file.
-    alias_info = defaultdict(list)
+    alias_info = {}
     with open(args.alias_file, 'r', newline='') as fp:
         r = csv.DictReader(fp, delimiter='\t')
         def isnull(value):
@@ -133,13 +133,13 @@ def main():
 
     template_name = 'alias_tables'
     for cv_id in sorted(id_list):
-        resource_markdown = alias_info[cv_id]
-        
-        assert resource_markdown is not None
-
-        # write out JSON pieces for aggregation & upload
-        cfde_common.write_output_pieces(output_dir, args.widget_name,
-                                        cv_id, resource_markdown)
+        resource_markdown = alias_info.get(cv_id)
+        if resource_markdown:
+            # write out JSON pieces for aggregation & upload
+            cfde_common.write_output_pieces(output_dir, args.widget_name,
+                                            cv_id, resource_markdown)
+        else:
+            print(f"WARNING: missing markdown for identifier {cv_id}")
 
 
 if __name__ == '__main__':
