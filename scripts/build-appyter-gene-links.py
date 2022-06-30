@@ -12,9 +12,9 @@ import cfde_common
 def make_markdown(cv_id):
     return f"""
 
-## [CFDE Gene Partnership Appyter](https://appyters.maayanlab.cloud/CFDE-Gene-Partnership/#?args.gene={cv_id}&submit)
 
-The CFDE Gene Partnership Appyter provides up-to-date information on human genes from across the Common Fund Data Ecosystem. The Appyter collects gene-centric data from Common Fund supported programs via their API. The source code within the Appyter demonstrates how you can programmatically access CFDE data sources for integrative analyses. [View the Gene Partnership Appyter: {cv_id}](https://appyters.maayanlab.cloud/CFDE-Gene-Partnership/#?args.gene={cv_id}&submit)
+
+The [CFDE Gene Partnership Appyter for  {cv_id}](https://appyters.maayanlab.cloud/CFDE-Gene-Partnership/#?args.gene={cv_id}&submit) provides up-to-date information on from across the Common Fund Data Ecosystem. The Appyter collects gene-centric data from Common Fund supported programs via their API. The source code within the Appyter demonstrates how you can programmatically access CFDE data sources for integrative analyses. 
 
 """
 
