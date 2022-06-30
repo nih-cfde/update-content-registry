@@ -26,8 +26,8 @@ rule gene_json:
     message:
         "build markdown content for genes."
     input:
-        "output_pieces_gene/30-alias",
-        "output_pieces_gene/00-appyter",
+        "output_pieces_gene/00-alias",
+        "output_pieces_gene/01-appyter",
         "output_pieces_gene/10-expression",
         "output_pieces_gene/20-transcripts",
 
@@ -74,15 +74,31 @@ rule compound_json:
 ## 
 
 
+rule gene_json_alias_widget:
+    message: "build alias widgets for genes"
+    input:
+        script = "scripts/build-markdown-pieces-gene-translate.py",
+        id_list = "data/inputs/gene_IDs_for_expression_widget.txt",
+        alias_info = "data/inputs/Homo_sapiens.gene_info_20220304.txt_conv_wNCBI_AC.txt",
+    output:
+        directory("output_pieces_gene/00-alias")
+    params:
+        widget_name = "00-alias",
+    shell: """
+        {input.script} gene {input.id_list} {input.alias_info} \
+            --widget-name alias_table \
+            --output-dir {output}
+    """
+
 rule gene_json_appyter_link:
     message: "build gene/appyter links for genes"
     input:
         script = "scripts/build-appyter-gene-links.py",
         id_list = "data/inputs/gene_IDs_for_expression_widget.txt",
     output:
-        directory("output_pieces_gene/00-appyter")
+        directory("output_pieces_gene/01-appyter")
     params:
-        widget_name = "00-appyter"
+        widget_name = "01-appyter"
     shell: """
         {input.script} gene {input.id_list} \
            --widget-name {params.widget_name} \
@@ -122,21 +138,7 @@ rule gene_json_transcript_widget:
            --output-dir {output}
     """
 
-rule gene_json_alias_widget:
-    message: "build alias widgets for genes"
-    input:
-        script = "scripts/build-markdown-pieces-gene-translate.py",
-        id_list = "data/inputs/gene_IDs_for_expression_widget.txt",
-        alias_info = "data/inputs/Homo_sapiens.gene_info_20220304.txt_conv_wNCBI_AC.txt",
-    output:
-        directory("output_pieces_gene/30-alias")
-    params:
-        widget_name = "30-alias",
-    shell: """
-        {input.script} gene {input.id_list} {input.alias_info} \
-            --widget-name alias_table \
-            --output-dir {output}
-    """
+
 
 rule anatomy_json_expression_widget:
     message: "build expression widgets for anatomy terms"
