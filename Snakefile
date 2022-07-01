@@ -80,6 +80,7 @@ rule gene_json_ucsc_genome_browser_widget:
     input:
         script = "scripts/build-markdown-pieces-ucsc-genome-browser-widget.pl",
         id_list = "data/inputs/gene_IDs_for_UCSC_genome_browser_widget.txt",
+        coord_info = "data/inputs/homo_sapiens.coords.tsv",
     output:
         directory("output_pieces_gene/70-ucsc")
     params:
@@ -87,6 +88,7 @@ rule gene_json_ucsc_genome_browser_widget:
     shell: """
         {input.script} \
            	{input.id_list} \
+			{input.coord_info} \
 			{params.widget_name} \
            	{output}
     """

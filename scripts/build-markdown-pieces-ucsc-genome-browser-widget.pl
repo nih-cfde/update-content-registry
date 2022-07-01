@@ -7,10 +7,28 @@ use URI::Escape;
 $| = 1;
 
 ################################################################################
+# SCRIPT PROVENANCE
+################################################################################
+# 
+# Arthur Brady (University of Maryland Institute for Genome Sciences) wrote
+# this script to generate JSON files describing basic iframe-includes,
+# encoded in Chaise markdown, showing the UCSC Genome Browser's web UI genome
+# track displays for specified genes (Ensembl IDs).
+# 
+# Chaise markdown guide: https://github.com/informatics-isi-edu/ermrestjs/blob/master/docs/user-docs/markdown-formatting.md
+# 
+# Creation date: 2022-06-29
+# Lastmod date unless I forgot to change it: 2022-07-01
+# 
+################################################################################
+
+################################################################################
 # ARGUMENTS
 ################################################################################
 
 my $idList = shift;
+
+my $coordMap = shift;
 
 my $widgetName = shift;
 
@@ -24,6 +42,11 @@ if ( $outDir eq '' ) {
 if ( not -e $idList ) {
 	
 	die("FATAL: Can't open specified term ID list \"$idList\"; aborting.\n");
+}
+
+if ( not -e $coordMap ) {
+	
+	die("FATAL: Can't open specified gene coordinate map \"$coordMap\"; aborting.\n");
 }
 
 if ( not -d $outDir ) {
@@ -60,7 +83,25 @@ while ( chomp( my $line = <IN> ) ) {
 close IN;
 
 ################################################################################
-# Load target Ensembl IDs and ensure all are valid.
+# Pre-load genome coordinates (chromosome/start/end) for Ensembl IDs.
+
+my $coords = {};
+
+open IN, "<$coordMap" or die("Can't open $coordMap for reading.\n");
+
+$header = <IN>;
+
+while ( chomp( my $line = <IN> ) ) {
+	
+	my ( $geneID, $chrID, $start, $end ) = split(/\t/, $line);
+
+	$coords->{$geneID}->{$chrID}->{$start}->{$end} = 1;
+}
+
+close IN;
+
+################################################################################
+# Load target Ensembl IDs and ensure all are valid and have coordinate metadata.
 
 my $targetIDs = {};
 
@@ -73,54 +114,37 @@ while ( chomp( my $id = <IN> ) ) {
 		die("FATAL: Target Ensembl gene ID \"$id\" not found in C2M2 reference list. Please check your sources and try again.\n");
 	}
 
+	if ( not exists( $coords->{$id} ) ) {
+		
+		die("FATAL: No chromosome coordinates loaded for Ensembl gene ID \"$id\"; aborting.\n");
+	}
+
 	$targetIDs->{$id} = 1;
 }
 
 close IN;
 
 ################################################################################
-# Attempt to establish a custom browser URL for each target Ensembl ID.
+# Establish a custom browser URL for each target Ensembl ID.
 
 my $targetURLs = {};
 
 foreach my $termID ( keys %$targetIDs ) {
 	
-	my $result = `curl "https://genome.ucsc.edu/cgi-bin/hgTracks?hgtgroup_map_close=0&hgtgroup_genes_close=0&hgtgroup_phenDis_close=0&hgtgroup_covid_close=0&hgtgroup_singleCell_close=0&hgtgroup_rna_close=0&hgtgroup_expression_close=0&hgtgroup_regulation_close=0&hgtgroup_compGeno_close=0&hgtgroup_varRep_close=0&hgtgroup_rep_close=0&hgsid=1391249855_Daatab52zi7CTH5N3y6APpNkUwRe&position=$termID&hgt.positionInput=$termID&goButton=go&hgt.suggestTrack=knownGene&db=hg38&c=chrX&l=100627107&r=100636806&pix=950&dinkL=2.0&dinkR=2.0"`;
+	# Each gene record has exactly one coordinate set in the coordinate map
+	# file: the following is just artificially unrolling a fast data structure
+	# and should not be taken to imply the existence of multiple versions of
+	# any of the components (chr, start, end).
 
-	my $url = '';
-
-	my $recording = 0;
-
-	my $found = 0;
-
-	FOUND_LINK: foreach my $line ( split(/\n/, $result) ) {
+	foreach my $chr ( keys %{$coords->{$termID}} ) {
 		
-		if ( $line =~ /hgFindResults/ ) {
+		foreach my $start ( keys %{$coords->{$termID}->{$chr}} ) {
 			
-			$recording = 1;
-
-		} elsif ( $recording ) {
-			
-			if ( $line =~ /A HREF=\"([^"]+)\"/ ) {
+			foreach my $end ( keys %{$coords->{$termID}->{$chr}->{$start}} ) {
 				
-				$url = $1;
-
-				$url =~ s/^\.\./https:\/\/genome.ucsc.edu/;
-
-				$found = 1;
-
-				last FOUND_LINK;
+				$targetURLs->{$termID} = "https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg38&position=chr${chr}%3A${start}-${end}";
 			}
 		}
-	}
-
-	if ( not $found ) {
-		
-		print STDERR "WARNING: No URL was findable for target Ensembl ID \"$termID\"; skipping, will not process this term for this widget.\n";
-
-	} else {
-		
-		$targetURLs->{$termID} = $url;
 	}
 }
 
@@ -134,6 +158,14 @@ foreach my $targetID ( sort { $a cmp $b } keys %$targetURLs ) {
 	open OUT, ">$outFile" or die("Can't open $outFile for writing.\n");
 
 	print OUT '{"id": "' . $targetID . '", "resource_markdown": "::: iframe [**Context view (via UCSC Genome Browser):**](' . $targetURLs->{$targetID} . '){width=\"1200\" height=\"900\" style=\"border: 1px solid black;\" caption-style=\"font-size: 24px;\" caption-link=\"' . $targetURLs->{$targetID} . '\" caption-target=\"_blank\"} \n:::\n"}';
+
+	close OUT;
+	
+	my $mdFile = "$outDir/" . uri_escape("${widgetName}_${targetID}.md");
+
+	open OUT, ">$mdFile" or die("Can't open $mdFile for writing.\n");
+
+	print OUT "::: iframe [**Context view (via UCSC Genome Browser):**]($targetURLs->{$targetID}){width=\"1200\" height=\"900\" style=\"border: 1px solid black;\" caption-style=\"font-size: 24px;\" caption-link=\"$targetURLs->{$targetID}\" caption-target=\"_blank\"} \n:::\n";
 
 	close OUT;
 }
