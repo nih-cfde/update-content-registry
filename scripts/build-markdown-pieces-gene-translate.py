@@ -70,10 +70,11 @@ def main():
             ensembl_id = row['ENSEMBL']
             if not isnull(ensembl_id):
                 mim_id = row['MIM']
-                try:
-                    hgnc_id = int(row['HGNC'])
-                except ValueError:
-                    hgnc_id = None
+
+                hgnc_id = None
+                hgnc_val = row['HGNC'].split('|')[0]
+                if hgnc_val:
+                    hgnc_id = int(hgnc_val)
 
                 hgnc_symbol = row['SYMBOL']
                 hgnc_gene_name = row['GENENAME']
