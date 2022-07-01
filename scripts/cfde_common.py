@@ -14,7 +14,7 @@ REF_FILES = {
     }
 
 
-def write_output_pieces(output_dir, widget_name, cv_id, md, *, verbose=True):
+def write_output_pieces(output_dir, widget_name, cv_id, md, *, verbose=False):
     output_filename = f"{widget_name}_{urllib.parse.quote(cv_id)}.json"
     output_filename = os.path.join(output_dir, output_filename)
 
