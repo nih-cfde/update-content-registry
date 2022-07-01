@@ -30,7 +30,7 @@ rule gene_json:
         "output_pieces_gene/01-appyter",
         "output_pieces_gene/10-expression",
         "output_pieces_gene/20-transcripts",
-
+        "output_pieces_gene/70-ucsc",
     output:
         json = "upload_json/gene.json",
     shell: """
@@ -74,6 +74,7 @@ rule compound_json:
 ## 
 
 
+
 rule gene_json_alias_widget:
     message: "build alias widgets for genes"
     input:
@@ -105,7 +106,23 @@ rule gene_json_appyter_link:
            --output-dir {output}
     """
 
-
+rule gene_json_ucsc_genome_browser_widget:
+    message: "build UCSC genome browser iframe-include for genes"
+    input:
+        script = "scripts/build-markdown-pieces-ucsc-genome-browser-widget.pl",
+        id_list = "data/inputs/gene_IDs_for_UCSC_genome_browser_widget.txt",
+        coord_info = "data/inputs/homo_sapiens.coords.tsv",
+    output:
+        directory("output_pieces_gene/70-ucsc")
+    params:
+        widget_name = "70-ucsc"
+    shell: """
+        {input.script} \
+           	{input.id_list} \
+			{input.coord_info} \
+			{params.widget_name} \
+           	{output}
+    """
 
 rule gene_json_expression_widget:
     message: "build expression widgets for genes"
