@@ -15,10 +15,24 @@ Alternatively, running
 ```
 pip install git+https://github.com/nih-cfde/cfde-deriva.git snakemake
 ```
-should get you there.
+should get you there if you're in a Python virtual environment.
+
+## Cloning the repository
+
+Next, clone the repo:
+
+```
+git clone https://github.com/nih-cfde/update-content-registry/
+```
+
+and change into the repo directory:
+```
+cd update-content-registry/
+```
 
 ## Quickstart - building
 
+Then, build!
 
 ```
 make clean
