@@ -55,7 +55,7 @@ def main():
           file=sys.stderr)
 
     # load in alias file.
-    alias_info = defaultdict(list)
+    alias_info = {}
     with open(args.alias_file, 'r', newline='') as fp:
         r = csv.DictReader(fp, delimiter='\t')
         def isnull(value):
@@ -70,10 +70,11 @@ def main():
             ensembl_id = row['ENSEMBL']
             if not isnull(ensembl_id):
                 mim_id = row['MIM']
-                try:
-                    hgnc_id = int(row['HGNC'])
-                except ValueError:
-                    hgnc_id = None
+
+                hgnc_id = None
+                hgnc_val = row['HGNC'].split('|')[0]
+                if hgnc_val:
+                    hgnc_id = int(hgnc_val)
 
                 hgnc_symbol = row['SYMBOL']
                 hgnc_gene_name = row['GENENAME']
@@ -112,7 +113,7 @@ def main():
                         x.append(f"[{uniprot_id}](https://www.uniprot.org/uniprot/{uniprot_id})")
                     uniprot_str = ", ".join(x)
 
-                alias_md = f""":span:IDs and other metadata for {ensembl_id} (curated by Metabolomics Workbench):/span:{{.caption-match style=\"font-size:24px;font-weight:bold\"}}\n\n| Ensembl ID | NCBI Gene (Entrez) ID | HGNC ID | HGNC symbol | HGNC name | MIM ID | RefSeq accessions (gene sequences and protein products) | UniProtKB accessions (protein products) |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n| [{ensembl_id}](http://www.ensembl.org/id/{ensembl_id}) | [{entrez_id}](https://www.ncbi.nlm.nih.gov/gene/{entrez_id}) | {hgncIDString} | {hgncSymbolString} | {hgncGeneNameString} | [{mim_id}](https://omim.org/entry/{mim_id}) | {refseq_str} | {uniprot_str} |\n\n"""
+                alias_md = f""":span:Links to external resources for {ensembl_id}:/span:{{.caption-match style=\"font-size:24px;font-weight:bold\"}}\n\n| Resource | Links |\n| --- | --- |\n| Ensembl | [{ensembl_id}](http://www.ensembl.org/id/{ensembl_id}) |\n| NCBI Gene | [{entrez_id}](https://www.ncbi.nlm.nih.gov/gene/{entrez_id}) |\n | Human Gene Nomenclature (HGNC) | [{hgnc_id}](https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/HGNC:{hgnc_id})|\n  | OMIM | [{mim_id}](https://omim.org/entry/{mim_id}) |\n| RefSeq | {refseq_str} |\n| UniProtKB | {uniprot_str} |\n| CFDE Gene Partnership Appyter | [{ensembl_id}](https://appyters.maayanlab.cloud/CFDE-Gene-Partnership/#?args.gene={ensembl_id}&submit)|\n|\n"""
 
                 alias_info[ensembl_id] = alias_md
 
@@ -133,13 +134,13 @@ def main():
 
     template_name = 'alias_tables'
     for cv_id in sorted(id_list):
-        resource_markdown = alias_info[cv_id]
-        
-        assert resource_markdown is not None
-
-        # write out JSON pieces for aggregation & upload
-        cfde_common.write_output_pieces(output_dir, args.widget_name,
-                                        cv_id, resource_markdown)
+        resource_markdown = alias_info.get(cv_id)
+        if resource_markdown:
+            # write out JSON pieces for aggregation & upload
+            cfde_common.write_output_pieces(output_dir, args.widget_name,
+                                            cv_id, resource_markdown)
+        else:
+            print(f"WARNING: missing markdown for identifier {cv_id}")
 
 
 if __name__ == '__main__':
