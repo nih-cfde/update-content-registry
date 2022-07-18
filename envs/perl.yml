@@ -1,0 +1,8 @@
+channels:
+    - conda-forge
+    - bioconda
+    - defaults
+dependencies:
+    - perl>=5.32,<6
+    - curl>=7,<8
+    - perl-uri
