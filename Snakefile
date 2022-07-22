@@ -43,7 +43,7 @@ rule anatomy_json:
     message:
         "build markdown content for anatomy terms."
     input:
-    	"output_pieces_anatomy/01-embl"
+    	"output_pieces_anatomy/01-embl",
         "output_pieces_anatomy/10-expression"
     output:
         json = "upload_json/anatomy.json",
