@@ -178,7 +178,7 @@ rule anatomy_link:
     message: "add link to embl ols"
     input:
         script = "scripts/build-anatomy-links.py",
-        id_list = "data/inputs/anatomy_gtex.txt",
+        id_list = "data/inputs/STAGING_PORTAL__anatomy__2022-07-22.txt",
     output:
         directory("output_pieces_anatomy/01-embl")
     params:
