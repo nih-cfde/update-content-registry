@@ -8,13 +8,6 @@ import os.path
 
 import cfde_common
 
-def make_markdown(cv_id):
-    return f"""
-
-The Ontology Lookup Service (OLS) from EMBL-EBI is a repository for biomedical ontologies that aims to provide a single point of access to the latest ontology versions. [Click here to learn more about {cv_id}](https://www.ebi.ac.uk/ols/ontologies/uberon/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2{new_cv_id}).
-
-"""
-
 
 def main():
     p = argparse.ArgumentParser()
