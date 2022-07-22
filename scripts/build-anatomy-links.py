@@ -8,6 +8,7 @@ import os.path
 
 import cfde_common
 
+new_cv_id = cv_id.replace(':', '_')
 
 def make_markdown(cv_id):
     return f"""
