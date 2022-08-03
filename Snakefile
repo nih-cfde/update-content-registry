@@ -44,7 +44,8 @@ rule anatomy_json:
         "build markdown content for anatomy terms."
     input:
     	"output_pieces_anatomy/01-embl",
-        "output_pieces_anatomy/10-expression"
+        "output_pieces_anatomy/10-expression",
+         "output_pieces_anatomy/11-expression"
     output:
         json = "upload_json/anatomy.json",
     shell: """
@@ -81,7 +82,7 @@ rule gene_json_alias_widget:
     message: "build alias widgets for genes"
     input:
         script = "scripts/build-markdown-pieces-gene-translate.py",
-        id_list = "data/inputs/gene_IDs_for_UCSC_genome_browser_widget.txt",
+        id_list = "data/inputs/STAGING_PORTAL__available_genes__2022-07-13.txt",
         alias_info = "data/inputs/Homo_sapiens.gene_info_20220304.txt_conv_wNCBI_AC.txt",
     output:
         directory("output_pieces_gene/00-alias")
@@ -97,7 +98,7 @@ rule gene_json_appyter_link:
     message: "build gene/appyter links for genes"
     input:
         script = "scripts/build-appyter-gene-links.py",
-        id_list = "data/inputs/gene_IDs_for_UCSC_genome_browser_widget.txt",
+        id_list = "data/inputs/STAGING_PORTAL__available_genes__2022-07-13.txt",
     output:
         directory("output_pieces_gene/01-appyter")
     params:
@@ -159,6 +160,21 @@ rule gene_json_transcript_widget:
 
 
 
+rule anatomy_link:
+    message: "add link to embl ols"
+    input:
+        script = "scripts/build-anatomy-links.py",
+        id_list = "data/inputs/STAGING_PORTAL__anatomy__2022-07-22.txt",
+    output:
+        directory("output_pieces_anatomy/01-embl")
+    params:
+        widget_name = "01-embl"
+    shell: """
+        {input.script} anatomy {input.id_list} \
+           --widget-name expression_widget \
+           --output-dir {output}
+    """    
+
 rule anatomy_json_expression_widget:
     message: "build expression widgets for anatomy terms"
     input:
@@ -174,17 +190,18 @@ rule anatomy_json_expression_widget:
            --output-dir {output}
     """
     
-rule anatomy_link:
-    message: "add link to embl ols"
+
+rule anatomy_blank:
+    message: "override blank gtex widgets"
     input:
-        script = "scripts/build-anatomy-links.py",
-        id_list = "data/inputs/STAGING_PORTAL__anatomy__2022-07-22.txt",
+        script = "scripts/build-anatomy-blank.py",
+        id_list = "data/inputs/anatomy_IDs_for_expression_widget.txt",
     output:
-        directory("output_pieces_anatomy/01-embl")
+        directory("output_pieces_anatomy/11-expression")
     params:
-        widget_name = "01-embl"
+        widget_name = "11-expression"
     shell: """
         {input.script} anatomy {input.id_list} \
            --widget-name expression_widget \
            --output-dir {output}
-    """    
+    """
