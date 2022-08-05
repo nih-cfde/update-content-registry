@@ -200,7 +200,7 @@ rule compound_json_links:
     message: "build links for compound terms"
     input:
         script = "scripts/build-compound-links.py",
-        id_list = "data/inputs/compound-test.txt",
+        id_list = "data/inputs/compound_IDs.txt",
     output:
         directory("output_pieces_compound/01-compound")
     params:
