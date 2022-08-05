@@ -16,7 +16,8 @@ import cfde_common
 ##
 
 def make_markdown(cv_id):
-    return f"# hello, world - {cv_id}"
+    return f"External links: More information is avilable on the NCBI PubChem page for compound [{cv_id}](https://pubchem.ncbi.nlm.nih.gov/compound/{cv_id})."
+
 
 
 def main():
@@ -83,7 +84,10 @@ def main():
 
     # now iterate over and make markdown, then save JSON + md.
     for cv_id in id_list:
+    
         md = make_markdown(cv_id)
+        
+        print(f"Compound {cv_id}")
 
         # write out JSON pieces for aggregation & upload
         cfde_common.write_output_pieces(output_dir, args.widget_name,
