@@ -16,7 +16,7 @@ import cfde_common
 ##
 
 def make_markdown(cv_id):
-    return f"External links: More information is avilable on the NCBI PubChem page for compound [{cv_id}](https://pubchem.ncbi.nlm.nih.gov/compound/{cv_id})."
+    return f"External links: More information is available on the NCBI PubChem page for compound [{cv_id}](https://pubchem.ncbi.nlm.nih.gov/compound/{cv_id})."
 
 
 
