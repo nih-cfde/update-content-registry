@@ -17,9 +17,10 @@ rule upload:
     input:
         "upload_json/gene.json",
         "upload_json/anatomy.json",
+        "upload_json/compound.json",
     shell: """
         export DERIVA_SERVERNAME=app-staging.nih-cfde.org
-        python3 -m cfde_deriva.registry upload-resources upload_json/gene.json upload_json/anatomy.json
+        python3 -m cfde_deriva.registry upload-resources upload_json/gene.json upload_json/anatomy.json upload_json/compound.json 
     """
 
 
@@ -50,6 +51,17 @@ rule anatomy_json:
         ./scripts/aggregate-markdown-pieces.py {input} -o {output.json}
     """
 
+rule compound_json:
+    message:
+        "build markdown content for compound terms."
+    input:
+        "output_pieces_compound/01-compound"
+    output:
+        json = "upload_json/compound.json",
+    shell: """
+        ./scripts/aggregate-markdown-pieces.py {input} -o {output.json}
+    """
+
 
 # nothing here yet.
 rule disease_json:
@@ -59,13 +71,8 @@ rule disease_json:
         touch {output}
     """
 
-# nothing here yet.
-rule compound_json:
-    output:
-        "upload_json/compound.json"
-    shell: """
-        touch {output}
-    """
+
+
 
 
 ###
@@ -80,7 +87,7 @@ rule gene_json_alias_widget:
     message: "build alias widgets for genes"
     input:
         script = "scripts/build-markdown-pieces-gene-translate.py",
-        id_list = "data/inputs/STAGING_PORTAL__available_genes__2022-07-13.txt",
+        id_list = "data/inputs/gene_IDs_for_transcripts_widget.txt",
         alias_info = "data/inputs/Homo_sapiens.gene_info_20220304.txt_conv_wNCBI_AC.txt",
     output:
         directory("output_pieces_gene/00-alias")
@@ -96,7 +103,7 @@ rule gene_json_appyter_link:
     message: "build gene/appyter links for genes"
     input:
         script = "scripts/build-appyter-gene-links.py",
-        id_list = "data/inputs/STAGING_PORTAL__available_genes__2022-07-13.txt",
+        id_list = "data/inputs/gene_IDs_for_transcripts_widget.txt",
     output:
         directory("output_pieces_gene/01-appyter")
     params:
@@ -172,3 +179,20 @@ rule anatomy_json_expression_widget:
            --widget-name expression_widget \
            --output-dir {output}
     """
+
+
+rule compound_json_links:
+    message: "build links for compound terms"
+    input:
+        script = "scripts/build-compound-links.py",
+        id_list = "data/inputs/compound-test.txt",
+    output:
+        directory("output_pieces_compound/01-compound")
+    params:
+        widget_name = "01-compound"
+    shell: """
+        {input.script} compound {input.id_list} \
+           --widget-name {params.widget_name} \
+           --output-dir {output}
+    """    
+
