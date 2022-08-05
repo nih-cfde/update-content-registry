@@ -87,7 +87,7 @@ def main():
     
         md = make_markdown(cv_id)
         
-        print(f"Compound {cv_id}")
+       # print(f"Compound {cv_id}")
 
         # write out JSON pieces for aggregation & upload
         cfde_common.write_output_pieces(output_dir, args.widget_name,
