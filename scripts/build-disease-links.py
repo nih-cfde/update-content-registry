@@ -18,7 +18,7 @@ import cfde_common
 def make_markdown(cv_id):
     return f"""
     
-    | External Reference | 
+    | External Resource | 
     |---|
     | [Disease Ontology](https://disease-ontology.org/?id={cv_id}) |
     | [Human Disease Ontology](https://bioportal.bioontology.org/ontologies/DOID?p=classes&conceptid={cv_id}) |
