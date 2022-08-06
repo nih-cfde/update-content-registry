@@ -17,6 +17,7 @@ rule upload:
     input:
         "upload_json/gene.json",
         "upload_json/anatomy.json",
+        "upload_json/disease.json",
     shell: """
         export DERIVA_SERVERNAME=app-staging.nih-cfde.org
         python3 -m cfde_deriva.registry upload-resources upload_json/gene.json upload_json/anatomy.json
@@ -51,12 +52,15 @@ rule anatomy_json:
     """
 
 
-# nothing here yet.
 rule disease_json:
+    message:
+        "build markdown content for disease terms",
+    input:
+        "output_pieces_disease/01-disease",
     output:
-        "upload_json/disease.json"
+        json = "upload_json/disease.json",
     shell: """
-        touch {output}
+        ./scripts/aggregate-markdown-pieces.py {input} -o {output.json}
     """
 
 # nothing here yet.
@@ -172,3 +176,21 @@ rule anatomy_json_expression_widget:
            --widget-name expression_widget \
            --output-dir {output}
     """
+
+
+
+rule disease_json_links:
+    message: "build links for disease terms"
+    input:
+        script = "scripts/build-disease-links.py",
+        id_list = "data/inputs/disease_IDs.txt",
+    output:
+        directory("output_pieces_disease/01-disease")
+    params:
+        widget_name = "01-disease"
+    shell: """
+        {input.script} disease {input.id_list} \
+           --widget-name {params.widget_name} \
+           --output-dir {output}
+    """    
+
