@@ -107,6 +107,21 @@ rule gene_json_appyter_link:
            --output-dir {output}
     """
 
+rule gene_json_appyter_lincs_geo_reverse_link:
+    message: "build gene/lincs geo reverse appyter links for genes"
+    input:
+        script = "scripts/build-appyter-gene-links-lincs-geo-reverse.py",
+        id_list = "data/inputs/STAGING_PORTAL__available_genes__2022-07-13.txt",
+    output:
+        directory("output_pieces_gene/02-appyter-lincs-geo-reverse")
+    params:
+        widget_name = "02-appyter-lincs-geo-reverse"
+    shell: """
+        {input.script} gene {input.id_list} \
+           --widget-name {params.widget_name} \
+           --output-dir {output}
+    """
+
 rule gene_json_ucsc_genome_browser_widget:
     message: "build UCSC genome browser iframe-include for genes"
     input:

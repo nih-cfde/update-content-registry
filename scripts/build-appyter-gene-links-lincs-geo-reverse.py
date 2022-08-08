@@ -9,10 +9,11 @@ import os.path
 import cfde_common
 
 
-def make_markdown(cv_id):
+
+def make_markdown(cv_id, genesym):
     return f"""
 
-The **CFDE Gene Partnership Appyter** for  [{cv_id}](https://appyters.maayanlab.cloud/CFDE-Gene-Partnership/#?args.gene={cv_id}&submit) provides up-to-date information from across the Common Fund Data Ecosystem. The Appyter collects gene-centric data from Common Fund supported programs via their API. The source code within the Appyter demonstrates how you can programmatically access CFDE data sources for integrative analyses. 
+The **LINCS Gene Centric GEO Reverse Search Appyter** for [{cv_id}](https://appyters.maayanlab.cloud/Gene_Centric_GEO_Reverse_Search/#?args.species_input=Human&args.human_gene={genesym}&submit) allows users to query for a gene in a species of interest and returns an interactive volcano plot visualization of LINCS L1000 signatures in which the given gene is up- or down-regulated.
 
 """
 
@@ -52,10 +53,12 @@ def main():
 
     # load in ref file; ID is first column
     ref_id_list = set()
+    ref_id_to_name = {}
     with open(ref_file, 'r', newline='') as fp:
         r = csv.DictReader(fp, delimiter='\t')
         for row in r:
             ref_id = row['id']
+            ref_id_to_name[ref_id] = row['name']
             ref_id_list.add(ref_id)
 
     print(f"Loaded {len(ref_id_list)} reference IDs from {ref_file}",
@@ -83,7 +86,7 @@ def main():
 
     # now iterate over and make markdown, then save JSON + md.
     for cv_id in id_list:
-        md = make_markdown(cv_id)
+        md = make_markdown(cv_id, ref_id_to_name[cv_id])
 
         # write out JSON pieces for aggregation & upload
         cfde_common.write_output_pieces(output_dir, args.widget_name,
