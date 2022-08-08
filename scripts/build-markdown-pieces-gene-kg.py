@@ -9,10 +9,7 @@ import os.path
 import cfde_common
 
 
-TEMPLATES = set([('gene', 'expression_widget'),
-                 ('gene', 'transcripts_widget'),
-                 ('gene', 'alias_tables'),
-                 ('anatomy', 'expression_widget')
+TEMPLATES = set([('gene', 'kg_widget'),
                  ])
 
 def kg_widget(**kwargs):
@@ -88,12 +85,13 @@ def main():
     for cv_id in sorted(id_list):
         resource_markdown = None
         if term =='gene':
-            if template_name == 'expression_widget':
-                resource_markdown = f"::: iframe [**Expression data (via GTEx API):**](https://mii.podvis.org/cfde-ge1/#/gene_tissues?gencode_id={cv_id}&width=1200&height=450&numTopTissues=10){{width=\"1200\" height=\"450\" style=\"border: 1px solid black;\" caption-style=\"font-size: 24px;\" caption-link=\"https://gtexportal.org/home/api-docs/index.html#/expression\" caption-target=\"_blank\"}} \n:::\n"
-            elif template_name == 'transcripts_widget':
-                resource_markdown = f"::: iframe [**Transcript list (via GTEx API):**](https://mii.podvis.org/cfde-ge1/#/gene_transcripts?gencode_id={cv_id}&width=1200&height=300){{width=\"1200\" height=\"300\" style=\"border: 1px solid black;\" caption-style=\"font-size: 24px;\" caption-link=\"https://gtexportal.org/home/api-docs/index.html#/reference\" caption-target=\"_blank\"}} \n:::\n";
-            elif template_name == 'alias_tables':
-                assert 0
+            if template_name == 'kg_widget':
+                # TODO: the cv_id which is a gencode id is not currently supported by gene-kg
+                resource_markdown = kg_widget(
+                    start='Gene',
+                    start_field='id',
+                    start_term=cv_id,
+                )
             else:
                 assert 0
         elif term =='anatomy':

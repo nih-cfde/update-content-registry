@@ -212,3 +212,18 @@ rule compound_json_glytoucan_image:
            --output-dir {output}
     """        
 
+rule gene_json_kg_widget:
+    message: "build kg widgets for genes"
+    input:
+        script = "scripts/build-markdown-pieces-gene-kg.py",
+        # TODO: create list of anatomys
+        id_list = "data/inputs/STAGING_PORTAL__available_genes__2022-07-13.txt",
+    output:
+        directory("output_pieces_gene/30-kg")
+    params:
+        widget_name = "30-kg"
+    shell: """
+        {input.script} gene {input.id_list} \
+           --widget-name kg_widget \
+           --output-dir {output}
+    """
