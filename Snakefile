@@ -227,3 +227,20 @@ rule gene_json_kg_widget:
            --widget-name kg_widget \
            --output-dir {output}
     """
+
+
+rule anatomy_json_kg_widget:
+    message: "build kg widgets for anatomy terms"
+    input:
+        script = "scripts/build-markdown-pieces-gene-kg.py",
+        # TODO: create list of anatomys
+        id_list = "data/inputs/anatomy_IDs_for_kg_widget.txt",
+    output:
+        directory("output_pieces_anatomy/30-kg")
+    params:
+        widget_name = "30-kg"
+    shell: """
+        {input.script} anatomy {input.id_list} \
+           --widget-name kg_widget \
+           --output-dir {output}
+    """

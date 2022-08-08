@@ -10,6 +10,7 @@ import cfde_common
 
 
 TEMPLATES = set([('gene', 'kg_widget'),
+                 ('anatomy', 'kg_widget'),
                  ])
 
 def kg_widget(**kwargs):
@@ -95,9 +96,13 @@ def main():
             else:
                 assert 0
         elif term =='anatomy':
-            if template_name == 'expression_widget':
-                cv_id_encoded = urllib.parse.quote(cv_id)
-                resource_markdown = f"::: iframe [**Expression data from GTEx:**](https://mii.podvis.org/cfde-ge1/#/anatomy?uberon_ids={cv_id_encoded}&width=1400&height=550&numTopGenes=25){{width=\"1400\" height=\"550\" style=\"border: 1px solid black;\" caption-style=\"font-size: 24px;\" caption-link=\"https://gtexportal.org/home/api-docs/index.html#/expression\" caption-target=\"_blank\"}} \n:::\n"
+            if template_name == 'kg_widget':
+                # TODO: the cv_id which is a DOID is not currently supported by gene-kg
+                resource_markdown = kg_widget(
+                    start='Cell or Tissue (HuBMAP)',
+                    start_field='id',
+                    start_term=cv_id,
+                )
             else:
                 assert 0
         elif term == 'compound':
