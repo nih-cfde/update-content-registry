@@ -10,10 +10,10 @@ import cfde_common
 
 
 
-def make_markdown(cv_id, genesym):
+def make_markdown(cv_id, drugname):
     return f"""
 
-The **LINCS Gene Centric GEO Reverse Search Appyter** for [{cv_id}](https://appyters.maayanlab.cloud/Gene_Centric_GEO_Reverse_Search/#?args.species_input=Human&args.human_gene={genesym}&submit) This appyter allows users to query for a gene in a species of interest and returns an interactive volcano plot visualization of LINCS L1000 signatures in which the given gene is up- or down-regulated.
+The **LINCS Chemical Similarity Appyter** for [{cv_id}](https://appyters.maayanlab.cloud/LINCS_Chemical_Similarity_Appyter/#?args.drug={drugname}) provides information about small molecules profiled by the LINCS program. Specifically, users can retrieve similar small molecules based on Tanimoto structural similarity and similarity based on L1000 gene expression.
 
 """
 

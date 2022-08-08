@@ -212,3 +212,18 @@ rule compound_json_glytoucan_image:
            --output-dir {output}
     """        
 
+
+rule compound_json_appyter_lincs_chemical_sim:
+    message: "build compound/lincs chemical similarity appyter links for compounds"
+    input:
+        script = "scripts/build-appyter-lincs-chemical-sim.py",
+        id_list = "data/inputs/compound_IDs.txt",
+    output:
+        directory("output_pieces_compound/03-appyter-lincs-chemical-sim")
+    params:
+        widget_name = "03-appyter-lincs-chemical-sim"
+    shell: """
+        {input.script} compound {input.id_list} \
+           --widget-name {params.widget_name} \
+           --output-dir {output}
+    """
