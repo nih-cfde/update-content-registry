@@ -15,6 +15,11 @@ TEMPLATES = set([('gene', 'expression_widget'),
                  ('anatomy', 'expression_widget')
                  ])
 
+def kg_widget(**kwargs):
+    ''' The knowledge graph, kwargs are mapped to query params on the site.
+    https://maayanlab.cloud/gene-kg/
+    '''
+    return f"::: iframe [**CFDE Gene Centric Knowledge Graph:**](https://maayanlab.cloud/gene-kg?{urllib.parse.urlencode(kwargs)}){{width=\"1200\" height=\"450\" style=\"border: 1px solid black;\" caption-style=\"font-size: 24px;\" caption-link=\"https://maayanlab.cloud/gene-kg/\" caption-target=\"_blank\"}} \n:::\n"
 
 def main():
     p = argparse.ArgumentParser()
