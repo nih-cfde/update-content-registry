@@ -55,7 +55,8 @@ rule compound_json:
     message:
         "build markdown content for compound terms."
     input:
-        "output_pieces_compound/01-compound"
+        "output_pieces_compound/01-compound",
+         "output_pieces_compound/02-compound"
     output:
         json = "upload_json/compound.json",
     shell: """
@@ -210,4 +211,19 @@ rule compound_json_links:
            --widget-name {params.widget_name} \
            --output-dir {output}
     """    
+    
+rule compound_json_glytoucan_image:
+    message: "Adding GlyTouCan images"
+    input:
+        script = "scripts/build-compound-image.py",
+        id_list = "data/inputs/compound_IDs_GlyTouCan.txt",
+    output:
+        directory("output_pieces_compound/02-compound")
+    params:
+        widget_name = "02-compound"
+    shell: """
+        {input.script} compound {input.id_list} \
+           --widget-name {params.widget_name} \
+           --output-dir {output}
+    """        
 
