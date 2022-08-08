@@ -244,3 +244,19 @@ rule anatomy_json_kg_widget:
            --widget-name kg_widget \
            --output-dir {output}
     """
+
+rule compound_json_kg_widget:
+    message: "build kg widgets for compound terms"
+    input:
+        script = "scripts/build-markdown-pieces-gene-kg.py",
+        # TODO: create list of compounds
+        id_list = "data/inputs/compound_IDs.txt",
+    output:
+        directory("output_pieces_compound/30-kg")
+    params:
+        widget_name = "30-kg"
+    shell: """
+        {input.script} compound {input.id_list} \
+           --widget-name kg_widget \
+           --output-dir {output}
+    """

@@ -11,6 +11,7 @@ import cfde_common
 
 TEMPLATES = set([('gene', 'kg_widget'),
                  ('anatomy', 'kg_widget'),
+                 ('compound', 'kg_widget'),
                  ])
 
 def kg_widget(**kwargs):
@@ -106,7 +107,14 @@ def main():
             else:
                 assert 0
         elif term == 'compound':
-            assert 0
+            if template_name == 'kg_widget':
+                resource_markdown = kg_widget(
+                    start='Drug',
+                    start_field='id',
+                    start_term=cv_id,
+                )
+            else:
+                assert 0
         elif term == 'disease':
             assert 0
 
