@@ -16,16 +16,8 @@ import cfde_common
 ##
 
 def make_markdown(cv_id):
-    return f"""
-    
-    | External Resource | 
-    |---|
-    | [Disease Ontology](https://disease-ontology.org/?id={cv_id}) |
-    | [Human Disease Ontology](https://bioportal.bioontology.org/ontologies/DOID?p=classes&conceptid={cv_id}) |
-    | [Rat Genome Database](https://rgd.mcw.edu/rgdweb/ontology/view.html?acc_id={cv_id}) |
-    | [Yeast Genome Database](https://www.yeastgenome.org/disease/{cv_id}) |
+    return  f"""\n\n| External Resources for {cv_id} |\n|---|\n|[Disease Ontology](https://disease-ontology.org/?id={cv_id}) |\n| [Human Disease Ontology](https://bioportal.bioontology.org/ontologies/DOID?p=classes&conceptid={cv_id}) |\n| [Rat Genome Database](https://rgd.mcw.edu/rgdweb/ontology/view.html?acc_id={cv_id}) |\n| [Yeast Genome Database](https://www.yeastgenome.org/disease/{cv_id})|\n|\n"""
 
-    """
 
 
 def main():

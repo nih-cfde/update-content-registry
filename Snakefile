@@ -20,7 +20,7 @@ rule upload:
         "upload_json/disease.json",
     shell: """
         export DERIVA_SERVERNAME=app-staging.nih-cfde.org
-        python3 -m cfde_deriva.registry upload-resources upload_json/gene.json upload_json/anatomy.json
+        python3 -m cfde_deriva.registry upload-resources upload_json/gene.json upload_json/anatomy.json upload_json/disease.json
     """
 
 
