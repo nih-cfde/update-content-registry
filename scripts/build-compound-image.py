@@ -16,9 +16,7 @@ import cfde_common
 ##
 
 def make_markdown(cv_id):
-    return f"""External links: More information is available on GlyGen website for glycan [{cv_id}](https://www.glygen.org/glycan/{cv_id}). \n\n ![Image](https://api.glygen.org/glycan/image/{cv_id}) """
-
-
+    return f"""## Glycan Details\n\n![Image](https://api.glygen.org/glycan/image/{cv_id})\n\n**GlyTouCan Accession**: {cv_id}\n\nFor more information see [GlyGen glycan details](https://www.glygen.org/glycan/{cv_id})"""
 
 def main():
     p = argparse.ArgumentParser()
