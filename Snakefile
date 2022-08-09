@@ -56,7 +56,8 @@ rule compound_json:
         "build markdown content for compound terms."
     input:
         "output_pieces_compound/01-compound",
-         "output_pieces_compound/02-compound"
+         "output_pieces_compound/02-compound",
+         "output_pieces_compound/03-compound",
     output:
         json = "upload_json/compound.json",
     shell: """
@@ -88,7 +89,7 @@ rule gene_json_alias_widget:
     message: "build alias widgets for genes"
     input:
         script = "scripts/build-markdown-pieces-gene-translate.py",
-        id_list = "data/inputs/STAGING_PORTAL__available_genes__2022-07-13.txt",
+        id_list = "data/inputs/gene_IDs_for_UCSC_genome_browser_widget.txt",
         alias_info = "data/inputs/Homo_sapiens.gene_info_20220304.txt_conv_wNCBI_AC.txt",
     output:
         directory("output_pieces_gene/00-alias")
@@ -104,7 +105,7 @@ rule gene_json_appyter_link:
     message: "build gene/appyter links for genes"
     input:
         script = "scripts/build-appyter-gene-links.py",
-        id_list = "data/inputs/STAGING_PORTAL__available_genes__2022-07-13.txt",
+        id_list = "data/inputs/gene_IDs_for_UCSC_genome_browser_widget.txt",
     output:
         directory("output_pieces_gene/01-appyter")
     params:
@@ -212,3 +213,18 @@ rule compound_json_glytoucan_image:
            --output-dir {output}
     """        
 
+rule compound_json_alias_widget:
+    message: "build alias widgets for compounds"
+    input:
+        script = "scripts/build-compound-alias.py",
+        id_list = "data/inputs/compound_IDs.txt",
+        alias_info = "data/inputs/compound_glycan.txt",
+    output:
+        directory("output_pieces_compound/03-compound")
+    params:
+        widget_name = "03-compound",
+    shell: """
+        {input.script} compound {input.id_list} {input.alias_info} \
+            --widget-name {params.widget_name}  \
+            --output-dir {output}
+    """

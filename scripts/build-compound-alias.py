@@ -5,33 +5,24 @@ import csv
 import json
 import urllib.parse
 import os.path
+from collections import defaultdict
 
 import cfde_common
-
-##
-## this is the function to change to generate different markdown entries.
-## it should return a markdown string.
-## you can change it to take more arguments, use a database, whatever - but
-## please don't change the output filenames or formats :).
-##
-
-def make_markdown(cv_id):
-    return f"""## Pub Chem Details\n\nMore information is available on the NCBI PubChem page for compound [{cv_id}](https://pubchem.ncbi.nlm.nih.gov/compound/{cv_id}).\n"""
-
 
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument('termtype', help="controlled vocabulary term type - gene, disease, compound, or anatomy")
-    p.add_argument('id_list', help="file containing list of IDs to build markdown for")
-    p.add_argument('--widget-name', default="widget",
-                   help="widget name, used to set the output filename(s)")
+    p.add_argument('term')
+    p.add_argument('id_list')
+    p.add_argument('alias_file')
     p.add_argument('--output-dir', '-o',
                    help="output directory, defaults to 'output_pieces_{termtype}")
+    p.add_argument('--widget-name', default="widget",
+                   help="widget name, used to set the output filename(s)")
     args = p.parse_args()
 
     # validate term
-    term = args.termtype
+    term = args.term
     if term not in cfde_common.REF_FILES:
         print(f"ERROR: unknown term type '{term}'", file=sys.stderr)
         sys.exit(-1)
@@ -47,7 +38,6 @@ def main():
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
 
-    # validate that ID list is contained within actual IDs in database
     ref_file = cfde_common.REF_FILES.get(term)
     if ref_file is None:
         print(f"ERROR: no ref file for term. Dying terribly.", file=sys.stderr)
@@ -64,10 +54,28 @@ def main():
     print(f"Loaded {len(ref_id_list)} reference IDs from {ref_file}",
           file=sys.stderr)
 
-    # load up each ID in id_list file - is it in the ref_id_list?
-    # if not, complain.
-    # we could also remove them here. we don't want to output markdown
-    # for them!
+    # load in alias file.
+    alias_info = {}
+    with open(args.alias_file, 'r', newline='') as fp:
+        r = csv.DictReader(fp, delimiter='\t')
+        def isnull(value):
+            if not value or value == 'NA':
+                return True
+            return False
+
+        for row in r:
+        
+            glycan_id = row['glytoucan_ac']
+            cv_id = row['id']
+            
+            print(f"{glycan_id}") 
+            
+            alias_md = f"""## Glycan Details\n\n![Image](https://api.glygen.org/glycan/image/{glycan_id})\n\n**GlyTouCan Accession**: {glycan_id}\n\nFor more information see [GlyGen glycan details](https://www.glygen.org/glycan/{glycan_id})"""
+            
+            alias_info[cv_id] = alias_md
+
+
+    # load in id list
     id_list = set()
     with open(args.id_list, 'rt') as fp:
         for line in fp:
@@ -82,16 +90,15 @@ def main():
     print(f"Loaded {len(id_list)} IDs from {args.id_list}",
           file=sys.stderr)
 
-    # now iterate over and make markdown, then save JSON + md.
-    for cv_id in id_list:
-    
-        md = make_markdown(cv_id)
-        
-       # print(f"Compound {cv_id}")
-
-        # write out JSON pieces for aggregation & upload
-        cfde_common.write_output_pieces(output_dir, args.widget_name,
-                                        cv_id, md)
+    template_name = 'alias_tables'
+    for cv_id in sorted(id_list):
+        resource_markdown = alias_info.get(cv_id)
+        if resource_markdown:
+            # write out JSON pieces for aggregation & upload
+            cfde_common.write_output_pieces(output_dir, args.widget_name,
+                                            cv_id, resource_markdown)
+        else:
+            print(f"WARNING: missing markdown for identifier {cv_id}")
 
 
 if __name__ == '__main__':
