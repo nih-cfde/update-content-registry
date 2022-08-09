@@ -18,10 +18,14 @@ TEMPLATES = set([('gene', 'kg_widget'),
                  ('compound', 'kg_widget'),
                  ])
 
-def kg_widget(**kwargs):
+def kg_widget(cv_id, **kwargs):
     ''' The knowledge graph, kwargs are mapped to query params on the site.
     '''
-    return f"::: iframe [**CFDE Gene Centric Knowledge Graph:**]({API_ENDPOINT}?{urllib.parse.urlencode(kwargs)}){{width=\"1200\" height=\"450\" style=\"border: 1px solid black;\" caption-style=\"font-size: 24px;\" caption-link=\"https://maayanlab.cloud/gene-kg/\" caption-target=\"_blank\"}} \n:::\n"
+    return f"""
+
+The **CFDE Gene Centric Knowledge Graph** for  [{cv_id}]({API_ENDPOINT}?{urllib.parse.urlencode(kwargs)}) provides an interface for exploring cross-dcc knowledge about genes and their associations.
+
+"""
 
 INPUT_GENE_ID_LIST = os.path.join('data', 'inputs', 'gene_IDs_for_gene_kg.txt')
 INPUT_ANATOMY_ID_LIST = os.path.join('data', 'inputs', 'anatomy_IDs_for_gene_kg.txt')
@@ -167,6 +171,7 @@ def main():
         if term =='gene':
             if template_name == 'kg_widget':
                 resource_markdown = kg_widget(
+                    cv_id,
                     start='Gene',
                     start_field='label',
                     start_term=ref_id_to_name[cv_id], # gencode => gene sym
@@ -176,6 +181,7 @@ def main():
         elif term =='anatomy':
             if template_name == 'kg_widget':
                 resource_markdown = kg_widget(
+                    cv_id,
                     start='Cell or Tissue (HuBMAP)',
                     start_field='id',
                     start_term=cv_id.replace(':', '_'), # UBERON:123 => UBERON_123
@@ -185,6 +191,7 @@ def main():
         elif term == 'compound':
             if template_name == 'kg_widget':
                 resource_markdown = kg_widget(
+                    cv_id,
                     start='Drug',
                     start_field='id',
                     start_term=f"CID:{cv_id}", # 123 => CID:123
