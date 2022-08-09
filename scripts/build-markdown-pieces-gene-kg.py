@@ -60,10 +60,12 @@ def main():
 
     # load in ref file; ID is first column
     ref_id_list = set()
+    ref_id_to_name = {}
     with open(ref_file, 'r', newline='') as fp:
         r = csv.DictReader(fp, delimiter='\t')
         for row in r:
             ref_id = row['id']
+            ref_id_to_name[ref_id] = row['name']
             ref_id_list.add(ref_id)
 
     print(f"Loaded {len(ref_id_list)} reference IDs from {ref_file}",
@@ -88,21 +90,19 @@ def main():
         resource_markdown = None
         if term =='gene':
             if template_name == 'kg_widget':
-                # TODO: the cv_id which is a gencode id is not currently supported by gene-kg
                 resource_markdown = kg_widget(
                     start='Gene',
-                    start_field='id',
-                    start_term=cv_id,
+                    start_field='label',
+                    start_term=ref_id_to_name[cv_id], # gencode => gene sym
                 )
             else:
                 assert 0
         elif term =='anatomy':
             if template_name == 'kg_widget':
-                # TODO: the cv_id which is a DOID is not currently supported by gene-kg
                 resource_markdown = kg_widget(
                     start='Cell or Tissue (HuBMAP)',
                     start_field='id',
-                    start_term=cv_id,
+                    start_term=cv_id.replace(':', '_'), # UBERON:123 => UBERON_123
                 )
             else:
                 assert 0
@@ -111,7 +111,7 @@ def main():
                 resource_markdown = kg_widget(
                     start='Drug',
                     start_field='id',
-                    start_term=cv_id,
+                    start_term=f"CID:{cv_id}", # 123 => CID:123
                 )
             else:
                 assert 0
