@@ -9,10 +9,7 @@ import os.path
 import cfde_common
 
 
-TEMPLATES = set([('gene', 'expression_widget'),
-                 ('gene', 'transcripts_widget'),
-                 ('gene', 'alias_tables'),
-                 ('anatomy', 'expression_widget')
+TEMPLATES = set([('gene', 'reverse_search_widget'),
                  ])
 
 
@@ -56,10 +53,12 @@ def main():
 
     # load in ref file; ID is first column
     ref_id_list = set()
+    ref_id_to_name = {}
     with open(ref_file, 'r', newline='') as fp:
         r = csv.DictReader(fp, delimiter='\t')
         for row in r:
             ref_id = row['id']
+            ref_id_to_name[ref_id] = row['name']
             ref_id_list.add(ref_id)
 
     print(f"Loaded {len(ref_id_list)} reference IDs from {ref_file}",
@@ -83,20 +82,12 @@ def main():
     for cv_id in sorted(id_list):
         resource_markdown = None
         if term =='gene':
-            if template_name == 'expression_widget':
-                resource_markdown = f"::: iframe [**Expression data (via GTEx API):**](https://mii.podvis.org/cfde-ge1/#/gene_tissues?gencode_id={cv_id}&width=1200&height=450&numTopTissues=10){{width=\"1200\" height=\"450\" style=\"border: 1px solid black;\" caption-style=\"font-size: 24px;\" caption-link=\"https://gtexportal.org/home/api-docs/index.html#/expression\" caption-target=\"_blank\"}} \n:::\n"
-            elif template_name == 'transcripts_widget':
-                resource_markdown = f"::: iframe [**Transcript list (via GTEx API):**](https://mii.podvis.org/cfde-ge1/#/gene_transcripts?gencode_id={cv_id}&width=1200&height=300){{width=\"1200\" height=\"300\" style=\"border: 1px solid black;\" caption-style=\"font-size: 24px;\" caption-link=\"https://gtexportal.org/home/api-docs/index.html#/reference\" caption-target=\"_blank\"}} \n:::\n";
-            elif template_name == 'alias_tables':
-                assert 0
+            if template_name == 'reverse_search_widget':
+                resource_markdown = f"::: iframe [**LINCS Chemical Perturbations (via LINCS API):**](https://lincs-reverse-search-dashboard.dev.maayanlab.cloud/#{ref_id_to_name[cv_id]}){{width=\"1200\" height=\"450\" style=\"border: 1px solid black;\" caption-style=\"font-size: 24px;\" caption-link=\"v\" caption-target=\"_blank\"}} \n:::\n"
             else:
                 assert 0
         elif term =='anatomy':
-            if template_name == 'expression_widget':
-                cv_id_encoded = urllib.parse.quote(cv_id)
-                resource_markdown = f"::: iframe [**Expression data from GTEx:**](https://mii.podvis.org/cfde-ge1/#/anatomy?uberon_ids={cv_id_encoded}&width=1400&height=550&numTopGenes=25){{width=\"1400\" height=\"550\" style=\"border: 1px solid black;\" caption-style=\"font-size: 24px;\" caption-link=\"https://gtexportal.org/home/api-docs/index.html#/expression\" caption-target=\"_blank\"}} \n:::\n"
-            else:
-                assert 0
+            assert 0
         elif term == 'compound':
             assert 0
         elif term == 'disease':

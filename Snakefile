@@ -172,3 +172,19 @@ rule anatomy_json_expression_widget:
            --widget-name expression_widget \
            --output-dir {output}
     """
+
+
+rule gene_json_reverse_search_widget:
+    message: "build reverse search widgets for genes"
+    input:
+        script = "scripts/build-markdown-pieces-lincs-reverse-search.py",
+        id_list = "data/inputs/DEV_PORTAL__available_genes__2022-07-01.txt",
+    output:
+        directory("output_pieces_gene/11-reverse-search")
+    params:
+        widget_name = "11-reverse-search"
+    shell: """
+        {input.script} gene {input.id_list} \
+           --widget-name reverse_search_widget \
+           --output-dir {output}
+    """
