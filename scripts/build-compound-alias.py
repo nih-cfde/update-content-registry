@@ -66,11 +66,13 @@ def main():
         for row in r:
         
             glycan_id = row['glytoucan_ac']
+            
             cv_id = row['id']
             
             print(f"{glycan_id}") 
             
-            alias_md = f"""## Glycan Details\n\n![Image](https://api.glygen.org/glycan/image/{glycan_id})\n\n**GlyTouCan Accession**: {glycan_id}\n\nFor more information see [GlyGen glycan details](https://www.glygen.org/glycan/{glycan_id})"""
+            alias_md = f"""## Glycan Details\n\n![Image](https://api.glygen.org/glycan/image/{glycan_id})\n\nMore information is available on the GlyGen glycan page for **GlyTouCan Accession** [{glycan_id}](https://www.glygen.org/glycan/{glycan_id})."""
+            
             
             alias_info[cv_id] = alias_md
 

@@ -55,9 +55,10 @@ rule compound_json:
     message:
         "build markdown content for compound terms."
     input:
-        "output_pieces_compound/01-compound",
          "output_pieces_compound/02-compound",
          "output_pieces_compound/03-compound",
+         "output_pieces_compound/04-compound",
+
     output:
         json = "upload_json/compound.json",
     shell: """
@@ -189,9 +190,9 @@ rule compound_json_links:
         script = "scripts/build-compound-links.py",
         id_list = "data/inputs/compound_IDs.txt",
     output:
-        directory("output_pieces_compound/01-compound")
+        directory("output_pieces_compound/04-compound")
     params:
-        widget_name = "01-compound"
+        widget_name = "04-compound"
     shell: """
         {input.script} compound {input.id_list} \
            --widget-name {params.widget_name} \
