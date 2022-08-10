@@ -31,12 +31,14 @@ rule gene_json:
         "output_pieces_gene/01-appyter",
         "output_pieces_gene/10-expression",
         "output_pieces_gene/20-transcripts",
+        "output_pieces_gene/30-lincs",
         "output_pieces_gene/70-ucsc",
     output:
         json = "upload_json/gene.json",
     shell: """
         ./scripts/aggregate-markdown-pieces.py {input} -o {output.json}
     """
+
 
 
 rule anatomy_json:
@@ -156,6 +158,21 @@ rule gene_json_transcript_widget:
            --output-dir {output}
     """
 
+rule gene_json_lincs_widget:
+    message: "build lincs widgets for genes"
+    input:
+        script = "scripts/build-markdown-pieces-gene-lincs.py",
+        id_list = "data/inputs/gene_IDs_for_transcripts_widget.txt",
+        alias_file = "data/inputs/Homo_sapiens.gene_info_20220304.txt_conv_wNCBI_AC.txt",
+    output:
+        directory("output_pieces_gene/30-lincs")
+    params:
+        widget_name = "lincs_widget"
+    shell: """
+        {input.script} gene {input.id_list} {input.alias_file} \
+           --widget-name {params.widget_name} \
+           --output-dir {output}
+    """
 
 
 rule anatomy_json_expression_widget:
