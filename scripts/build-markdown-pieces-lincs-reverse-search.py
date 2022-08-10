@@ -3,16 +3,44 @@ import argparse
 import sys
 import csv
 import json
-import urllib.parse
 import os.path
 
 import cfde_common
 
+__directory__, __base__ = os.path.split(__file__)
+__root__, _ = os.path.split(__directory__)
 
 API_ENDPOINT = 'https://lincs-reverse-search-dashboard.dev.maayanlab.cloud'
 TEMPLATES = set([('gene', 'reverse_search_widget'),
                  ])
+INPUT_ID_LIST = os.path.join('data', 'inputs', 'gene_IDs_for_lincs_reverse_search.txt')
 
+def build_id_list():
+    ''' Usage:
+    cd scripts && python -c 'import importlib; importlib.import_module("build-markdown-pieces-lincs-reverse-search").build_id_list()'
+    '''
+    import os
+    import urllib.request
+    os.chdir(__root__)
+
+    # get reverse name => gencode gene mappings
+    ref_file = cfde_common.REF_FILES.get('gene')
+    ref_name_to_id = {}
+    with open(ref_file, 'r', newline='') as fp:
+        r = csv.DictReader(fp, delimiter='\t')
+        for row in r:
+            ref_name_to_id[row['name']] = row['id']
+
+    # get supported genes from API
+    with urllib.request.urlopen(f"{API_ENDPOINT}/api/info/") as fr:
+        info = json.load(fr)
+
+    # construct input id list
+    with open(INPUT_ID_LIST, 'w') as fw:
+        for gene in info.keys():
+            cv_id = ref_name_to_id.get(gene)
+            if cv_id:
+                fw.write(cv_id + '\n')
 
 def main():
     p = argparse.ArgumentParser()
