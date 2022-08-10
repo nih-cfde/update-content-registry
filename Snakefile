@@ -178,7 +178,7 @@ rule gene_json_reverse_search_widget:
     message: "build reverse search widgets for genes"
     input:
         script = "scripts/build-markdown-pieces-lincs-reverse-search.py",
-        id_list = "data/inputs/DEV_PORTAL__available_genes__2022-07-01.txt",
+        id_list = "data/inputs/gene_IDs_for_lincs_reverse_search.txt",
     output:
         directory("output_pieces_gene/11-reverse-search")
     params:
