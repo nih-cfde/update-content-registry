@@ -29,8 +29,10 @@ rule gene_json:
     input:
         "output_pieces_gene/00-alias",
         "output_pieces_gene/01-appyter",
+        "output_pieces_gene/02-MetGene",
         "output_pieces_gene/10-expression",
         "output_pieces_gene/20-transcripts",
+
         "output_pieces_gene/70-ucsc",
     output:
         json = "upload_json/gene.json",
@@ -80,7 +82,7 @@ rule gene_json_alias_widget:
     message: "build alias widgets for genes"
     input:
         script = "scripts/build-markdown-pieces-gene-translate.py",
-        id_list = "data/inputs/STAGING_PORTAL__available_genes__2022-07-13.txt",
+        id_list = "data/inputs/gene_IDs_for_transcripts_widget.txt",
         alias_info = "data/inputs/Homo_sapiens.gene_info_20220304.txt_conv_wNCBI_AC.txt",
     output:
         directory("output_pieces_gene/00-alias")
@@ -96,7 +98,7 @@ rule gene_json_appyter_link:
     message: "build gene/appyter links for genes"
     input:
         script = "scripts/build-appyter-gene-links.py",
-        id_list = "data/inputs/STAGING_PORTAL__available_genes__2022-07-13.txt",
+        id_list = "data/inputs/gene_IDs_for_expression_widget.txt",
     output:
         directory("output_pieces_gene/01-appyter")
     params:
@@ -111,7 +113,7 @@ rule gene_json_ucsc_genome_browser_widget:
     message: "build UCSC genome browser iframe-include for genes"
     input:
         script = "scripts/build-markdown-pieces-ucsc-genome-browser-widget.pl",
-        id_list = "data/inputs/gene_IDs_for_UCSC_genome_browser_widget.txt",
+        id_list = "data/inputs/gene_IDs_for_expression_widget.txt",
         coord_info = "data/inputs/homo_sapiens.coords.tsv",
     output:
         directory("output_pieces_gene/70-ucsc")
@@ -145,7 +147,7 @@ rule gene_json_transcript_widget:
     message: "build transcript widgets for genes"
     input:
         script = "scripts/build-markdown-pieces.py",
-        id_list = "data/inputs/gene_IDs_for_transcripts_widget.txt",
+        id_list = "data/inputs/gene_IDs_for_expression_widget.txt",
     output:
         directory("output_pieces_gene/20-transcripts")
     params:
@@ -156,7 +158,20 @@ rule gene_json_transcript_widget:
            --output-dir {output}
     """
 
-
+rule gene_json_lincs_widget:
+    message: "build MetGene widgets for genes"
+    input:
+        script = "scripts/build-markdown-pieces-MetGene.py",
+        id_list = "data/inputs/gene_IDs_for_transcripts_widget.txt",
+    output:
+        directory("output_pieces_gene/02-MetGene")
+    params:
+        widget_name = "metgene_widget"
+    shell: """
+        {input.script} gene {input.id_list} \
+           --widget-name {params.widget_name} \
+           --output-dir {output}
+    """
 
 rule anatomy_json_expression_widget:
     message: "build expression widgets for anatomy terms"
