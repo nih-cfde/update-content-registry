@@ -8,6 +8,10 @@ import os.path
 
 import cfde_common
 
+__directory__, __base__ = os.path.split(__file__)
+__root__, _ = os.path.split(__directory__)
+
+API_ENDPOINT = 'https://maayanlab.cloud/gene-kg'
 
 TEMPLATES = set([('gene', 'kg_widget'),
                  ('anatomy', 'kg_widget'),
@@ -16,9 +20,81 @@ TEMPLATES = set([('gene', 'kg_widget'),
 
 def kg_widget(**kwargs):
     ''' The knowledge graph, kwargs are mapped to query params on the site.
-    https://maayanlab.cloud/gene-kg/
     '''
-    return f"::: iframe [**CFDE Gene Centric Knowledge Graph:**](https://maayanlab.cloud/gene-kg?{urllib.parse.urlencode(kwargs)}){{width=\"1200\" height=\"450\" style=\"border: 1px solid black;\" caption-style=\"font-size: 24px;\" caption-link=\"https://maayanlab.cloud/gene-kg/\" caption-target=\"_blank\"}} \n:::\n"
+    return f"::: iframe [**CFDE Gene Centric Knowledge Graph:**]({API_ENDPOINT}?{urllib.parse.urlencode(kwargs)}){{width=\"1200\" height=\"450\" style=\"border: 1px solid black;\" caption-style=\"font-size: 24px;\" caption-link=\"https://maayanlab.cloud/gene-kg/\" caption-target=\"_blank\"}} \n:::\n"
+
+INPUT_GENE_ID_LIST = os.path.join('data', 'inputs', 'gene_IDs_for_gene_kg.txt')
+INPUT_ANATOMY_ID_LIST = os.path.join('data', 'inputs', 'anatomy_IDs_for_gene_kg.txt')
+INPUT_COMPOUND_ID_LIST = os.path.join('data', 'inputs', 'compound_IDs_for_gene_kg.txt')
+
+def build_id_lists():
+    ''' Usage:
+    cd scripts && python -c 'import importlib; importlib.import_module("build-markdown-pieces-gene-kg").build_id_lists()'
+    '''
+    import os
+    import urllib.request
+    os.chdir(__root__)
+
+    # GENE
+    # get reverse name => gencode gene mappings
+    ref_file = cfde_common.REF_FILES.get('gene')
+    ref_name_to_id = {}
+    with open(ref_file, 'r', newline='') as fp:
+        r = csv.DictReader(fp, delimiter='\t')
+        for row in r:
+            ref_name_to_id[row['name']] = row['id']
+
+    # get supported genes from API
+    with urllib.request.urlopen(f"{API_ENDPOINT}/api/knowledge_graph/Gene") as fr:
+        genes = json.load(fr)
+
+    # construct input id list
+    with open(INPUT_GENE_ID_LIST, 'w') as fw:
+        for gene in genes.keys():
+            cv_id = ref_name_to_id.get(gene)
+            if cv_id:
+                fw.write(cv_id + '\n')
+
+    # ANATOMY
+    ref_file = cfde_common.REF_FILES.get('anatomy')
+    ref_ids = set()
+    with open(ref_file, 'r', newline='') as fp:
+        r = csv.DictReader(fp, delimiter='\t')
+        for row in r:
+            ref_ids.add(row['id'])
+
+    # get supported anatomy from API
+    with urllib.request.urlopen(f"{API_ENDPOINT}/api/knowledge_graph/{urllib.parse.quote('`Cell or Tissue (HuBMAP)`')}") as fr:
+        anatomies = json.load(fr)
+
+    # construct input id list
+    with open(INPUT_ANATOMY_ID_LIST, 'w') as fw:
+        for anatomy in anatomies.values():
+            if anatomy['id'].startswith('UBERON_'):
+                _, _, uberon_id = anatomy['id'].partition('_') # our anatomies are UBERON_123 but CFDE's are UBERON:123
+                cv_id = f"UBERON:{uberon_id}"
+                if cv_id in ref_ids:
+                    fw.write(cv_id + '\n')
+
+    # COMPOUND
+    # get cfde supported compound ids
+    ref_file = cfde_common.REF_FILES.get('compound')
+    ref_ids = set()
+    with open(ref_file, 'r', newline='') as fp:
+        r = csv.DictReader(fp, delimiter='\t')
+        for row in r:
+            ref_ids.add(row['id'])
+
+    # get supported drugs from API
+    with urllib.request.urlopen(f"{API_ENDPOINT}/api/knowledge_graph/Drug") as fr:
+        compounds = json.load(fr)
+
+    # construct input id list
+    with open(INPUT_COMPOUND_ID_LIST, 'w') as fw:
+        for compound in compounds.values():
+            _, _, cv_id = compound['id'].partition(':') # our compounds are CID:123 but CFDE's are just 123
+            if cv_id in ref_ids:
+                fw.write(cv_id + '\n')
 
 def main():
     p = argparse.ArgumentParser()
