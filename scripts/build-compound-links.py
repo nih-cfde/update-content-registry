@@ -16,7 +16,7 @@ import cfde_common
 ##
 
 def make_markdown(cv_id):
-    return f"""## Pub Chem Details\n\nMore information is available on the NCBI PubChem page for compound [{cv_id}](https://pubchem.ncbi.nlm.nih.gov/compound/{cv_id}).\n"""
+    return f"""## Pub Chem Details\n\nMore information is available on the NCBI PubChem page for **NCBI Accession** [{cv_id}](https://pubchem.ncbi.nlm.nih.gov/compound/{cv_id}).\n"""
 
 
 
