@@ -9,6 +9,7 @@ import os.path
 import cfde_common
 
 
+API_ENDPOINT = 'https://lincs-reverse-search-dashboard.dev.maayanlab.cloud'
 TEMPLATES = set([('gene', 'reverse_search_widget'),
                  ])
 
@@ -83,7 +84,7 @@ def main():
         resource_markdown = None
         if term =='gene':
             if template_name == 'reverse_search_widget':
-                resource_markdown = f"::: iframe [**LINCS Chemical Perturbations (via LINCS API):**](https://lincs-reverse-search-dashboard.dev.maayanlab.cloud/#{ref_id_to_name[cv_id]}){{width=\"1200\" height=\"450\" style=\"border: 1px solid black;\" caption-style=\"font-size: 24px;\" caption-link=\"v\" caption-target=\"_blank\"}} \n:::\n"
+                resource_markdown = f"::: iframe [**LINCS Chemical Perturbations (via LINCS API):**]({API_ENDPOINT}/#{ref_id_to_name[cv_id]}){{width=\"1200\" height=\"450\" style=\"border: 1px solid black;\" caption-style=\"font-size: 24px;\" caption-link=\"v\" caption-target=\"_blank\"}} \n:::\n"
             else:
                 assert 0
         elif term =='anatomy':
