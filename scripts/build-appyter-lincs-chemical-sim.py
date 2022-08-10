@@ -8,7 +8,10 @@ import os.path
 
 import cfde_common
 
+__directory__, __base__ = os.path.split(__file__)
+__root__, _ = os.path.split(__directory__)
 
+INPUT_COMPOUND_ID_LIST = os.path.join('data', 'inputs', 'compound_IDs_for_lincs_chemical_sim_appyter.txt')
 
 def make_markdown(cv_id, drugname):
     return f"""
@@ -17,6 +20,34 @@ The **LINCS Chemical Similarity Appyter** for [{cv_id}](https://appyters.maayanl
 
 """
 
+def build_id_list():
+    ''' Usage:
+    cd scripts && python -c 'import importlib; importlib.import_module("build-appyter-lincs-chemical-sim").build_id_list()'
+    '''
+    import os
+    import urllib.request
+    os.chdir(__root__)
+
+    # get reverse name => cid mappings
+    ref_file = cfde_common.REF_FILES.get('compound')
+    ref_name_to_id = {}
+    with open(ref_file, 'r', newline='') as fp:
+        r = csv.DictReader(fp, delimiter='\t')
+        for row in r:
+            ref_name_to_id[row['name']] = row['id']
+
+    # get compounds from appyter
+    with urllib.request.urlopen('https://appyters.maayanlab.cloud/storage/DODGE-Chemical-Similarity/L1000_signature_similarity_scores.json') as fr:
+        L1000_signature_similarity_scores = json.load(fr)
+    compounds = list(L1000_signature_similarity_scores.keys())
+    del L1000_signature_similarity_scores
+
+    # construct input id list
+    with open(INPUT_COMPOUND_ID_LIST, 'w') as fw:
+        for compound in compounds:
+            cv_id = ref_name_to_id.get(compound)
+            if cv_id:
+                fw.write(cv_id + '\n')
 
 def main():
     p = argparse.ArgumentParser()
