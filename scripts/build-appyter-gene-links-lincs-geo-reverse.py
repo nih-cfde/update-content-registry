@@ -8,7 +8,10 @@ import os.path
 
 import cfde_common
 
+__directory__, __base__ = os.path.split(__file__)
+__root__, _ = os.path.split(__directory__)
 
+INPUT_GENE_ID_LIST = os.path.join('data', 'inputs', 'gene_IDs_for_lincs_geo_reverse_appyter.txt')
 
 def make_markdown(cv_id, genesym):
     return f"""
@@ -17,6 +20,35 @@ The **LINCS Gene Centric GEO Reverse Search Appyter** for [{cv_id}](https://appy
 
 """
 
+def build_id_list():
+    ''' Usage:
+    cd scripts && python -c 'import importlib; importlib.import_module("build-appyter-gene-links-lincs-geo-reverse").build_id_list()'
+    '''
+    import os
+    import pandas as pd
+    os.chdir(__root__)
+
+    # get reverse name => gencode gene mappings
+    ref_file = cfde_common.REF_FILES.get('gene')
+    ref_name_to_id = {}
+    with open(ref_file, 'r', newline='') as fp:
+        r = csv.DictReader(fp, delimiter='\t')
+        for row in r:
+            ref_name_to_id[row['name']] = row['id']
+
+    # get genes from appyter
+    endpoint = 'https://appyters.maayanlab.cloud/storage/Gene_Centric_GEO_Reverse_Search'
+    species = 'human'
+    pval_df_input = pd.read_feather(f"{endpoint}/{species}_pval.f").set_index('index')
+    genes = pval_df_input.columns.tolist()
+    del pval_df_input
+
+    # construct input id list
+    with open(INPUT_GENE_ID_LIST, 'w') as fw:
+        for gene in genes:
+            cv_id = ref_name_to_id.get(gene)
+            if cv_id:
+                fw.write(cv_id + '\n')
 
 def main():
     p = argparse.ArgumentParser()
