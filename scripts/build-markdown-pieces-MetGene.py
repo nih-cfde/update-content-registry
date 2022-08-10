@@ -10,7 +10,7 @@ import cfde_common
 
 
 def make_markdown(cv_id):
-    return f"""::: iframe [**Gene-centric Metabolomics Information Retrieval Tool (via MetGene API)**](https://bdcw.org/MetGENE/mgSummary.php?species=hsa&ENSEMBL={cv_id}){{width=\"400\" height=\"200\" style=\"border: 1px solid black;\" caption-style=\"font-size: 24px;\" caption-link=\"v\" caption-target=\"_blank\"}} \n:::\n"""
+    return f"""::: iframe [**Gene-centric Metabolomics Information Retrieval Tool (via MetGene API)**](https://bdcw.org/MetGENE/mgSummary.php?species=hsa&ENSEMBL={cv_id}){{width=\"1200\" height=\"100\" style=\"border: 1px solid black;\" caption-style=\"font-size: 24px;\" caption-link=\"v\" caption-target=\"_blank\"}} \n:::\n\n![Image](https://bdcw.org/MetGENE/mgSummary.php?species=hsa&ENSEMBL={cv_id}&viewType=png)\n\nMore information is available on the Gene-centric Metabolomics Information Retrieval Tool query page for [{cv_id}](https://bdcw.org/MetGENE/index.php?species=hsa&GeneIDType=ENSEMBL&GeneInfoStr={cv_id}&anatomy=NA&disease=NA&phenotype=NA)."""
 
 def main():
     p = argparse.ArgumentParser()
