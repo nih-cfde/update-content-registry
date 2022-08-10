@@ -216,8 +216,7 @@ rule gene_json_kg_widget:
     message: "build kg widgets for genes"
     input:
         script = "scripts/build-markdown-pieces-gene-kg.py",
-        # TODO: create list of anatomys
-        id_list = "data/inputs/STAGING_PORTAL__available_genes__2022-07-13.txt",
+        id_list = "data/inputs/gene_IDs_for_gene_kg.txt",
     output:
         directory("output_pieces_gene/30-kg")
     params:
@@ -233,8 +232,7 @@ rule anatomy_json_kg_widget:
     message: "build kg widgets for anatomy terms"
     input:
         script = "scripts/build-markdown-pieces-gene-kg.py",
-        # TODO: create list of anatomys
-        id_list = "data/inputs/anatomy_IDs_for_kg_widget.txt",
+        id_list = "data/inputs/anatomy_IDs_for_gene_kg.txt",
     output:
         directory("output_pieces_anatomy/30-kg")
     params:
@@ -249,8 +247,7 @@ rule compound_json_kg_widget:
     message: "build kg widgets for compound terms"
     input:
         script = "scripts/build-markdown-pieces-gene-kg.py",
-        # TODO: create list of compounds
-        id_list = "data/inputs/compound_IDs.txt",
+        id_list = "data/inputs/compound_IDs_for_gene_kg.txt",
     output:
         directory("output_pieces_compound/30-kg")
     params:
