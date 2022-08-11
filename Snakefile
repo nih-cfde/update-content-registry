@@ -55,10 +55,7 @@ rule compound_json:
     message:
         "build markdown content for compound terms."
     input:
-         "output_pieces_compound/02-compound",
-         "output_pieces_compound/03-compound",
-         "output_pieces_compound/04-compound",
-         "output_pieces_compound/05-compound",
+         "output_pieces_compound/00-compound",
     output:
         json = "upload_json/compound.json",
     shell: """
@@ -184,64 +181,21 @@ rule anatomy_json_expression_widget:
     """
 
 
-rule compound_json_links:
-    message: "build links for compound terms"
-    input:
-        script = "scripts/build-compound-links.py",
-        id_list = "data/inputs/compound_IDs.txt",
-    output:
-        directory("output_pieces_compound/04-compound")
-    params:
-        widget_name = "04-compound"
-    shell: """
-        {input.script} compound {input.id_list} \
-           --widget-name {params.widget_name} \
-           --output-dir {output}
-    """    
     
-rule compound_json_glytoucan_image:
-    message: "Adding GlyTouCan images"
-    input:
-        script = "scripts/build-compound-image.py",
-        id_list = "data/inputs/compound_IDs_GlyTouCan.txt",
-    output:
-        directory("output_pieces_compound/02-compound")
-    params:
-        widget_name = "02-compound"
-    shell: """
-        {input.script} compound {input.id_list} \
-           --widget-name {params.widget_name} \
-           --output-dir {output}
-    """        
 
 rule compound_json_alias_widget:
-    message: "build alias widgets for compounds"
+    message: "Building alias table for compounds"
     input:
         script = "scripts/build-compound-alias.py",
-        id_list = "data/inputs/compound_IDs.txt",
-        alias_info = "data/inputs/compound_glycan.txt",
+        id_list = "data/inputs/compound_IDs_all.txt",
+        alias_info = "data/inputs/compound_IDs_alias_url.txt",
     output:
-        directory("output_pieces_compound/03-compound")
+        directory("output_pieces_compound/00-compound")
     params:
-        widget_name = "03-compound",
+        widget_name = "00-compound",
     shell: """
         {input.script} compound {input.id_list} {input.alias_info} \
             --widget-name {params.widget_name}  \
             --output-dir {output}
     """
 
-rule compound_json_drugcentral_widget:
-    message: "build links for drug central"
-    input:
-        script = "scripts/build-compound-drugcentral.py",
-        id_list = "data/inputs/compound_IDs.txt",
-        alias_info = "data/inputs/compounds_pubchem2drugcentral.tsv",
-    output:
-        directory("output_pieces_compound/05-compound")
-    params:
-        widget_name = "05-compound",
-    shell: """
-        {input.script} compound {input.id_list} {input.alias_info} \
-            --widget-name {params.widget_name}  \
-            --output-dir {output}
-    """    

@@ -65,13 +65,20 @@ def main():
 
         for row in r:
         
+            
+            
+            cv_id = row['pubchem_cid']
+            pubchem_url = row['pubchem_url']
+            drugcentral_id = row['drugcentral_id']
+            drugcentral_url = row['drugcentral_url']
+            
             glycan_id = row['glytoucan_ac']
+            glycan_url = row['glytoucan_url']
             
-            cv_id = row['id']
+            print(f"{cv_id}") 
             
-            print(f"{glycan_id}") 
+            alias_md = f""":span:Links to external resources for {cv_id}:/span:{{.caption-match style=\"font-size:24px;font-weight:bold\"}}\n\n| Resource | Links |\n| --- | --- |\n| Drug Central |  [{drugcentral_id}]({drugcentral_url}) |\n| GlyGen Glycan |  [{glycan_id}]({glycan_url})|\n| Pub Chem |  [{cv_id}]({pubchem_url}) |\n """
             
-            alias_md = f"""## Glycan Details\n\n![Image](https://api.glygen.org/glycan/image/{glycan_id})\n\nMore information is available on the GlyGen glycan page for **GlyTouCan Accession** [{glycan_id}](https://www.glygen.org/glycan/{glycan_id})."""
             
             
             alias_info[cv_id] = alias_md
