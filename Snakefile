@@ -30,6 +30,7 @@ rule gene_json:
         "output_pieces_gene/00-alias",
         "output_pieces_gene/01-appyter",
         "output_pieces_gene/10-expression",
+        "output_pieces_gene/11-reverse-search",
         "output_pieces_gene/20-transcripts",
         "output_pieces_gene/70-ucsc",
     output:
