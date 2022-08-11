@@ -19,7 +19,7 @@ rule upload:
         "upload_json/anatomy.json",
         "upload_json/compound.json",
     shell: """
-        export DERIVA_SERVERNAME=app-staging.nih-cfde.org
+        export DERIVA_SERVERNAME=app-dev.nih-cfde.org
         python3 -m cfde_deriva.registry upload-resources upload_json/gene.json upload_json/anatomy.json upload_json/compound.json 
     """
 
@@ -58,7 +58,7 @@ rule compound_json:
          "output_pieces_compound/02-compound",
          "output_pieces_compound/03-compound",
          "output_pieces_compound/04-compound",
-
+         "output_pieces_compound/05-compound",
     output:
         json = "upload_json/compound.json",
     shell: """
@@ -90,7 +90,7 @@ rule gene_json_alias_widget:
     message: "build alias widgets for genes"
     input:
         script = "scripts/build-markdown-pieces-gene-translate.py",
-        id_list = "data/inputs/gene_IDs_for_UCSC_genome_browser_widget.txt",
+        id_list = "data/inputs/gene_IDs_for_expression_widget.txt",
         alias_info = "data/inputs/Homo_sapiens.gene_info_20220304.txt_conv_wNCBI_AC.txt",
     output:
         directory("output_pieces_gene/00-alias")
@@ -106,7 +106,7 @@ rule gene_json_appyter_link:
     message: "build gene/appyter links for genes"
     input:
         script = "scripts/build-appyter-gene-links.py",
-        id_list = "data/inputs/gene_IDs_for_UCSC_genome_browser_widget.txt",
+        id_list = "data/inputs/gene_IDs_for_expression_widget.txt",
     output:
         directory("output_pieces_gene/01-appyter")
     params:
@@ -188,7 +188,7 @@ rule compound_json_links:
     message: "build links for compound terms"
     input:
         script = "scripts/build-compound-links.py",
-        id_list = "data/inputs/compound_IDs.txt",
+        id_list = "data/inputs/compound_IDs-test.txt",
     output:
         directory("output_pieces_compound/04-compound")
     params:
@@ -203,7 +203,7 @@ rule compound_json_glytoucan_image:
     message: "Adding GlyTouCan images"
     input:
         script = "scripts/build-compound-image.py",
-        id_list = "data/inputs/compound_IDs_GlyTouCan.txt",
+        id_list = "data/inputs/compound_IDs_GlyTouCan-test.txt",
     output:
         directory("output_pieces_compound/02-compound")
     params:
@@ -218,7 +218,7 @@ rule compound_json_alias_widget:
     message: "build alias widgets for compounds"
     input:
         script = "scripts/build-compound-alias.py",
-        id_list = "data/inputs/compound_IDs.txt",
+        id_list = "data/inputs/compound_IDs-test.txt",
         alias_info = "data/inputs/compound_glycan.txt",
     output:
         directory("output_pieces_compound/03-compound")
@@ -229,3 +229,19 @@ rule compound_json_alias_widget:
             --widget-name {params.widget_name}  \
             --output-dir {output}
     """
+
+rule compound_json_drugcentral_widget:
+    message: "build links for drug central"
+    input:
+        script = "scripts/build-compound-drugcentral.py",
+        id_list = "data/inputs/compound_IDs-test.txt",
+        alias_info = "data/inputs/compounds_pubchem2drugcentral.tsv",
+    output:
+        directory("output_pieces_compound/05-compound")
+    params:
+        widget_name = "05-compound",
+    shell: """
+        {input.script} compound {input.id_list} {input.alias_info} \
+            --widget-name {params.widget_name}  \
+            --output-dir {output}
+    """    
