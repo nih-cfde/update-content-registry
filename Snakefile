@@ -56,7 +56,8 @@ rule compound_json:
         "build markdown content for compound terms."
     input:
         "output_pieces_compound/01-compound",
-         "output_pieces_compound/02-compound"
+        "output_pieces_compound/02-compound",
+        "output_pieces_compound/03-appyter-lincs-chemical-sim",
     output:
         json = "upload_json/compound.json",
     shell: """
