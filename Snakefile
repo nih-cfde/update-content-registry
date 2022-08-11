@@ -32,6 +32,7 @@ rule gene_json:
         "output_pieces_gene/01-appyter",
         "output_pieces_gene/10-expression",
         "output_pieces_gene/20-transcripts",
+        "output_pieces_gene/30-kg",
         "output_pieces_gene/70-ucsc",
     output:
         json = "upload_json/gene.json",
@@ -44,7 +45,8 @@ rule anatomy_json:
     message:
         "build markdown content for anatomy terms."
     input:
-        "output_pieces_anatomy/10-expression"
+        "output_pieces_anatomy/10-expression",
+        "output_pieces_anatomy/30-kg",
     output:
         json = "upload_json/anatomy.json",
     shell: """
@@ -56,7 +58,8 @@ rule compound_json:
         "build markdown content for compound terms."
     input:
         "output_pieces_compound/01-compound",
-         "output_pieces_compound/02-compound"
+        "output_pieces_compound/02-compound",
+        "output_pieces_compound/30-kg",
     output:
         json = "upload_json/compound.json",
     shell: """
