@@ -16,7 +16,7 @@ INPUT_COMPOUND_ID_LIST = os.path.join('data', 'inputs', 'compound_IDs_for_lincs_
 def make_markdown(cv_id, drugname):
     return f"""
 
-The **LINCS Chemical Similarity Appyter** for [{cv_id}](https://appyters.maayanlab.cloud/LINCS_Chemical_Similarity_Appyter/#?args.drug={drugname}) provides information about small molecules profiled by the LINCS program. Specifically, users can retrieve similar small molecules based on Tanimoto structural similarity and similarity based on L1000 gene expression.
+The **LINCS Chemical Similarity Appyter** for [{drugname} (CID:{cv_id})](https://appyters.maayanlab.cloud/LINCS_Chemical_Similarity_Appyter/#?args.drug={drugname}) provides information about small molecules profiled by the LINCS program. Specifically, users can retrieve similar small molecules based on Tanimoto structural similarity and similarity based on L1000 gene expression.
 
 """
 
