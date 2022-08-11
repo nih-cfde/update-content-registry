@@ -188,7 +188,7 @@ rule compound_json_links:
     message: "build links for compound terms"
     input:
         script = "scripts/build-compound-links.py",
-        id_list = "data/inputs/compound_IDs-test.txt",
+        id_list = "data/inputs/compound_IDs.txt",
     output:
         directory("output_pieces_compound/04-compound")
     params:
@@ -203,7 +203,7 @@ rule compound_json_glytoucan_image:
     message: "Adding GlyTouCan images"
     input:
         script = "scripts/build-compound-image.py",
-        id_list = "data/inputs/compound_IDs_GlyTouCan-test.txt",
+        id_list = "data/inputs/compound_IDs_GlyTouCan.txt",
     output:
         directory("output_pieces_compound/02-compound")
     params:
@@ -218,7 +218,7 @@ rule compound_json_alias_widget:
     message: "build alias widgets for compounds"
     input:
         script = "scripts/build-compound-alias.py",
-        id_list = "data/inputs/compound_IDs-test.txt",
+        id_list = "data/inputs/compound_IDs.txt",
         alias_info = "data/inputs/compound_glycan.txt",
     output:
         directory("output_pieces_compound/03-compound")
@@ -234,7 +234,7 @@ rule compound_json_drugcentral_widget:
     message: "build links for drug central"
     input:
         script = "scripts/build-compound-drugcentral.py",
-        id_list = "data/inputs/compound_IDs-test.txt",
+        id_list = "data/inputs/compound_IDs.txt",
         alias_info = "data/inputs/compounds_pubchem2drugcentral.tsv",
     output:
         directory("output_pieces_compound/05-compound")
