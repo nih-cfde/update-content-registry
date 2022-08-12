@@ -65,16 +65,20 @@ def main():
 
         for row in r:
         
-            cv_id = row['cv_id']
-            
-            glytoucan_ac = row['glytoucan_ac']
-            
+            cv_id = row['CV_ID']
+            GLYTOUCAN_ID = row['GLYTOUCAN_ID']
+            PUBCHEM_CID = row['PUBCHEM_CID']
+            MASS = row['MASS']
+            COMPOSITION = row['COMPOSITION']
+            PUBCHEM_CID = row['PUBCHEM_CID']
+            IMAGE_URL = row['IMAGE_URL']
+            LINK_OUT_URL = row['LINK_OUT_URL']
             
             #print(f"{glytoucan_ac}") 
             
-            alias_md = f"""## Glycan Details\nMore information is available on the GlyGen glycan page for **GlyTouCan Accession** [{glytoucan_ac}](https://www.glygen.org/glycan/{glytoucan_ac}).\n![Image](https://api.glygen.org/glycan/image/{glytoucan_ac})\n"""
-            
-            
+            alias_md = f"""## Glycan Details\n![Image]({IMAGE_URL})\n**GlyTouCan Accession**: [{GLYTOUCAN_ID}]({LINK_OUT_URL})\n**PubChem CID**: {PUBCHEM_CID}\n**Monoisotopic Mass**: {MASS} Da\n**Composition**: {COMPOSITION} \n\nMore information for glycan [{GLYTOUCAN_ID}]({LINK_OUT_URL}) is available on GlyGen.\n"""
+
+           
             alias_info[cv_id] = alias_md
 
 
