@@ -20,7 +20,7 @@ rule upload:
         "upload_json/compound.json",
     shell: """
         export DERIVA_SERVERNAME=app-dev.nih-cfde.org
-        python3 -m cfde_deriva.registry upload-resources upload_json/gene.json upload_json/anatomy.json upload_json/compound.json 
+        python3 -m cfde_deriva.registry upload-resources upload_json/gene.json upload_json/anatomy.json upload_json/compound.json
     """
 
 
@@ -118,7 +118,7 @@ rule gene_json_ucsc_genome_browser_widget:
     message: "build UCSC genome browser iframe-include for genes"
     input:
         script = "scripts/build-markdown-pieces-ucsc-genome-browser-widget.pl",
-        id_list = "data/inputs/gene_IDs_for_UCSC_genome_browser_widget.txt",
+        id_list = "data/inputs/gene_IDs_for_expression_widget.txt",
         coord_info = "data/inputs/homo_sapiens.coords.tsv",
     output:
         directory("output_pieces_gene/70-ucsc")
@@ -187,7 +187,7 @@ rule compound_json_alias_widget:
     message: "Building alias table for compounds"
     input:
         script = "scripts/build-compound-alias.py",
-        id_list = "data/inputs/compound_IDs_all.txt",
+        id_list = "data/inputs/compound-test.txt",
         alias_info = "data/inputs/compound_IDs_alias_url.txt",
     output:
         directory("output_pieces_compound/00-compound")

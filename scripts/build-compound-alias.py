@@ -75,12 +75,14 @@ def main():
             glycan_id = row['glytoucan_ac']
             glycan_url = row['glytoucan_url']
             
+            name = row['name']
+            description = row['description']
+            
             print(f"{cv_id}") 
             
-            alias_md = f""":span:Links to external resources for {cv_id}:/span:{{.caption-match style=\"font-size:24px;font-weight:bold\"}}\n\n| Resource | Links |\n| --- | --- |\n| Drug Central |  [{drugcentral_id}]({drugcentral_url}) |\n| GlyGen Glycan |  [{glycan_id}]({glycan_url})|\n| Pub Chem |  [{cv_id}]({pubchem_url}) |\n """
+            alias_md = f""":span:Links to external resources for {cv_id}:/span:{{.caption-match style=\"font-size:24px;font-weight:bold\"}}\n\n| Resource | Links |\n| --- | --- |\n| Drug Central |  [{drugcentral_id}]({drugcentral_url}) |\n| GlyGen Glycan |  [{glycan_id}]({glycan_url})|\n|LINCS Chemical Similarity |  [{name}](https://appyters.maayanlab.cloud/LINCS_Chemical_Similarity_Appyter/#?args.drug={name}) |\n Pub Chem |  [{cv_id}]({pubchem_url}) |\n  ## Drug Central \n![Image](https://drugcentral.org/drug/{drugcentral_id}/image)\n\nMore information is available on the Drug Central page for **Accession** [{drugcentral_id}]({drugcentral_url}). \n ## Glycan Details \n {description} \n![Image](https://api.glygen.org/glycan/image/{glycan_id})\n\nMore information is available on the GlyGen glycan page for **GlyTouCan Accession** [{cv_id}](https://www.glygen.org/glycan/{cv_id}). \n ## LINCS \n The **LINCS Chemical Similarity Appyter** for [{name} (CID:{cv_id})](https://appyters.maayanlab.cloud/LINCS_Chemical_Similarity_Appyter/#?args.drug={name}) provides information about small molecules profiled by the LINCS program. Specifically, users can retrieve similar small molecules based on Tanimoto structural similarity and similarity based on L1000 gene expression."""
             
-            
-            
+                    
             alias_info[cv_id] = alias_md
 
 
