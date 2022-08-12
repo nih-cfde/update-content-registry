@@ -28,26 +28,33 @@ def build_id_list():
     import urllib.request
     os.chdir(__root__)
 
-    # get reverse name => cid mappings
+    # get available cids
     ref_file = cfde_common.REF_FILES.get('compound')
-    ref_name_to_id = {}
+    ref_ids = set()
     with open(ref_file, 'r', newline='') as fp:
         r = csv.DictReader(fp, delimiter='\t')
         for row in r:
-            ref_name_to_id[row['name']] = row['id']
+            ref_ids.add(row['id'])
 
     # get compounds from appyter
     with urllib.request.urlopen('https://appyters.maayanlab.cloud/storage/DODGE-Chemical-Similarity/L1000_signature_similarity_scores.json') as fr:
         L1000_signature_similarity_scores = json.load(fr)
-    compounds = list(L1000_signature_similarity_scores.keys())
+    compounds = set(L1000_signature_similarity_scores.keys())
     del L1000_signature_similarity_scores
 
+    # get compound -> cid mappings
+    compound_cids = set()
+    with urllib.request.urlopen('https://maayanlab.cloud/L1000FWD/download/Drugs_metadata.csv') as fp:
+        r = csv.DictReader(map(bytes.decode, fp))
+        for row in r:
+            if row['pert_id'] in compounds:
+                compound_cids.add(row['pubchem_cid'])
+
+    intersecting_cids = compound_cids & ref_ids
     # construct input id list
     with open(INPUT_COMPOUND_ID_LIST, 'w') as fw:
-        for compound in compounds:
-            cv_id = ref_name_to_id.get(compound)
-            if cv_id:
-                fw.write(cv_id + '\n')
+        for cv_id in intersecting_cids:
+            fw.write(cv_id + '\n')
 
 def main():
     p = argparse.ArgumentParser()
