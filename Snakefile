@@ -19,8 +19,9 @@ rule upload:
         "upload_json/anatomy.json",
         "upload_json/compound.json",
     shell: """
-        export DERIVA_SERVERNAME=app-dev.nih-cfde.org
+        export DERIVA_SERVERNAME=app-staging.nih-cfde.org
         python3 -m cfde_deriva.registry upload-resources upload_json/gene.json upload_json/anatomy.json upload_json/compound.json
+        python3 -m cfde_deriva.release refresh-resources 5e0b5f45-2b99-4026-8d22-d1a642a9e903
     """
 
 
@@ -55,7 +56,10 @@ rule compound_json:
     message:
         "build markdown content for compound terms."
     input:
-         "output_pieces_compound/00-compound",
+         "output_pieces_compound/00-pubchem",
+         "output_pieces_compound/01-drugcentral",
+         "output_pieces_compound/02-glycan",
+         "output_pieces_compound/03-lincs",
     output:
         json = "upload_json/compound.json",
     shell: """
@@ -183,19 +187,69 @@ rule anatomy_json_expression_widget:
 
     
 
-rule compound_json_alias_widget:
-    message: "Building alias table for compounds"
+rule compound_json_pubchem:
+    message: "Building PubChem links"
     input:
-        script = "scripts/build-compound-alias.py",
-        id_list = "data/inputs/compound-test.txt",
-        alias_info = "data/inputs/compound_IDs_alias_url.txt",
+        script = "scripts/build-compound-pubchem.py",
+        id_list = "data/inputs/compound_IDs_test.txt",
     output:
-        directory("output_pieces_compound/00-compound")
+        directory("output_pieces_compound/00-pubchem")
     params:
-        widget_name = "00-compound",
+        widget_name = "00-pubchem",
+    shell: """
+        {input.script} compound {input.id_list} \
+            --widget-name {params.widget_name}  \
+            --output-dir {output}
+    """
+
+
+rule compound_json_drugcentral:
+    message: "Building Drug Central links"
+    input:
+        script = "scripts/build-compound-drugcentral.py",
+        id_list = "data/inputs/compound_IDs_DrugCentral_test.txt",
+        alias_info = "data/inputs/compounds_pubchem2drugcentral.tsv",
+    output:
+        directory("output_pieces_compound/01-drugcentral")
+    params:
+        widget_name = "01-drugcentral",
     shell: """
         {input.script} compound {input.id_list} {input.alias_info} \
             --widget-name {params.widget_name}  \
             --output-dir {output}
-    """
+    """    
+
+
+rule compound_json_glytoucan:
+    message: "Building GlyTouCan links"
+    input:
+        script = "scripts/build-compound-glycan.py",
+        id_list = "data/inputs/compound_IDs_GlyTouCan_test.txt",
+        alias_info = "data/inputs/gtc_pubchem_xref_status.txt",
+    output:
+        directory("output_pieces_compound/02-glycan")
+    params:
+        widget_name = "02-glycan",
+    shell: """
+        {input.script} compound {input.id_list} {input.alias_info} \
+            --widget-name {params.widget_name}  \
+            --output-dir {output}
+    """         
+
+
+rule compound_json_lincs:
+    message: "Building LINCS links"
+    input:
+        script = "scripts/build-compound-lincs.py",
+        id_list = "data/inputs/compound_IDs_LINCS.txt",
+        alias_info = "data/validate/compound.tsv",
+    output:
+        directory("output_pieces_compound/03-lincs")
+    params:
+        widget_name = "03-lincs",
+    shell: """
+        {input.script} compound {input.id_list} {input.alias_info} \
+            --widget-name {params.widget_name}  \
+            --output-dir {output}
+    """    
 

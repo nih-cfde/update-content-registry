@@ -59,21 +59,23 @@ def main():
     with open(args.alias_file, 'r', newline='') as fp:
         r = csv.DictReader(fp, delimiter='\t')
         def isnull(value):
-            if not value or value == 'NA':
+            if not value or value == ' ':
                 return True
             return False
 
         for row in r:
         
             cv_id = row['pubchem_cid']
-            pubchem_url = row['pubchem_url']
             
             drugcentral_id = row['drugcentral_id']
+            #assert not isnull(drugcentral_id)
+            
             drugcentral_url = row['drugcentral_url']
+            #assert not isnull(drugcentral_url)
             
-            print(f"{drugcentral_id}") 
+            #print(f"{drugcentral_id}") 
             
-            alias_md = f"""## Drug Central  Details\n\n![Image](https://drugcentral.org/drug/{drugcentral_id}/image)\n\nMore information is available on the Drug Central page for **Accession** [{drugcentral_id}]({drugcentral_url})."""
+            alias_md = f"""## Drug Central Details \n More information is available on the Drug Central page for  [{drugcentral_id}]({drugcentral_url}).\n![Image](https://drugcentral.org/drug/{drugcentral_id}/image)\n"""
             
             
             alias_info[cv_id] = alias_md
