@@ -21,7 +21,6 @@ rule upload:
     shell: """
         export DERIVA_SERVERNAME=app-staging.nih-cfde.org
         python3 -m cfde_deriva.registry upload-resources upload_json/gene.json upload_json/anatomy.json upload_json/compound.json
-        python3 -m cfde_deriva.release refresh-resources 5e0b5f45-2b99-4026-8d22-d1a642a9e903
     """
 
 
