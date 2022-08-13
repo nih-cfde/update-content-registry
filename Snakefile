@@ -20,8 +20,7 @@ rule upload:
         "upload_json/compound.json",
     shell: """
         export DERIVA_SERVERNAME=app-staging.nih-cfde.org
-        python3 -m cfde_deriva.registry upload-resources upload_json/gene.json upload_json/anatomy.json upload_json/compound.json
-        python3 -m cfde_deriva.release refresh-resources 5e0b5f45-2b99-4026-8d22-d1a642a9e903
+        python3 -m cfde_deriva.registry upload-resources upload_json/gene.json upload_json/anatomy.json upload_json/compound.json 
     """
 
 
@@ -58,7 +57,7 @@ rule compound_json:
     input:
          "output_pieces_compound/00-pubchem",
          "output_pieces_compound/02-glycan",
-         "output_pieces_compound/03-lincs",
+         "output_pieces_compound/03-appyter-lincs-chemical-sim",
          "output_pieces_compound/04-drugcentral",
     output:
         json = "upload_json/compound.json",
@@ -183,7 +182,6 @@ rule anatomy_json_expression_widget:
            --widget-name expression_widget \
            --output-dir {output}
     """
-
 
     
 
