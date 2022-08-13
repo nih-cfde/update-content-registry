@@ -71,7 +71,7 @@ def main():
             
            # print(f"{cv_id}") 
             
-            alias_md = f"""## LINCS Chemical Similarity Appyter \n The **LINCS Chemical Similarity Appyter** for [{drugname} (CID:{cv_id})](https://appyters.maayanlab.cloud/LINCS_Chemical_Similarity_Appyter/#?args.drug={drugname}) provides information about small molecules profiled by the LINCS program. Specifically, users can retrieve similar small molecules based on Tanimoto structural similarity and similarity based on L1000 gene expression.\n"""
+            alias_md = f"""## LINCS Chemical Similarity Appyter \n The LINCS Chemical Similarity Appyter for [{drugname} (CID:{cv_id})](https://appyters.maayanlab.cloud/LINCS_Chemical_Similarity_Appyter/#?args.drug={drugname}) provides information about small molecules profiled by the LINCS program. Specifically, users can retrieve similar small molecules based on Tanimoto structural similarity and similarity based on L1000 gene expression.\n"""
                     
             alias_info[cv_id] = alias_md
 

@@ -75,8 +75,9 @@ def main():
             
             #print(f"{drugcentral_id}") 
             
-            alias_md = f"""## DrugCentral Details \n More information is available on the DrugCentral page for  [{drugcentral_id}]({drugcentral_url}).\n![Image](https://drugcentral.org/drug/{drugcentral_id}/image)\n"""
+            alias_md = f"""## DrugCentral Details \n More information is available on the DrugCentral page for  [{drugcentral_id}]({drugcentral_url}).\n![DrugCentral Image](https://drugcentral.org/drug/{drugcentral_id}/image).\n """
             
+           
             
             alias_info[cv_id] = alias_md
 
