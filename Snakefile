@@ -34,6 +34,7 @@ rule gene_json:
         "output_pieces_gene/10-expression",
         "output_pieces_gene/11-reverse-search",
         "output_pieces_gene/20-transcripts",
+        "output_pieces_gene/30-kg",
         "output_pieces_gene/70-ucsc",
     output:
         json = "upload_json/gene.json",
@@ -46,7 +47,8 @@ rule anatomy_json:
     message:
         "build markdown content for anatomy terms."
     input:
-        "output_pieces_anatomy/10-expression"
+        "output_pieces_anatomy/10-expression",
+        "output_pieces_anatomy/30-kg",
     output:
         json = "upload_json/anatomy.json",
     shell: """
@@ -57,9 +59,10 @@ rule compound_json:
     message:
         "build markdown content for compound terms."
     input:
-        "output_pieces_compound/01-compound",
-        "output_pieces_compound/02-compound",
+        #"output_pieces_compound/01-compound",
+        #"output_pieces_compound/02-compound",
         "output_pieces_compound/03-appyter-lincs-chemical-sim",
+        "output_pieces_compound/30-kg",
     output:
         json = "upload_json/compound.json",
     shell: """
@@ -200,6 +203,7 @@ rule anatomy_json_expression_widget:
     """
 
 
+
 rule gene_json_reverse_search_widget:
     message: "build reverse search widgets for genes"
     input:
@@ -212,5 +216,51 @@ rule gene_json_reverse_search_widget:
     shell: """
         {input.script} gene {input.id_list} \
            --widget-name reverse_search_widget \
+
+       
+
+rule gene_json_kg_widget:
+    message: "build kg widgets for genes"
+    input:
+        script = "scripts/build-markdown-pieces-gene-kg.py",
+        id_list = "data/inputs/gene_IDs_for_gene_kg.txt",
+    output:
+        directory("output_pieces_gene/30-kg")
+    params:
+        widget_name = "30-kg"
+    shell: """
+        {input.script} gene {input.id_list} \
+           --widget-name kg_widget \
+           --output-dir {output}
+    """
+
+
+rule anatomy_json_kg_widget:
+    message: "build kg widgets for anatomy terms"
+    input:
+        script = "scripts/build-markdown-pieces-gene-kg.py",
+        id_list = "data/inputs/anatomy_IDs_for_gene_kg.txt",
+    output:
+        directory("output_pieces_anatomy/30-kg")
+    params:
+        widget_name = "30-kg"
+    shell: """
+        {input.script} anatomy {input.id_list} \
+           --widget-name kg_widget \
+           --output-dir {output}
+    """
+
+rule compound_json_kg_widget:
+    message: "build kg widgets for compound terms"
+    input:
+        script = "scripts/build-markdown-pieces-gene-kg.py",
+        id_list = "data/inputs/compound_IDs_for_gene_kg.txt",
+    output:
+        directory("output_pieces_compound/30-kg")
+    params:
+        widget_name = "30-kg"
+    shell: """
+        {input.script} compound {input.id_list} \
+           --widget-name kg_widget \
            --output-dir {output}
     """
