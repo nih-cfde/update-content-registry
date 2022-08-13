@@ -53,18 +53,18 @@ rule anatomy_json:
         ./scripts/aggregate-markdown-pieces.py {input} -o {output.json}
     """
 
-rule compound_json:
-    message:
-        "build markdown content for compound terms."
-    input:
-        "output_pieces_compound/01-compound",
-        "output_pieces_compound/02-compound",
-        "output_pieces_compound/03-appyter-lincs-chemical-sim",
-    output:
-        json = "upload_json/compound.json",
-    shell: """
-        ./scripts/aggregate-markdown-pieces.py {input} -o {output.json}
-    """
+#rule compound_json:
+#    message:
+#        "build markdown content for compound terms."
+#    input:
+#        "output_pieces_compound/01-compound",
+#        "output_pieces_compound/02-compound",
+#        "output_pieces_compound/03-appyter-lincs-chemical-sim",
+#    output:
+#        json = "upload_json/compound.json",
+#    shell: """
+#        ./scripts/aggregate-markdown-pieces.py {input} -o {output.json}
+#    """
 
 
 # nothing here yet.
