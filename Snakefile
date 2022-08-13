@@ -17,9 +17,10 @@ rule upload:
     input:
         "upload_json/gene.json",
         "upload_json/anatomy.json",
+        "upload_json/compound.json",
     shell: """
         export DERIVA_SERVERNAME=app-staging.nih-cfde.org
-        python3 -m cfde_deriva.registry upload-resources upload_json/gene.json upload_json/anatomy.json
+        python3 -m cfde_deriva.registry upload-resources upload_json/gene.json upload_json/anatomy.json upload_json/compound.json 
     """
 
 
@@ -50,6 +51,19 @@ rule anatomy_json:
         ./scripts/aggregate-markdown-pieces.py {input} -o {output.json}
     """
 
+rule compound_json:
+    message:
+        "build markdown content for compound terms."
+    input:
+        "output_pieces_compound/01-compound",
+        "output_pieces_compound/02-compound",
+        "output_pieces_compound/03-appyter-lincs-chemical-sim",
+    output:
+        json = "upload_json/compound.json",
+    shell: """
+        ./scripts/aggregate-markdown-pieces.py {input} -o {output.json}
+    """
+
 
 # nothing here yet.
 rule disease_json:
@@ -59,13 +73,8 @@ rule disease_json:
         touch {output}
     """
 
-# nothing here yet.
-rule compound_json:
-    output:
-        "upload_json/compound.json"
-    shell: """
-        touch {output}
-    """
+
+
 
 
 ###
@@ -170,5 +179,52 @@ rule anatomy_json_expression_widget:
     shell: """
         {input.script} anatomy {input.id_list} \
            --widget-name expression_widget \
+           --output-dir {output}
+    """
+
+
+rule compound_json_links:
+    message: "build links for compound terms"
+    input:
+        script = "scripts/build-compound-links.py",
+        id_list = "data/inputs/compound_IDs.txt",
+    output:
+        directory("output_pieces_compound/01-compound")
+    params:
+        widget_name = "01-compound"
+    shell: """
+        {input.script} compound {input.id_list} \
+           --widget-name {params.widget_name} \
+           --output-dir {output}
+    """    
+    
+rule compound_json_glytoucan_image:
+    message: "Adding GlyTouCan images"
+    input:
+        script = "scripts/build-compound-image.py",
+        id_list = "data/inputs/compound_IDs_GlyTouCan.txt",
+    output:
+        directory("output_pieces_compound/02-compound")
+    params:
+        widget_name = "02-compound"
+    shell: """
+        {input.script} compound {input.id_list} \
+           --widget-name {params.widget_name} \
+           --output-dir {output}
+    """        
+
+
+rule compound_json_appyter_lincs_chemical_sim:
+    message: "build compound/lincs chemical similarity appyter links for compounds"
+    input:
+        script = "scripts/build-appyter-lincs-chemical-sim.py",
+        id_list = "data/inputs/compound_IDs_for_lincs_chemical_sim_appyter.txt",
+    output:
+        directory("output_pieces_compound/03-appyter-lincs-chemical-sim")
+    params:
+        widget_name = "03-appyter-lincs-chemical-sim"
+    shell: """
+        {input.script} compound {input.id_list} \
+           --widget-name {params.widget_name} \
            --output-dir {output}
     """
