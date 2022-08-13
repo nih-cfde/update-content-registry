@@ -32,6 +32,7 @@ rule gene_json:
         "output_pieces_gene/01-appyter",
         "output_pieces_gene/02-appyter-lincs-geo-reverse",
         "output_pieces_gene/10-expression",
+        "output_pieces_gene/11-reverse-search",
         "output_pieces_gene/20-transcripts",
         "output_pieces_gene/70-ucsc",
     output:
@@ -199,48 +200,17 @@ rule anatomy_json_expression_widget:
     """
 
 
-rule compound_json_links:
-    message: "build links for compound terms"
+rule gene_json_reverse_search_widget:
+    message: "build reverse search widgets for genes"
     input:
-        script = "scripts/build-compound-links.py",
-        id_list = "data/inputs/compound_IDs.txt",
+        script = "scripts/build-markdown-pieces-lincs-reverse-search.py",
+        id_list = "data/inputs/gene_IDs_for_lincs_reverse_search.txt",
     output:
-        directory("output_pieces_compound/01-compound")
+        directory("output_pieces_gene/11-reverse-search")
     params:
-        widget_name = "01-compound"
+        widget_name = "11-reverse-search"
     shell: """
-        {input.script} compound {input.id_list} \
-           --widget-name {params.widget_name} \
-           --output-dir {output}
-    """    
-    
-rule compound_json_glytoucan_image:
-    message: "Adding GlyTouCan images"
-    input:
-        script = "scripts/build-compound-image.py",
-        id_list = "data/inputs/compound_IDs_GlyTouCan.txt",
-    output:
-        directory("output_pieces_compound/02-compound")
-    params:
-        widget_name = "02-compound"
-    shell: """
-        {input.script} compound {input.id_list} \
-           --widget-name {params.widget_name} \
-           --output-dir {output}
-    """        
-
-
-rule compound_json_appyter_lincs_chemical_sim:
-    message: "build compound/lincs chemical similarity appyter links for compounds"
-    input:
-        script = "scripts/build-appyter-lincs-chemical-sim.py",
-        id_list = "data/inputs/compound_IDs_for_lincs_chemical_sim_appyter.txt",
-    output:
-        directory("output_pieces_compound/03-appyter-lincs-chemical-sim")
-    params:
-        widget_name = "03-appyter-lincs-chemical-sim"
-    shell: """
-        {input.script} compound {input.id_list} \
-           --widget-name {params.widget_name} \
+        {input.script} gene {input.id_list} \
+           --widget-name reverse_search_widget \
            --output-dir {output}
     """
