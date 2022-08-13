@@ -240,13 +240,12 @@ rule compound_json_lincs:
     input:
         script = "scripts/build-appyter-lincs-chemical-sim.py",
         id_list = "data/inputs/compound_IDs_for_lincs_chemical_sim_appyter.txt",
-        alias_info = "data/validate/compound.tsv",
     output:
         directory("output_pieces_compound/03-lincs")
     params:
         widget_name = "03-lincs",
     shell: """
-        {input.script} compound {input.id_list} {input.alias_info} \
+        {input.script} compound {input.id_list} \
             --widget-name {params.widget_name}  \
             --output-dir {output}
     """    
