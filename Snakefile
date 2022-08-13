@@ -30,6 +30,7 @@ rule gene_json:
     input:
         "output_pieces_gene/00-alias",
         "output_pieces_gene/01-appyter",
+        "output_pieces_gene/02-appyter-lincs-geo-reverse",
         "output_pieces_gene/10-expression",
         "output_pieces_gene/20-transcripts",
         "output_pieces_gene/70-ucsc",
@@ -110,6 +111,21 @@ rule gene_json_appyter_link:
         directory("output_pieces_gene/01-appyter")
     params:
         widget_name = "01-appyter"
+    shell: """
+        {input.script} gene {input.id_list} \
+           --widget-name {params.widget_name} \
+           --output-dir {output}
+    """
+
+rule gene_json_appyter_lincs_geo_reverse_link:
+    message: "build gene/lincs geo reverse appyter links for genes"
+    input:
+        script = "scripts/build-appyter-gene-links-lincs-geo-reverse.py",
+        id_list = "data/inputs/gene_IDs_for_lincs_geo_reverse_appyter.txt",
+    output:
+        directory("output_pieces_gene/02-appyter-lincs-geo-reverse")
+    params:
+        widget_name = "02-appyter-lincs-geo-reverse"
     shell: """
         {input.script} gene {input.id_list} \
            --widget-name {params.widget_name} \
