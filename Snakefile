@@ -2,7 +2,9 @@
 ## Workflow logic to build and then upload content registry information.
 ##
 
-TERM_TYPES = ['anatomy', 'compound', 'disease', 'gene']
+## 'compound'
+
+TERM_TYPES = ['anatomy', 'disease', 'gene']
 
 rule all:
     message:
