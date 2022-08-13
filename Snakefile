@@ -217,7 +217,7 @@ rule gene_json_reverse_search_widget:
         {input.script} gene {input.id_list} \
            --widget-name reverse_search_widget \
 	   --output-dir {output}
-
+    """
        
 
 rule gene_json_kg_widget:
