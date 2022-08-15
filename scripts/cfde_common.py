@@ -11,6 +11,7 @@ REF_FILES = {
     'compound': 'data/validate/compound.tsv',
     'disease': 'data/validate/disease.tsv',
     'gene': 'data/validate/ensembl_genes.tsv',
+    'protein': 'data/validate/protein.tsv',
     }
 
 

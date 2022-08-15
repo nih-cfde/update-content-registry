@@ -77,6 +77,19 @@ rule disease_json:
     """
 
 
+rule protein_json:
+    message:
+        "build markdown content for protein terms."
+    input:
+        "output_pieces_protein/00-refseq",
+        "output_pieces_protein/01-disease",
+    output:
+        json = "upload_json/protein.json",
+    shell: """
+        ./scripts/aggregate-markdown-pieces.py {input} -o {output.json}
+    """
+
+
 
 
 
@@ -245,4 +258,37 @@ rule compound_json_appyter_lincs_chemical_sim:
         {input.script} compound {input.id_list} \
            --widget-name {params.widget_name} \
            --output-dir {output}
+    """
+
+
+rule protein_json_refseq:
+    message: "build protein markdown for refseq"
+    input:
+        script = "scripts/build-protein-refseq.py",
+        id_list = "data/inputs/protein_IDs.txt",
+        alias_info = "data/validate/protein.tsv",
+    output:
+        directory("output_pieces_protein/00-refseq")
+    params:
+        widget_name = "00-refseq",
+    shell: """
+        {input.script} protein {input.id_list} {input.alias_info} \
+            --widget-name {params.widget_name} \
+            --output-dir {output}
+    """
+
+rule protein_json_disease:
+    message: "build protein markdown for diseases"
+    input:
+        script = "scripts/build-protein-disease.py",
+        id_list = "data/inputs/proteins_IDs_withdisease.txt",
+        alias_info = "data/inputs/proteins2disease2genes.txt",
+    output:
+        directory("output_pieces_protein/01-disease")
+    params:
+        widget_name = "01-disease",
+    shell: """
+        {input.script} protein {input.id_list} {input.alias_info} \
+            --widget-name {params.widget_name} \
+            --output-dir {output}
     """
