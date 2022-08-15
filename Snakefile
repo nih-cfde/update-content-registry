@@ -15,12 +15,12 @@ rule upload:
     message:
         "upload new content to the registry."
     input:
-        "upload_json/gene.json",
-        "upload_json/anatomy.json",
+        #"upload_json/gene.json",
+        #"upload_json/anatomy.json",
         "upload_json/compound.json",
     shell: """
         export DERIVA_SERVERNAME=app-staging.nih-cfde.org
-        python3 -m cfde_deriva.registry upload-resources upload_json/gene.json upload_json/anatomy.json upload_json/compound.json 
+        python3 -m cfde_deriva.registry upload-resources upload_json/compound.json 
     """
 
 
@@ -222,7 +222,7 @@ rule compound_json_glytoucan:
     message: "Building GlyTouCan links"
     input:
         script = "scripts/build-compound-glycan.py",
-        id_list = "data/inputs/compound_IDs_GlyTouCan.txt",
+        id_list = "data/inputs/compound_IDs_GlyTouCan_test.txt",
         alias_info = "data/inputs/compounds_glygen2pubchem.tsv",
     output:
         directory("output_pieces_compound/02-glycan")

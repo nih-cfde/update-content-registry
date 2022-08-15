@@ -68,15 +68,29 @@ def main():
             cv_id = row['CV_ID']
             GLYTOUCAN_ID = row['GLYTOUCAN_ID']
             PUBCHEM_CID = row['PUBCHEM_CID']
+            
             MASS = row['MASS']
+            
+            if ( MASS == 'NA' ):
+            	MASS_str = f""
+            else:
+            	MASS_str = f"**Monoisotopic Mass**: {MASS}\n"
+            
+            
             COMPOSITION = row['COMPOSITION']
+            
+            if ( COMPOSITION == 'NA' ):
+            	COMPOSITION_str = f""
+            else:
+            	COMPOSITION_str = f"**Composition**: {COMPOSITION}\n"
+            
             PUBCHEM_CID = row['PUBCHEM_CID']
             IMAGE_URL = row['IMAGE_URL']
             LINK_OUT_URL = row['LINK_OUT_URL']
             
             #print(f"{glytoucan_ac}") 
             
-            alias_md = f"""## Glycan Details\n![Image]({IMAGE_URL})\n**GlyTouCan Accession**: [{GLYTOUCAN_ID}]({LINK_OUT_URL})\n**PubChem CID**: {PUBCHEM_CID}\n**Monoisotopic Mass**: {MASS}\n**Composition**: {COMPOSITION} \n\nMore information for glycan [{GLYTOUCAN_ID}]({LINK_OUT_URL}) is available on GlyGen.\n"""
+            alias_md = f"""## Glycan Details\n![Image]({IMAGE_URL})\n**GlyTouCan Accession**: [{GLYTOUCAN_ID}]({LINK_OUT_URL})\n**PubChem CID**: {PUBCHEM_CID}\n{MASS_str}{COMPOSITION_str}\nMore information for glycan [{GLYTOUCAN_ID}]({LINK_OUT_URL}) is available on GlyGen.\n"""
 
            
             alias_info[cv_id] = alias_md
