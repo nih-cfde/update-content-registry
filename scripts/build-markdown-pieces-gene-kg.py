@@ -21,10 +21,8 @@ TEMPLATES = set([('gene', 'kg_widget'),
 def kg_widget(cv_id, display, **kwargs):
     ''' The knowledge graph, kwargs are mapped to query params on the site.
     '''
-    return f"""
-
-The **CFDE Gene Centric Knowledge Graph** for [{display}]({API_ENDPOINT}?{urllib.parse.urlencode(kwargs)}) provides an interface for exploring cross-dcc knowledge about genes and their associations.
-
+    return f"""\nThe **CFDE Gene Centric Knowledge Graph** for [{display}]({API_ENDPOINT}?{urllib.parse.urlencode(kwargs)}) provides an interface for exploring cross-dcc knowledge about genes and their associations.
+\n
 """
 
 INPUT_GENE_ID_LIST = os.path.join('data', 'inputs', 'gene_IDs_for_gene_kg.txt')

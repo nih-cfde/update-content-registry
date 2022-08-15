@@ -15,12 +15,14 @@ rule upload:
     message:
         "upload new content to the registry."
     input:
-        "upload_json/gene.json",
+        #"upload_json/gene.json",
         "upload_json/anatomy.json",
-        "upload_json/compound.json",
+        #"upload_json/compound.json",
     shell: """
-        export DERIVA_SERVERNAME=app-staging.nih-cfde.org
-        python3 -m cfde_deriva.registry upload-resources upload_json/gene.json upload_json/anatomy.json upload_json/compound.json 
+        export DERIVA_SERVERNAME=app-dev.nih-cfde.org
+        python3 -m cfde_deriva.registry upload-resources upload_json/anatomy.json
+        #upload_json/gene.json upload_json/compound.json
+        python3 -m cfde_deriva.release refresh-resources 3b297b75-d7de-4f4b-876c-0233f68580ed
     """
 
 
@@ -47,8 +49,8 @@ rule anatomy_json:
     message:
         "build markdown content for anatomy terms."
     input:
+        "output_pieces_anatomy/01-kg",
         "output_pieces_anatomy/10-expression",
-        "output_pieces_anatomy/30-kg",
     output:
         json = "upload_json/anatomy.json",
     shell: """
@@ -94,7 +96,7 @@ rule gene_json_alias_widget:
     message: "build alias widgets for genes"
     input:
         script = "scripts/build-markdown-pieces-gene-translate.py",
-        id_list = "data/inputs/STAGING_PORTAL__available_genes__2022-07-13.txt",
+        id_list = "data/inputs/gene_IDs_for_expression_widget.txt",
         alias_info = "data/inputs/Homo_sapiens.gene_info_20220304.txt_conv_wNCBI_AC.txt",
     output:
         directory("output_pieces_gene/00-alias")
@@ -110,7 +112,7 @@ rule gene_json_appyter_link:
     message: "build gene/appyter links for genes"
     input:
         script = "scripts/build-appyter-gene-links.py",
-        id_list = "data/inputs/STAGING_PORTAL__available_genes__2022-07-13.txt",
+        id_list = "data/inputs/gene_IDs_for_expression_widget.txt",
     output:
         directory("output_pieces_gene/01-appyter")
     params:
@@ -242,9 +244,9 @@ rule anatomy_json_kg_widget:
         script = "scripts/build-markdown-pieces-gene-kg.py",
         id_list = "data/inputs/anatomy_IDs_for_gene_kg.txt",
     output:
-        directory("output_pieces_anatomy/30-kg")
+        directory("output_pieces_anatomy/01-kg")
     params:
-        widget_name = "30-kg"
+        widget_name = "01-kg"
     shell: """
         {input.script} anatomy {input.id_list} \
            --widget-name kg_widget \
