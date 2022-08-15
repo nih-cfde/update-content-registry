@@ -15,13 +15,14 @@ rule upload:
     message:
         "upload new content to the registry."
     input:
-        "upload_json/gene.json",
-        "upload_json/anatomy.json",
-        "upload_json/compound.json",
+        #"upload_json/gene.json",
+        #"upload_json/anatomy.json",
+        #"upload_json/compound.json",
         "upload_json/protein.json",
     shell: """
         export DERIVA_SERVERNAME=app-staging.nih-cfde.org
-        python3 -m cfde_deriva.registry upload-resources upload_json/gene.json upload_json/anatomy.json upload_json/compound.json 
+        python3 -m cfde_deriva.registry upload-resources upload_json/protein.json 
+        #upload_json/anatomy.json upload_json/compound.json 
     """
 
 
@@ -91,7 +92,7 @@ rule gene_json_alias_widget:
     message: "build alias widgets for genes"
     input:
         script = "scripts/build-markdown-pieces-gene-translate.py",
-        id_list = "data/inputs/STAGING_PORTAL__available_genes__2022-07-13.txt",
+        id_list = "data/inputs/gene_IDs_for_transcripts_widget.txt",
         alias_info = "data/inputs/Homo_sapiens.gene_info_20220304.txt_conv_wNCBI_AC.txt",
     output:
         directory("output_pieces_gene/00-alias")
@@ -107,7 +108,7 @@ rule gene_json_appyter_link:
     message: "build gene/appyter links for genes"
     input:
         script = "scripts/build-appyter-gene-links.py",
-        id_list = "data/inputs/STAGING_PORTAL__available_genes__2022-07-13.txt",
+        id_list = "data/inputs/gene_IDs_for_transcripts_widget.txt",
     output:
         directory("output_pieces_gene/01-appyter")
     params:
@@ -122,7 +123,7 @@ rule gene_json_appyter_lincs_geo_reverse_link:
     message: "build gene/lincs geo reverse appyter links for genes"
     input:
         script = "scripts/build-appyter-gene-links-lincs-geo-reverse.py",
-        id_list = "data/inputs/gene_IDs_for_lincs_geo_reverse_appyter.txt",
+        id_list = "data/inputs/gene_IDs_for_transcripts_widget.txt",
     output:
         directory("output_pieces_gene/02-appyter-lincs-geo-reverse")
     params:
@@ -204,7 +205,7 @@ rule compound_json_links:
     message: "build links for compound terms"
     input:
         script = "scripts/build-compound-links.py",
-        id_list = "data/inputs/compound_IDs.txt",
+        id_list = "data/inputs/compound_IDs_test.txt",
     output:
         directory("output_pieces_compound/01-compound")
     params:
@@ -219,7 +220,7 @@ rule compound_json_glytoucan_image:
     message: "Adding GlyTouCan images"
     input:
         script = "scripts/build-compound-image.py",
-        id_list = "data/inputs/compound_IDs_GlyTouCan.txt",
+        id_list = "data/inputs/compound_IDs_test.txt",
     output:
         directory("output_pieces_compound/02-compound")
     params:
@@ -235,7 +236,7 @@ rule compound_json_appyter_lincs_chemical_sim:
     message: "build compound/lincs chemical similarity appyter links for compounds"
     input:
         script = "scripts/build-appyter-lincs-chemical-sim.py",
-        id_list = "data/inputs/compound_IDs_for_lincs_chemical_sim_appyter.txt",
+        id_list = "data/inputs/compound_IDs_test.txt",
     output:
         directory("output_pieces_compound/03-appyter-lincs-chemical-sim")
     params:
