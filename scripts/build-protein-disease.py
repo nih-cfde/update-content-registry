@@ -67,8 +67,8 @@ def main():
         
             cv_id = row['UNIPROT_AC']
             name = row['name']
+            
 
-    
                  	
             DO_IDs = row['DO_IDs']
             if not isnull(DO_IDs):
@@ -79,8 +79,11 @@ def main():
             DO_IDs_string = ""
             if DO_IDs:
                 x = []
-                for DO_ID in DO_IDs:
-                        x.append(f"[{DO_ID}](https://disease-ontology.org/?id={DO_ID})")
+                for DO_ID in DO_IDs: 
+                
+                	DO_ID_URL = DO_ID.replace(':', '%3A') 
+                
+                	x.append(f"[{DO_ID}](https://app.nih-cfde.org/chaise/record/#1/CFDE:disease/id={DO_ID_URL})")
                 
                 DO_IDs_string = ", ".join(x)
         

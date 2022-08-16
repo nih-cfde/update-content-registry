@@ -13,7 +13,7 @@ df <- read_csv("~/Downloads/Protein.csv") %>%
   distinct() %>%
   separate(name, into = c("name", "species"), sep = "_", remove = TRUE) %>%
   select(id, name, description, synonyms, ncbi_taxonomy.name) 
-    
+
 head(df)
 
 ## get the glygen protein data from github
@@ -41,7 +41,16 @@ write.table(proteinids, "../data/inputs/protein_IDs.txt",
 write.table(head(proteinids), "../data/inputs/proteins_IDs_test.txt", 
             row.names = F, col.names = F, quote = F, sep = "\t")
 
-# make table with proteins, genes, and diesease ids
+
+# download list of all diseases in portal
+
+df10 <- read_csv("~/Downloads/Disease.csv")  %>%
+  select(id) %>%
+  rename(DO_ID = id) %>%
+  arrange(DO_ID)
+head(df10)  
+
+# make table with proteins, genes, and disease ids
 
 df4 <- df2 %>%
   as_tibble() %>%
@@ -54,6 +63,7 @@ df4 <- df2 %>%
   unnest(disease) %>%
   group_by(id, name, ENSEMBL_ID, GENE_NAME, DO_ID) %>%
   summarise(DO_ID = toString(DO_ID)) %>%
+  inner_join(., df10, by = "DO_ID") %>%
   mutate(DO_IDs = paste0(DO_ID, collapse = "|"))  %>%
   select(-DO_ID) %>%
   distinct() %>%
@@ -75,6 +85,7 @@ df9 <- read.table("../data/inputs/STAGING_PORTAL__available_genes__2022-07-13.tx
   rename(ENSEMBL_ID = V1)
 head(df9)
 
+
 geneswithdisease <- df4 %>%
   filter(grepl("ENSG", ENSEMBL_ID)) %>%
   inner_join(., df8, by = "ENSEMBL_ID") %>%
@@ -83,6 +94,10 @@ geneswithdisease <- df4 %>%
 head(geneswithdisease)
 
 write.table(proteinswithdisease, "../data/inputs/proteins_IDs_withdisease.txt", 
+            row.names = F, quote = F, sep = "\t", col.names = F)
+
+
+write.table(head(proteinswithdisease), "../data/inputs/proteins_IDs_withdisease_test.txt", 
             row.names = F, quote = F, sep = "\t", col.names = F)
 
 write.table(geneswithdisease, "../data/inputs/gene_IDs_withdisease.txt", 
@@ -108,6 +123,7 @@ df5 <- df2 %>%
   summarise(ENSEMBL_ID = toString(ENSEMBL_ID)) %>%
   mutate(ENSEMBL_IDs = gsub(", ", "|", ENSEMBL_ID)) %>%
   select(DO_ID, ENSEMBL_IDs) %>%
+  inner_join(., df10, by = "DO_ID") %>%
   arrange(DO_ID)
 head(df5)
 
@@ -131,11 +147,9 @@ df6 <- df2 %>%
   mutate(id = gsub(", ", "|", id)) %>%
   select(DO_ID, id) %>%
   arrange(DO_ID) %>%
-  rename(UNIPROT_ACs = id)
+  rename(UNIPROT_ACs = id) %>%
+  inner_join(., df10, by = "DO_ID")
 head(df6)
-
-
-
 
 df7 <- df2 %>%
   as_tibble() %>%
@@ -150,14 +164,13 @@ df7 <- df2 %>%
   select(ENSEMBL_ID, DO_ID) %>%
   filter(!is.na(ENSEMBL_ID),
          grepl("DOID:", DO_ID)) %>%
+  inner_join(., df10, by = "DO_ID") %>%
   group_by(ENSEMBL_ID) %>%
   summarise(DO_ID = toString(DO_ID)) %>%
   mutate(DO_ID = gsub(", ", "|", DO_ID)) %>%
   select(ENSEMBL_ID, DO_ID) %>%
   arrange(ENSEMBL_ID) 
 head(df7)
-
-
 
 
 write.table(df5, "../data/inputs/disease2gene.txt", 

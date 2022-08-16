@@ -2,7 +2,9 @@
 ## Workflow logic to build and then upload content registry information.
 ##
 
-TERM_TYPES = ['anatomy', 'compound', 'disease', 'gene', 'protein']
+## 'anatomy', 'compound', 'disease', 'gene', 'protein'
+
+TERM_TYPES = ['protein']
 
 rule all:
     message:
@@ -15,14 +17,14 @@ rule upload:
     message:
         "upload new content to the registry."
     input:
-        "upload_json/gene.json",
+        #"upload_json/gene.json",
         #"upload_json/anatomy.json",
         #"upload_json/compound.json",
-        #"upload_json/protein.json",
+        "upload_json/protein.json",
     shell: """
         export DERIVA_SERVERNAME=app-staging.nih-cfde.org
-        python3 -m cfde_deriva.registry upload-resources upload_json/gene.json 
-        # upload_json/protein.json 
+        python3 -m cfde_deriva.registry upload-resources upload_json/protein.json 
+        #upload_json/gene.json 
         #upload_json/anatomy.json upload_json/compound.json 
     """
 
