@@ -4,7 +4,7 @@
 
 ## 'anatomy', 'compound', 'disease', 'gene', 'protein'
 
-TERM_TYPES = ['protein']
+TERM_TYPES = ['disease']
 
 rule all:
     message:
@@ -20,10 +20,12 @@ rule upload:
         #"upload_json/gene.json",
         #"upload_json/anatomy.json",
         #"upload_json/compound.json",
-        "upload_json/protein.json",
+        #"upload_json/protein.json",
+        "upload_json/disease.json",
     shell: """
         export DERIVA_SERVERNAME=app-staging.nih-cfde.org
-        python3 -m cfde_deriva.registry upload-resources upload_json/protein.json 
+        python3 -m cfde_deriva.registry upload-resources upload_json/disease.json
+        #upload_json/protein.json 
         #upload_json/gene.json 
         #upload_json/anatomy.json upload_json/compound.json 
     """
@@ -72,12 +74,16 @@ rule compound_json:
     """
 
 
-# nothing here yet.
 rule disease_json:
+    message:
+        "build markdown content for disease terms",
+    input:
+        "output_pieces_disease/00-links",
+        "output_pieces_disease/01-genes",
     output:
-        "upload_json/disease.json"
+        json = "upload_json/disease.json",
     shell: """
-        touch {output}
+        ./scripts/aggregate-markdown-pieces.py {input} -o {output.json}
     """
 
 
@@ -125,7 +131,7 @@ rule gene_json_appyter_link:
     message: "build gene/appyter links for genes"
     input:
         script = "scripts/build-appyter-gene-links.py",
-        id_list = "data/inputs/STAGING_PORTAL__available_genes__2022-07-13.txt",
+        id_list = "data/inputs/gene_IDs_for_expression_widget.txt",
     output:
         directory("output_pieces_gene/01-appyter")
     params:
@@ -140,7 +146,7 @@ rule gene_json_appyter_lincs_geo_reverse_link:
     message: "build gene/lincs geo reverse appyter links for genes"
     input:
         script = "scripts/build-appyter-gene-links-lincs-geo-reverse.py",
-        id_list = "data/inputs/STAGING_PORTAL__available_genes__2022-07-13.txt",
+        id_list = "data/inputs/gene_IDs_for_expression_widget.txt",
     output:
         directory("output_pieces_gene/02-appyter-lincs-geo-reverse")
     params:
@@ -314,3 +320,35 @@ rule gene_json_disease:
             --widget-name {params.widget_name} \
             --output-dir {output}
     """
+
+rule disease_json_links:
+    message: "build links for disease terms"
+    input:
+        script = "scripts/build-disease-links.py",
+        id_list = "data/inputs/disease_IDs.txt",
+    output:
+        directory("output_pieces_disease/00-links")
+    params:
+        widget_name = "00-links"
+    shell: """
+        {input.script} disease {input.id_list} \
+           --widget-name {params.widget_name} \
+           --output-dir {output}
+    """ 
+  
+    
+rule disease_json_genes:
+    message: "build links to genes associated with diseases"
+    input:
+        script = "scripts/build-disease-genes.py",
+        id_list = "data/inputs/disease_IDs.txt",
+        alias_info = "data/inputs/disease2gene.txt",
+    output:
+        directory("output_pieces_disease/01-genes")
+    params:
+        widget_name = "01-genes",
+    shell: """
+        {input.script} disease {input.id_list} {input.alias_info} \
+            --widget-name {params.widget_name} \
+            --output-dir {output}
+    """    
