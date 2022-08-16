@@ -15,13 +15,14 @@ rule upload:
     message:
         "upload new content to the registry."
     input:
-        #"upload_json/gene.json",
+        "upload_json/gene.json",
         #"upload_json/anatomy.json",
         #"upload_json/compound.json",
-        "upload_json/protein.json",
+        #"upload_json/protein.json",
     shell: """
         export DERIVA_SERVERNAME=app-staging.nih-cfde.org
-        python3 -m cfde_deriva.registry upload-resources upload_json/protein.json 
+        python3 -m cfde_deriva.registry upload-resources upload_json/gene.json 
+        # upload_json/protein.json 
         #upload_json/anatomy.json upload_json/compound.json 
     """
 
@@ -33,6 +34,7 @@ rule gene_json:
         "output_pieces_gene/00-alias",
         "output_pieces_gene/01-appyter",
         "output_pieces_gene/02-appyter-lincs-geo-reverse",
+        "output_pieces_gene/03-disease",
         "output_pieces_gene/10-expression",
         "output_pieces_gene/20-transcripts",
         "output_pieces_gene/70-ucsc",
@@ -105,7 +107,7 @@ rule gene_json_alias_widget:
     message: "build alias widgets for genes"
     input:
         script = "scripts/build-markdown-pieces-gene-translate.py",
-        id_list = "data/inputs/gene_IDs_for_transcripts_widget.txt",
+        id_list = "data/inputs/STAGING_PORTAL__available_genes__2022-07-13.txt",
         alias_info = "data/inputs/Homo_sapiens.gene_info_20220304.txt_conv_wNCBI_AC.txt",
     output:
         directory("output_pieces_gene/00-alias")
@@ -121,7 +123,7 @@ rule gene_json_appyter_link:
     message: "build gene/appyter links for genes"
     input:
         script = "scripts/build-appyter-gene-links.py",
-        id_list = "data/inputs/gene_IDs_for_transcripts_widget.txt",
+        id_list = "data/inputs/STAGING_PORTAL__available_genes__2022-07-13.txt",
     output:
         directory("output_pieces_gene/01-appyter")
     params:
@@ -136,7 +138,7 @@ rule gene_json_appyter_lincs_geo_reverse_link:
     message: "build gene/lincs geo reverse appyter links for genes"
     input:
         script = "scripts/build-appyter-gene-links-lincs-geo-reverse.py",
-        id_list = "data/inputs/gene_IDs_for_transcripts_widget.txt",
+        id_list = "data/inputs/STAGING_PORTAL__available_genes__2022-07-13.txt",
     output:
         directory("output_pieces_gene/02-appyter-lincs-geo-reverse")
     params:
@@ -289,6 +291,24 @@ rule protein_json_disease:
         widget_name = "01-disease",
     shell: """
         {input.script} protein {input.id_list} {input.alias_info} \
+            --widget-name {params.widget_name} \
+            --output-dir {output}
+    """
+
+
+
+rule gene_json_disease:
+    message: "build gene markdown for diseases"
+    input:
+        script = "scripts/build-gene-disease.py",
+        id_list = "data/inputs/gene_IDs_withdisease.txt",
+        alias_info = "data/inputs/gene2disease.txt",
+    output:
+        directory("output_pieces_gene/03-disease")
+    params:
+        widget_name = "03-disease",
+    shell: """
+        {input.script} gene {input.id_list} {input.alias_info} \
             --widget-name {params.widget_name} \
             --output-dir {output}
     """
