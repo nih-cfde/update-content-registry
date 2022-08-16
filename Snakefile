@@ -2,7 +2,9 @@
 ## Workflow logic to build and then upload content registry information.
 ##
 
-TERM_TYPES = ['anatomy', 'compound', 'disease', 'gene']
+## 'anatomy', 'compound', 'disease',
+
+TERM_TYPES = [ 'gene']
 
 rule all:
     message:
@@ -16,10 +18,13 @@ rule upload:
         "upload new content to the registry."
     input:
         "upload_json/gene.json",
-        "upload_json/anatomy.json",
+       # "upload_json/anatomy.json",
     shell: """
         export DERIVA_SERVERNAME=app-dev.nih-cfde.org
-        python3 -m cfde_deriva.registry upload-resources upload_json/gene.json upload_json/anatomy.json
+        python3 -m cfde_deriva.registry upload-resources upload_json/gene.json 
+        #upload_json/anatomy.json
+        #python3 -m cfde_deriva.release refresh-resources 3b297b75-d7de-4f4b-876c-0233f68580ed
+
 
     """
 
@@ -33,7 +38,6 @@ rule gene_json:
         "output_pieces_gene/02-MetGene",
         "output_pieces_gene/10-expression",
         "output_pieces_gene/20-transcripts",
-
         "output_pieces_gene/70-ucsc",
     output:
         json = "upload_json/gene.json",
@@ -163,7 +167,7 @@ rule gene_json_lincs_widget:
     message: "build MetGene widgets for genes"
     input:
         script = "scripts/build-markdown-pieces-MetGene.py",
-        id_list = "data/inputs/gene_IDs_for_transcripts_widget.txt",
+        id_list = "data/inputs/gene_IDs_for_MetGene.txt",
     output:
         directory("output_pieces_gene/02-MetGene")
     params:
