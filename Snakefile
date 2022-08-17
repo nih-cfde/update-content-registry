@@ -28,6 +28,7 @@ rule upload:
         #upload_json/protein.json 
         #upload_json/gene.json 
         #upload_json/anatomy.json upload_json/compound.json 
+        python3 -m cfde_deriva.registry upload-resources upload_json/disease.json
     """
 
 
@@ -80,6 +81,7 @@ rule disease_json:
     input:
         "output_pieces_disease/00-links",
         "output_pieces_disease/01-genes",
+        "output_pieces_disease/02-proteins",
     output:
         json = "upload_json/disease.json",
     shell: """
@@ -352,3 +354,19 @@ rule disease_json_genes:
             --widget-name {params.widget_name} \
             --output-dir {output}
     """    
+    
+rule disease_json_protein:
+    message: "build links to proteins associated with diseases"
+    input:
+        script = "scripts/build-disease-proteins.py",
+        id_list = "data/inputs/disease_IDs.txt",
+        alias_info = "data/inputs/disease2protein.txt",
+    output:
+        directory("output_pieces_disease/02-proteins")
+    params:
+        widget_name = "02-proteins",
+    shell: """
+        {input.script} disease {input.id_list} {input.alias_info} \
+            --widget-name {params.widget_name} \
+            --output-dir {output}
+    """        
