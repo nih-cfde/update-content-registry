@@ -290,10 +290,6 @@ rule compound_json_glytoucan:
     """         
 
 
-rule compound_json_lincs:
-    message: "Building LINCS links"
-
-
 
 rule gene_json_reverse_search_widget:
     message: "build reverse search widgets for genes"
