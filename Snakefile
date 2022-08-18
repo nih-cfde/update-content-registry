@@ -2,7 +2,9 @@
 ## Workflow logic to build and then upload content registry information.
 ##
 
-TERM_TYPES = ['anatomy', 'compound', 'disease', 'gene']
+## 'compound'
+
+TERM_TYPES = ['anatomy', 'disease', 'gene']
 
 rule all:
     message:
@@ -19,10 +21,9 @@ rule upload:
         "upload_json/anatomy.json",
         #"upload_json/compound.json",
     shell: """
-        export DERIVA_SERVERNAME=app-dev.nih-cfde.org
-        python3 -m cfde_deriva.registry upload-resources upload_json/anatomy.json
-        #upload_json/gene.json upload_json/compound.json
-        python3 -m cfde_deriva.release refresh-resources 3b297b75-d7de-4f4b-876c-0233f68580ed
+        export DERIVA_SERVERNAME=app-staging.nih-cfde.org
+        python3 -m cfde_deriva.registry upload-resources upload_json/gene.json upload_json/anatomy.json 
+	      #upload_json/compound.json 
     """
 
 
@@ -56,6 +57,7 @@ rule anatomy_json:
     shell: """
         ./scripts/aggregate-markdown-pieces.py {input} -o {output.json}
     """
+
 
 rule compound_json:
     message:
@@ -205,7 +207,6 @@ rule anatomy_json_expression_widget:
     """
 
 
-
 rule gene_json_reverse_search_widget:
     message: "build reverse search widgets for genes"
     input:
@@ -218,7 +219,7 @@ rule gene_json_reverse_search_widget:
     shell: """
         {input.script} gene {input.id_list} \
            --widget-name reverse_search_widget \
-	   --output-dir {output}
+           --output-dir {output}
     """
        
 
