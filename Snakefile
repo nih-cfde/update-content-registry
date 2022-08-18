@@ -348,7 +348,6 @@ rule compound_json_kg_widget:
         script = "scripts/build-markdown-pieces-gene-kg.py",
         id_list = "data/inputs/compound_IDs_for_gene_kg.txt",
     output:
-
         directory("output_pieces_compound/30-kg")
     params:
         widget_name = "30-kg"
