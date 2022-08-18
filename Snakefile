@@ -2,7 +2,6 @@
 ## Workflow logic to build and then upload content registry information.
 ##
 
-## 'compound'
 
 TERM_TYPES = ['anatomy', 'disease', 'gene']
 
@@ -17,13 +16,13 @@ rule upload:
     message:
         "upload new content to the registry."
     input:
-        #"upload_json/gene.json",
-        "upload_json/anatomy.json",
-        #"upload_json/compound.json",
+        "upload_json/gene.json",
+       # "upload_json/anatomy.json",
     shell: """
-        export DERIVA_SERVERNAME=app-staging.nih-cfde.org
-        python3 -m cfde_deriva.registry upload-resources upload_json/gene.json upload_json/anatomy.json 
-	      #upload_json/compound.json 
+        export DERIVA_SERVERNAME=app-dev.nih-cfde.org
+        python3 -m cfde_deriva.registry upload-resources upload_json/gene.json 
+        #upload_json/anatomy.json
+        #python3 -m cfde_deriva.release refresh-resources 3b297b75-d7de-4f4b-876c-0233f68580ed
     """
 
 
@@ -33,6 +32,7 @@ rule gene_json:
     input:
         "output_pieces_gene/00-alias",
         "output_pieces_gene/01-appyter",
+        "output_pieces_gene/02-MetGene",
         "output_pieces_gene/02-appyter-lincs-geo-reverse",
         "output_pieces_gene/10-expression",
         "output_pieces_gene/11-reverse-search",
@@ -144,7 +144,7 @@ rule gene_json_ucsc_genome_browser_widget:
     message: "build UCSC genome browser iframe-include for genes"
     input:
         script = "scripts/build-markdown-pieces-ucsc-genome-browser-widget.pl",
-        id_list = "data/inputs/gene_IDs_for_UCSC_genome_browser_widget.txt",
+        id_list = "data/inputs/gene_IDs_for_expression_widget.txt",
         coord_info = "data/inputs/homo_sapiens.coords.tsv",
     output:
         directory("output_pieces_gene/70-ucsc")
@@ -178,7 +178,7 @@ rule gene_json_transcript_widget:
     message: "build transcript widgets for genes"
     input:
         script = "scripts/build-markdown-pieces.py",
-        id_list = "data/inputs/gene_IDs_for_transcripts_widget.txt",
+        id_list = "data/inputs/gene_IDs_for_expression_widget.txt",
     output:
         directory("output_pieces_gene/20-transcripts")
     params:
@@ -189,7 +189,20 @@ rule gene_json_transcript_widget:
            --output-dir {output}
     """
 
-
+rule gene_json_lincs_widget:
+    message: "build MetGene widgets for genes"
+    input:
+        script = "scripts/build-markdown-pieces-MetGene.py",
+        id_list = "data/inputs/gene_IDs_for_MetGene.txt",
+    output:
+        directory("output_pieces_gene/02-MetGene")
+    params:
+        widget_name = "metgene_widget"
+    shell: """
+        {input.script} gene {input.id_list} \
+           --widget-name {params.widget_name} \
+           --output-dir {output}
+    """
 
 rule anatomy_json_expression_widget:
     message: "build expression widgets for anatomy terms"
