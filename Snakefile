@@ -50,8 +50,10 @@ rule anatomy_json:
     message:
         "build markdown content for anatomy terms."
     input:
+        "output_pieces_anatomy/01-embl",
         "output_pieces_anatomy/01-kg",
         "output_pieces_anatomy/10-expression",
+
     output:
         json = "upload_json/anatomy.json",
     shell: """
@@ -204,11 +206,26 @@ rule gene_json_lincs_widget:
            --output-dir {output}
     """
 
+rule anatomy_link:
+    message: "add link to embl ols"
+    input:
+        script = "scripts/build-anatomy-links.py",
+        id_list = "data/inputs/STAGING_PORTAL__anatomy__2022-07-22.txt",
+    output:
+        directory("output_pieces_anatomy/01-embl")
+    params:
+        widget_name = "01-embl"
+    shell: """
+        {input.script} anatomy {input.id_list} \
+           --widget-name expression_widget \
+           --output-dir {output}
+    """    
+
 rule anatomy_json_expression_widget:
     message: "build expression widgets for anatomy terms"
     input:
         script = "scripts/build-markdown-pieces.py",
-        id_list = "data/inputs/anatomy_IDs_for_expression_widget.txt",
+        id_list = "data/inputs/anatomy_gtex.txt",
     output:
         directory("output_pieces_anatomy/10-expression")
     params:
