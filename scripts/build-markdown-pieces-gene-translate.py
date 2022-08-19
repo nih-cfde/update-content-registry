@@ -128,7 +128,7 @@ def main():
                     mim_str = ", ".join(x)                    
 
 
-                alias_md = f""":span:Links to external resources for {hgnc_symbol}:/span:{{.caption-match style=\"font-size:24px;font-weight:bold\"}}\n\n| Resource | Links |\n| --- | --- |\n| CFDE Gene Partnership Appyter | [{ensembl_id}](https://appyters.maayanlab.cloud/CFDE-Gene-Partnership/#?args.gene={ensembl_id}&submit) |\n| Ensembl | [{ensembl_id}](http://www.ensembl.org/id/{ensembl_id}) |\n| Human Gene Nomenclature (HGNC) | [{hgnc_id}](https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/HGNC:{hgnc_id}) |\n| LINCS Chemical Perturbations | [{hgnc_symbol}](https://appyters.maayanlab.cloud/L1000_RNAseq_Gene_Search/#?args.gene={hgnc_symbol}&submit) |\n| NCBI Gene | [{entrez_id}](https://www.ncbi.nlm.nih.gov/gene/{entrez_id}) |\n| OMIM | {mim_str} |\n| RefSeq | {refseq_str}  |\n| UniProtKB | {uniprot_str} |\n"""
+                alias_md = f"""## Gene Details \n**Ensembl ID**: [{ensembl_id}](http://www.ensembl.org/id/{ensembl_id}) \n**Human Gene Nomenclature (HGNC)**: [{hgnc_id}](https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/HGNC:{hgnc_id}) \n**LINCS Chemical Perturbations**:  [{hgnc_symbol}](https://appyters.maayanlab.cloud/L1000_RNAseq_Gene_Search/#?args.gene={hgnc_symbol}&submit) \n**NCBI Gene**: [{entrez_id}](https://www.ncbi.nlm.nih.gov/gene/{entrez_id}) \n**OMIM**: {mim_str}  \n**RefSeq:** {refseq_str}   \n**UniProtKB**: {uniprot_str}\n"""
 
 
                 alias_info[ensembl_id] = alias_md
