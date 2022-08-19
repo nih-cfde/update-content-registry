@@ -75,7 +75,6 @@ rule compound_json:
          "output_pieces_compound/03-lincs",
          "output_pieces_compound/04-drugcentral",
          "output_pieces_compound/30-kg",
-
     output:
         json = "upload_json/compound.json",
     shell: """
