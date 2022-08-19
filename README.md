@@ -63,7 +63,7 @@ support for other controlled vocabularies used in the C2M2.
 Below is a simple approach to generating your own content that will
 let us integrate it other content in the content registry.
 
-(You can see some examples [in the gallery](docs/gallery.md) if you like!)
+(You can see some examples [in the gallery](https://github.com/nih-cfde/update-content-registry/blob/main/docs/gallery.md) if you like!)
 
 The CFDE-CC is happy to help with any of the steps below! Just ask in an
 issue!
@@ -150,12 +150,12 @@ below.
 
 ### Tables
 
-Tables are used by the alias table example [in the gallery](gallery.md).
+Tables are used by the alias table example [in the gallery](https://github.com/nih-cfde/update-content-registry/blob/main/docs/gallery.md).
 See the [full supported syntax for tables here](https://github.com/informatics-isi-edu/ermrestjs/blob/master/docs/user-docs/markdown-formatting.md#15-table).
 
 ### Iframes
 
-Several of the examples [in the gallery](gallery.md) use
+Several of the examples [in the gallery](https://github.com/nih-cfde/update-content-registry/blob/main/docs/gallery.md) use
 [iframe HTML elements](https://en.wikipedia.org/wiki/HTML_element#Frames)
 to encapsulate calls out to other Web pages.
 

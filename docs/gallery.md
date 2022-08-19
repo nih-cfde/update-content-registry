@@ -43,3 +43,13 @@ expression data for that gene.
 This content is produced by the script [build-markdown-pieces.py](https://github.com/nih-cfde/update-content-registry/blob/main/scripts/build-markdown-pieces.py)
 
 ![](gallery/example-gene-expression-widget.png)
+
+
+## Example: UCSC genome browser
+
+This content introduces an iframe that encloses a custom app. The app
+shows the [UCSC Genome Browser](https://genome.ucsc.edu/) for a gene of interest.
+
+This content is produced by the script [build-markdown-pieces-ucsc-genome-browser-widget.pl](https://github.com/nih-cfde/update-content-registry/blob/main/scripts/build-markdown-pieces-ucsc-genome-browser-widget.pl)
+
+![](gallery/example-ucsc-genome-browser.png)

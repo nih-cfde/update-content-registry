@@ -69,9 +69,15 @@ def main():
 
             ensembl_id = row['ENSEMBL']
             if not isnull(ensembl_id):
-                mim_id = row['MIM']
-
+                
+                mim_ids = row['MIM']
+                if not isnull(mim_ids):
+                    mim_ids = mim_ids.split('|')
+                else:
+                    mim_ids = []
+                
                 hgnc_id = None
+                
                 hgnc_val = row['HGNC'].split('|')[0]
                 if hgnc_val:
                     hgnc_id = int(hgnc_val)
@@ -112,8 +118,18 @@ def main():
                     for uniprot_id in uniprot_ids:
                         x.append(f"[{uniprot_id}](https://www.uniprot.org/uniprot/{uniprot_id})")
                     uniprot_str = ", ".join(x)
+                    
+                    
+                mim_str = ""
+                if mim_ids:
+                    x = []
+                    for mim_id in mim_ids:
+                        x.append(f"[{mim_id}](https://omim.org/entry/{mim_id})")
+                    mim_str = ", ".join(x)                    
 
-                alias_md = f""":span:Links to external resources for {ensembl_id}:/span:{{.caption-match style=\"font-size:24px;font-weight:bold\"}}\n\n| Resource | Links |\n| --- | --- |\n| Ensembl | [{ensembl_id}](http://www.ensembl.org/id/{ensembl_id}) |\n| NCBI Gene | [{entrez_id}](https://www.ncbi.nlm.nih.gov/gene/{entrez_id}) |\n | Human Gene Nomenclature (HGNC) | [{hgnc_id}](https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/HGNC:{hgnc_id})|\n  | OMIM | [{mim_id}](https://omim.org/entry/{mim_id}) |\n| RefSeq | {refseq_str} |\n| UniProtKB | {uniprot_str} |\n| CFDE Gene Partnership Appyter | [{ensembl_id}](https://appyters.maayanlab.cloud/CFDE-Gene-Partnership/#?args.gene={ensembl_id}&submit)|\n|\n"""
+
+                alias_md = f"""## Gene Details \n**Ensembl ID**: [{ensembl_id}](http://www.ensembl.org/id/{ensembl_id}) \n**Human Gene Nomenclature (HGNC)**: [{hgnc_id}](https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/HGNC:{hgnc_id}) \n**LINCS Chemical Perturbations**:  [{hgnc_symbol}](https://appyters.maayanlab.cloud/L1000_RNAseq_Gene_Search/#?args.gene={hgnc_symbol}&submit) \n**NCBI Gene**: [{entrez_id}](https://www.ncbi.nlm.nih.gov/gene/{entrez_id}) \n**OMIM**: {mim_str}  \n**RefSeq:** {refseq_str}   \n**UniProtKB**: {uniprot_str}\n"""
+
 
                 alias_info[ensembl_id] = alias_md
 
