@@ -81,7 +81,7 @@ def main():
                 for DO_ID in DO_IDs:
                 
                 	DO_ID_URL = DO_ID.replace(':', '%3A')
-                	x.append(f"[{DO_ID_URL}](https://app.nih-cfde.org/chaise/record/#1/CFDE:gene/id={DO_ID_URL})")
+                	x.append(f"[{DO_ID}](https://app.nih-cfde.org/chaise/record/#1/CFDE:disease/id={DO_ID_URL})")
                 	DO_IDs_string = ", ".join(x)
                 	
                 	alias_md = f"""## Associated Diseases\n {DO_IDs_string} \n"""
