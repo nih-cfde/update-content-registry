@@ -79,13 +79,12 @@ def main():
             if DO_IDs:
                 x = []
                 for DO_ID in DO_IDs:
-                        x.append(f"[{DO_ID}](https://disease-ontology.org/?id={DO_ID})")
                 
-                DO_IDs_string = ", ".join(x)
-        
-                    
-            alias_md = f"""## Associated Diseases\n {DO_IDs_string} \n"""
-                       
+                	DO_ID_URL = DO_ID.replace(':', '%3A')
+                	x.append(f"[{DO_ID_URL}](https://app.nih-cfde.org/chaise/record/#1/CFDE:gene/id={DO_ID_URL})")
+                	DO_IDs_string = ", ".join(x)
+                	
+                	alias_md = f"""## Associated Diseases\n {DO_IDs_string} \n"""
             alias_info[cv_id] = alias_md
 
 
