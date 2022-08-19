@@ -76,13 +76,12 @@ def main():
     # now iterate over and make markdown, then save JSON + md.
     for cv_id in id_list:
     
-        print(f"Anatomy {cv_id}")
+        #print(f"Anatomy {cv_id}")
 
         new_cv_id = cv_id.replace(':', '_')
 		
-        md = f"""
-External links: Use the Ontology Lookup Service (OLS) from EMBL-EBI to learn more about [{cv_id}](https://www.ebi.ac.uk/ols/ontologies/uberon/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2F{new_cv_id}).
-"""
+        md = f"""## Anatomy Details \n
+**EMBL-EBI Ontology Lookup Service (OLS)**: [{cv_id}](https://www.ebi.ac.uk/ols/ontologies/uberon/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2F{new_cv_id})\n"""
 
         # write out JSON pieces for aggregation & upload
         cfde_common.write_output_pieces(output_dir, args.widget_name,
