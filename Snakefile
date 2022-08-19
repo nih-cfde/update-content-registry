@@ -2,6 +2,8 @@
 ## Workflow logic to build and then upload content registry information.
 ##
 
+## 'anatomy', 'compound', 'disease', 'gene', 'protein'
+
 
 TERM_TYPES = ['anatomy', 'compound', 'disease', 'gene', 'protein']
 
@@ -16,17 +18,17 @@ rule upload:
     message:
         "upload new content to the registry."
     input:
-        #"upload_json/gene.json",
-        #"upload_json/anatomy.json",
-        #"upload_json/compound.json",
-        #"upload_json/protein.json",
+        "upload_json/gene.json",
+        "upload_json/anatomy.json",
+        "upload_json/compound.json",
+        "upload_json/protein.json",
         "upload_json/disease.json",
     shell: """
         export DERIVA_SERVERNAME=app-staging.nih-cfde.org
-        python3 -m cfde_deriva.registry upload-resources upload_json/disease.json
-        #upload_json/protein.json 
-        #upload_json/gene.json 
-        #upload_json/anatomy.json upload_json/compound.json 
+        python3 -m cfde_deriva.registry upload-resources upload_json/gene.json upload_json/anatomy.json  upload_json/disease.json upload_json/compound.json upload_json/protein.json 
+
+        python3 -m cfde_deriva.release refresh-resources 5e0b5f45-2b99-4026-8d22-d1a642a9e903
+
     """
 
 
@@ -37,12 +39,12 @@ rule gene_json:
         "output_pieces_gene/00-alias",
         "output_pieces_gene/01-appyter",
         "output_pieces_gene/02-appyter-lincs-geo-reverse",
-        "output_pieces_gene/02-MetGene",
-        "output_pieces_gene/03-disease",
+        "output_pieces_gene/03-kg",
+        "output_pieces_gene/04-disease",
+        "output_pieces_gene/05-MetGene",
         "output_pieces_gene/10-expression",
         "output_pieces_gene/11-reverse-search",
         "output_pieces_gene/20-transcripts",
-        "output_pieces_gene/30-kg",
         "output_pieces_gene/70-ucsc",
     output:
         json = "upload_json/gene.json",
@@ -123,7 +125,7 @@ rule gene_json_alias_widget:
     message: "build alias widgets for genes"
     input:
         script = "scripts/build-markdown-pieces-gene-translate.py",
-        id_list = "data/inputs/gene_IDs_for_expression_widget.txt",
+        id_list = "data/inputs/STAGING_PORTAL__available_genes__2022-08-19.txt",
         alias_info = "data/inputs/Homo_sapiens.gene_info_20220304.txt_conv_wNCBI_AC.txt",
     output:
         directory("output_pieces_gene/00-alias")
@@ -139,7 +141,7 @@ rule gene_json_appyter_link:
     message: "build gene/appyter links for genes"
     input:
         script = "scripts/build-appyter-gene-links.py",
-        id_list = "data/inputs/gene_IDs_for_expression_widget.txt",
+        id_list = "data/inputs/STAGING_PORTAL__available_genes__2022-08-19.txt",
     output:
         directory("output_pieces_gene/01-appyter")
     params:
@@ -154,7 +156,7 @@ rule gene_json_appyter_lincs_geo_reverse_link:
     message: "build gene/lincs geo reverse appyter links for genes"
     input:
         script = "scripts/build-appyter-gene-links-lincs-geo-reverse.py",
-        id_list = "data/inputs/gene_IDs_for_expression_widget.txt",
+        id_list = "data/inputs/gene_IDs_for_lincs_reverse_search.txt",
     output:
         directory("output_pieces_gene/02-appyter-lincs-geo-reverse")
     params:
@@ -169,7 +171,7 @@ rule gene_json_ucsc_genome_browser_widget:
     message: "build UCSC genome browser iframe-include for genes"
     input:
         script = "scripts/build-markdown-pieces-ucsc-genome-browser-widget.pl",
-        id_list = "data/inputs/gene_IDs_for_expression_widget.txt",
+        id_list = "data/inputs/gene_IDs_for_UCSC_genome_browser_widget.txt",
         coord_info = "data/inputs/homo_sapiens.coords.tsv",
     output:
         directory("output_pieces_gene/70-ucsc")
@@ -203,7 +205,7 @@ rule gene_json_transcript_widget:
     message: "build transcript widgets for genes"
     input:
         script = "scripts/build-markdown-pieces.py",
-        id_list = "data/inputs/gene_IDs_for_expression_widget.txt",
+        id_list = "data/inputs/gene_IDs_for_transcripts_widget.txt",
     output:
         directory("output_pieces_gene/20-transcripts")
     params:
@@ -220,9 +222,9 @@ rule gene_json_lincs_widget:
         script = "scripts/build-markdown-pieces-MetGene.py",
         id_list = "data/inputs/gene_IDs_for_MetGene.txt",
     output:
-        directory("output_pieces_gene/02-MetGene")
+        directory("output_pieces_gene/05-MetGene")
     params:
-        widget_name = "metgene_widget"
+        widget_name = "05-MetGene"
     shell: """
         {input.script} gene {input.id_list} \
            --widget-name {params.widget_name} \
@@ -335,9 +337,9 @@ rule gene_json_kg_widget:
         script = "scripts/build-markdown-pieces-gene-kg.py",
         id_list = "data/inputs/gene_IDs_for_gene_kg.txt",
     output:
-        directory("output_pieces_gene/30-kg")
+        directory("output_pieces_gene/03-kg")
     params:
-        widget_name = "30-kg"
+        widget_name = "03-kg"
     shell: """
         {input.script} gene {input.id_list} \
            --widget-name kg_widget \
@@ -417,9 +419,9 @@ rule gene_json_disease:
         id_list = "data/inputs/gene_IDs_withdisease.txt",
         alias_info = "data/inputs/gene2disease.txt",
     output:
-        directory("output_pieces_gene/03-disease")
+        directory("output_pieces_gene/04-disease")
     params:
-        widget_name = "03-disease",
+        widget_name = "04-disease",
     shell: """
         {input.script} gene {input.id_list} {input.alias_info} \
             --widget-name {params.widget_name} \
