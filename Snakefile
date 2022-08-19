@@ -72,7 +72,6 @@ rule compound_json:
     input:
          "output_pieces_compound/00-pubchem",
          "output_pieces_compound/02-glycan",
-         "output_pieces_compound/03-lincs",
          "output_pieces_compound/04-drugcentral",
          "output_pieces_compound/30-kg",
     output:
