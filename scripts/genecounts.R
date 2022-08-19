@@ -3,7 +3,16 @@
 library(dplyr)
 library(tidyr)
 
-genes <- read.table("../data/inputs/STAGING_PORTAL__available_genes__2022-07-13.txt") %>%
+# download genes in portal. 
+# update to get from https://app.nih-cfde.org/ermrest/catalog/registry/attribute/CFDE:gene/id@sort(id)
+
+genes <- read.csv("~/Downloads/Gene (4).csv") %>%
+  select(id) %>%
+  arrange(id)
+write.table(genes, "../data/inputs/STAGING_PORTAL__available_genes__2022-08-19.txt",
+            col.names = F, row.names = F, quote = F)
+
+genes <- read.table("../data/inputs/STAGING_PORTAL__available_genes__2022-08-19.txt") %>%
   mutate(ENSEMBL_ID = V1)
 kg <- read.table("../data/inputs/gene_IDs_for_gene_kg.txt") %>%
   mutate(kg = "KnowledgeGraph")
@@ -56,3 +65,4 @@ write.table(df, "../data/inputs/gene_IDs_for_lincs_reverse_search.txt", row.name
 
 df <- inner_join(genes, lincs2) %>% select(ENSEMBL_ID) 
 write.table(df, "../data/inputs/gene_IDs_for_lincs_geo_reverse_appyter.txt", row.names = F, col.names = F, quote = F)
+
