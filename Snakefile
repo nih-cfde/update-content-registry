@@ -26,7 +26,6 @@ rule upload:
     shell: """
         export DERIVA_SERVERNAME=app-staging.nih-cfde.org
         python3 -m cfde_deriva.registry upload-resources upload_json/gene.json upload_json/anatomy.json  upload_json/disease.json upload_json/compound.json upload_json/protein.json 
-
         python3 -m cfde_deriva.release refresh-resources 5e0b5f45-2b99-4026-8d22-d1a642a9e903
 
     """
@@ -301,7 +300,7 @@ rule compound_json_glytoucan:
     message: "Building GlyTouCan links"
     input:
         script = "scripts/build-compound-glycan.py",
-        id_list = "data/inputs/compound_IDs_GlyTouCan_test.txt",
+        id_list = "data/inputs/compound_IDs_GlyTouCan.txt",
         alias_info = "data/inputs/compounds_glygen2pubchem.tsv",
     output:
         directory("output_pieces_compound/02-glycan")
