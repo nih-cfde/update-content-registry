@@ -117,7 +117,7 @@ def main():
    
    
             
-            print(f"{cv_id}") 
+            #print(f"{cv_id}") 
             
             alias_md = f"""**GlyGen Accession**: [{cv_id}](https://www.glygen.org/protein/{cv_id}))\n**UniProtKB Accession**: [{cv_id}](https://www.uniprot.org/uniprotkb/{cv_id}/entry)\n {REFSEQ_NAME_str}{ENSEMBL_ID_str}{GENE_NAME_str}{GLYCOSYLATION_str}{GENE_LOCATION_str}\n\nMore information for protein [{cv_id}](https://www.glygen.org/protein/{cv_id}) is available on GlyGen.\n"""
 
