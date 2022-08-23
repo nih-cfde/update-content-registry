@@ -10,7 +10,7 @@ import cfde_common
 
 
 def make_markdown(cv_id):
-    return f"""Visit **PubChem** for information about compound [CID:{cv_id}](https://pubchem.ncbi.nlm.nih.gov/compound/{cv_id}).\n """
+    return f"""Visit **PubChem** for information about compound [CID:{cv_id}](https://pubchem.ncbi.nlm.nih.gov/compound/{cv_id}).\n"""
 
 
 

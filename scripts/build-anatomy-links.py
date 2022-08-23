@@ -80,8 +80,7 @@ def main():
 
         new_cv_id = cv_id.replace(':', '_')
 		
-        md = f"""## Anatomy Details \n
-**EMBL-EBI Ontology Lookup Service (OLS)**: [{cv_id}](https://www.ebi.ac.uk/ols/ontologies/uberon/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2F{new_cv_id})\n"""
+        md = f"""**EMBL-EBI Ontology Lookup Service (OLS)**: [{cv_id}](https://www.ebi.ac.uk/ols/ontologies/uberon/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2F{new_cv_id})\n"""
 
         # write out JSON pieces for aggregation & upload
         cfde_common.write_output_pieces(output_dir, args.widget_name,

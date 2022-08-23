@@ -14,13 +14,7 @@ __root__, _ = os.path.split(__directory__)
 INPUT_COMPOUND_ID_LIST = os.path.join('data', 'inputs', 'compound_IDs_for_lincs_chemical_sim_appyter.txt')
 
 def make_markdown(cv_id, drugname):
-    return f"""
-
-## LINCS Chemical Similarity Appyter
-
-The LINCS Chemical Similarity Appyter for [{drugname} (CID:{cv_id})](https://appyters.maayanlab.cloud/LINCS_Chemical_Similarity_Appyter/#?args.drug={drugname}&submit) provides information about small molecules profiled by the LINCS program. Specifically, users can retrieve similar small molecules based on Tanimoto structural similarity and similarity based on L1000 gene expression.
-
-"""
+    return f"""The **LINCS Chemical Similarity Appyter** for [{drugname} (CID:{cv_id})](https://appyters.maayanlab.cloud/LINCS_Chemical_Similarity_Appyter/#?args.drug={drugname}&submit) provides information about small molecules profiled by the LINCS program. Specifically, users can retrieve similar small molecules based on Tanimoto structural similarity and similarity based on L1000 gene expression.\n"""
 
 def build_id_list():
     ''' Usage:

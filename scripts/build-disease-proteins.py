@@ -84,7 +84,7 @@ def main():
                 UNIPROT_ACs_string = ", ".join(x)
         
                     
-            alias_md = f"""## Associated Proteins\n {UNIPROT_ACs_string} \n"""
+            alias_md = f"""**Associated Proteins**: {UNIPROT_ACs_string}\n"""
                        
             alias_info[cv_id] = alias_md
 

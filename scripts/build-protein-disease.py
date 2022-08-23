@@ -88,7 +88,7 @@ def main():
                 DO_IDs_string = ", ".join(x)
         
                     
-            alias_md = f"""## Associated Diseases\n {DO_IDs_string} \n"""
+            alias_md = f"""**Associated Diseases**: {DO_IDs_string}\n"""
                        
             alias_info[cv_id] = alias_md
 

@@ -84,7 +84,7 @@ def main():
                 ENSEMBL_IDs_string = ", ".join(x)
         
                     
-            alias_md = f"""## Associated Genes\n {ENSEMBL_IDs_string} \n"""
+            alias_md = f"""**Associated Genes**: {ENSEMBL_IDs_string}\n"""
                        
             alias_info[cv_id] = alias_md
 
