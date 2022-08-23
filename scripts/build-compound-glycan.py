@@ -90,7 +90,7 @@ def main():
             
             #print(f"{glytoucan_ac}") 
             
-            alias_md = f"""## Glycan Details\n![Image]({IMAGE_URL})\n**GlyTouCan Accession**: [{GLYTOUCAN_ID}]({LINK_OUT_URL})\n**PubChem CID**: {PUBCHEM_CID}\n{MASS_str}{COMPOSITION_str}\nMore information for glycan [{GLYTOUCAN_ID}]({LINK_OUT_URL}) is available on GlyGen.\n"""
+            alias_md = f"""**GlyTouCan Accession**: [{GLYTOUCAN_ID}]({LINK_OUT_URL})\n**PubChem CID**: {PUBCHEM_CID}\n{MASS_str}{COMPOSITION_str}\nMore information for glycan [{GLYTOUCAN_ID}]({LINK_OUT_URL}) is available on GlyGen. \n![Image]({IMAGE_URL})\n"""
 
            
             alias_info[cv_id] = alias_md

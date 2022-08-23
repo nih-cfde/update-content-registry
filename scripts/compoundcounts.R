@@ -26,7 +26,6 @@ df <- full_join(gly, kg) %>%
   full_join(., lincs) %>%
   full_join(., dc) %>%
   full_join(., pc) %>%
-  full_join(., id) %>%
   mutate(gly = replace_na(gly, "_________"),
          kg = replace_na(kg, "______________"),
          lincs = replace_na(lincs, "_____"),
@@ -46,3 +45,10 @@ count(df, markdown) %>%
   arrange(n) %>%
   as.data.frame()
 
+length(df$id)
+
+compound_IDs_withmarkdown <- df %>% 
+  select(id) 
+ 
+write.table(compound_IDs_withmarkdown, "../data/inputs/compound_IDs_withmarkdown.txt",
+              row.names = F, col.names = F, quote = F)

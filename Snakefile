@@ -18,14 +18,15 @@ rule upload:
     message:
         "upload new content to the registry."
     input:
-        "upload_json/gene.json",
-        "upload_json/anatomy.json",
+        #"upload_json/gene.json",
+        #"upload_json/anatomy.json",
         "upload_json/compound.json",
-        "upload_json/protein.json",
-        "upload_json/disease.json",
+        #"upload_json/protein.json",
+        #"upload_json/disease.json",
     shell: """
         export DERIVA_SERVERNAME=app-staging.nih-cfde.org
-        python3 -m cfde_deriva.registry upload-resources upload_json/gene.json upload_json/anatomy.json  upload_json/disease.json upload_json/compound.json upload_json/protein.json 
+        python3 -m cfde_deriva.registry upload-resources upload_json/compound.json 
+        #upload_json/gene.json upload_json/anatomy.json  upload_json/disease.json upload_json/protein.json 
         python3 -m cfde_deriva.release refresh-resources 5e0b5f45-2b99-4026-8d22-d1a642a9e903
 
     """
@@ -71,10 +72,12 @@ rule compound_json:
     message:
         "build markdown content for compound terms."
     input:
-         "output_pieces_compound/00-pubchem",
-         "output_pieces_compound/02-glycan",
+         "output_pieces_compound/00-header",
+         "output_pieces_compound/01-glycan",
+         "output_pieces_compound/02-kg",
+         "output_pieces_compound/03-pubchem",
          "output_pieces_compound/04-drugcentral",
-         "output_pieces_compound/30-kg",
+
     output:
         json = "upload_json/compound.json",
     shell: """
@@ -260,7 +263,54 @@ rule anatomy_json_expression_widget:
            --output-dir {output}
     """
 
+rule compound_json_header:
+    message: "Building Compound links"
+    input:
+        script = "scripts/build-compound-header.py",
+        id_list = "data/inputs/compound_IDs_withmarkdown.txt",
+    output:
+        directory("output_pieces_compound/00-header")
+    params:
+        widget_name = "00-header",
+    shell: """
+        {input.script} compound {input.id_list} \
+            --widget-name {params.widget_name}  \
+            --output-dir {output}
+    """
     
+
+rule compound_json_glytoucan:
+    message: "Building GlyTouCan links"
+    input:
+        script = "scripts/build-compound-glycan.py",
+        id_list = "data/inputs/compound_IDs_GlyTouCan.txt",
+        alias_info = "data/inputs/compounds_glygen2pubchem.tsv",
+    output:
+        directory("output_pieces_compound/01-glycan")
+    params:
+        widget_name = "01-glycan",
+    shell: """
+        {input.script} compound {input.id_list} {input.alias_info} \
+            --widget-name {params.widget_name}  \
+            --output-dir {output}
+    """         
+
+
+
+rule compound_json_kg_widget:
+    message: "build kg widgets for compound terms"
+    input:
+        script = "scripts/build-markdown-pieces-gene-kg.py",
+        id_list = "data/inputs/compound_IDs_for_gene_kg.txt",
+    output:
+        directory("output_pieces_compound/02-kg")
+    params:
+        widget_name = "02-kg"
+    shell: """
+        {input.script} compound {input.id_list} \
+           --widget-name kg_widget \
+           --output-dir {output}
+    """
 
 
 rule compound_json_pubchem:
@@ -269,9 +319,9 @@ rule compound_json_pubchem:
         script = "scripts/build-compound-pubchem.py",
         id_list = "data/inputs/compound_IDs_PubChem.txt",
     output:
-        directory("output_pieces_compound/00-pubchem")
+        directory("output_pieces_compound/03-pubchem")
     params:
-        widget_name = "00-pubchem",
+        widget_name = "01-pubchem",
     shell: """
         {input.script} compound {input.id_list} \
             --widget-name {params.widget_name}  \
@@ -294,24 +344,6 @@ rule compound_json_drugcentral:
             --widget-name {params.widget_name}  \
             --output-dir {output}
     """    
-
-
-rule compound_json_glytoucan:
-    message: "Building GlyTouCan links"
-    input:
-        script = "scripts/build-compound-glycan.py",
-        id_list = "data/inputs/compound_IDs_GlyTouCan.txt",
-        alias_info = "data/inputs/compounds_glygen2pubchem.tsv",
-    output:
-        directory("output_pieces_compound/02-glycan")
-    params:
-        widget_name = "02-glycan",
-    shell: """
-        {input.script} compound {input.id_list} {input.alias_info} \
-            --widget-name {params.widget_name}  \
-            --output-dir {output}
-    """         
-
 
 
 rule gene_json_reverse_search_widget:
@@ -357,21 +389,6 @@ rule anatomy_json_kg_widget:
         widget_name = "01-kg"
     shell: """
         {input.script} anatomy {input.id_list} \
-           --widget-name kg_widget \
-           --output-dir {output}
-    """
-
-rule compound_json_kg_widget:
-    message: "build kg widgets for compound terms"
-    input:
-        script = "scripts/build-markdown-pieces-gene-kg.py",
-        id_list = "data/inputs/compound_IDs_for_gene_kg.txt",
-    output:
-        directory("output_pieces_compound/30-kg")
-    params:
-        widget_name = "30-kg"
-    shell: """
-        {input.script} compound {input.id_list} \
            --widget-name kg_widget \
            --output-dir {output}
     """
