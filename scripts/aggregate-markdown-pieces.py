@@ -81,7 +81,7 @@ def main():
             combined_md.append(d['resource_markdown'])
 
         # aggregate!
-        combined_md = "\n## Knowledge Base\n".join(combined_md) + "\n"
+        combined_md = "\n## Knowledge Base\n" + "\n".join(combined_md) + "\n"
 
         # save aggregated chunks under a new dictionary
         chunks.append(dict(id=cv_id, resource_markdown=combined_md))

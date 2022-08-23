@@ -46,9 +46,3 @@ count(df, markdown) %>%
   as.data.frame()
 
 length(df$id)
-
-compound_IDs_withmarkdown <- df %>% 
-  select(id) 
- 
-write.table(compound_IDs_withmarkdown, "../data/inputs/compound_IDs_withmarkdown.txt",
-              row.names = F, col.names = F, quote = F)
