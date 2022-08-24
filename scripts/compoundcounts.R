@@ -46,3 +46,9 @@ count(df, markdown) %>%
   as.data.frame()
 
 length(df$id)
+
+
+df %>%
+  filter(markdown == "GlyTouCan ______________ _____ DrugCentral PubChem") %>%
+  pull(id) %>%
+  head()

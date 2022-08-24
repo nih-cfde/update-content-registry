@@ -84,7 +84,7 @@ def main():
                 	x.append(f"[{DO_ID}](https://app.nih-cfde.org/chaise/record/#1/CFDE:disease/id={DO_ID_URL})")
                 	DO_IDs_string = ", ".join(x)
                 	
-                	alias_md = f"""**Associated Diseases**:\n {DO_IDs_string} \n"""
+                	alias_md = f"""**Associated Diseases**: {DO_IDs_string} \n"""
             alias_info[cv_id] = alias_md
 
 
