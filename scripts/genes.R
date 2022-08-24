@@ -19,8 +19,8 @@ df2 <- read.table("../data/inputs/STAGING_PORTAL__available_genes__2022-07-13.tx
 
 head(df2)
 
-#write.table(df2, "../data/inputs/gene_IDs_for_MetGene.txt", 
- #           row.names = F, col.names = F, quote =  F)
+write.table(df2, "../data/inputs/gene_IDs_for_MetGene.txt", 
+            row.names = F, col.names = F, quote =  F)
 
 #write.table(head(df2), "../data/inputs/gene_IDs_for_MetGene_test.txt", 
   #          row.names = F, col.names = F, quote =  F)
@@ -34,5 +34,5 @@ df3 <- read.table("~/Downloads/LORALS_GTEx_v9_ase_quant_results.gencode.txt",
   inner_join(., df2)
 head(df3)
 
-#write.table(df2, "../data/inputs/gene_IDs_for_gtex.txt", 
-   #         row.names = F, col.names = F, quote =  F)
+write.table(df3, "../data/inputs/gene_IDs_for_gtex.txt", 
+            row.names = F, col.names = F, quote =  F)
