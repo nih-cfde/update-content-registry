@@ -199,6 +199,21 @@ head(df8)
 tail(df8)
 
 
+df11 <- df2 %>%
+  as_tibble() %>%
+  arrange(UNIPROT_AC) %>%
+  select(UNIPROT_AC, everything()) %>%
+  rename(id = UNIPROT_AC) %>%
+  left_join(df, ., by = "id") %>%
+  select( -LINK_OUT_URL) %>%
+  filter(disease != "NULL") %>%
+  unnest(disease) %>%
+  select(id, name) %>%
+  distinct(id, name)
+head(df11)
+
+
+
 write.table(df5, "../data/inputs/disease2gene.txt", 
             row.names = F, quote = F, sep = "\t")
 
@@ -210,3 +225,9 @@ write.table(df7, "../data/inputs/gene2disease.txt",
 
 write.table(df8, "../data/inputs/protein2disease.txt", 
             row.names = F, quote = F, sep = "\t")
+
+
+write.table(df11, "../data/inputs/protein_names.txt", 
+            row.names = F, quote = F, sep = "\t")
+
+

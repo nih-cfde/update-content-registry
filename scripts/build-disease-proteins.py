@@ -65,13 +65,8 @@ def main():
 
         for row in reader:
             
-            current_id = row['UNIPROT_AC']
-            current_name = row['name']
-
-            if ( current_id != '' and current_name != '' ):
-                
-                protein_name[current_id] = current_name
-
+            cv_id = row['id']
+            name = row['name']
 
 
     # load in alias file.
@@ -86,9 +81,8 @@ def main():
         for row in r:
         
             cv_id = row['DO_ID']
-
-                             	
             UNIPROT_ACs = row['UNIPROT_ACs']
+            
             if not isnull(UNIPROT_ACs):
                 UNIPROT_ACs = UNIPROT_ACs.split('|')
             else:
@@ -98,11 +92,8 @@ def main():
             if UNIPROT_ACs:
                 x = []
                 for UNIPROT_AC in UNIPROT_ACs: 
-                
-                	if ( UNIPROT_AC in protein_name ):
-                	    x.append(f"[{protein_name[UNIPROT_AC]} ({protein_name})](https://app.nih-cfde.org/chaise/record/#1/CFDE:protein/id={UNIPROT_AC})")
-                	else:     x.append(f"[{UNIPROT_AC}](https://app.nih-cfde.org/chaise/record/#1/CFDE:protein/id={UNIPROT_AC})")
-                	
+                    x.append(f"[{name} ({cv_id})](https://app.nih-cfde.org/chaise/record/#1/CFDE:protein/id={cv_id})")
+
                 
                 UNIPROT_ACs_string = ", ".join(x)
         
