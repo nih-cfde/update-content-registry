@@ -480,12 +480,13 @@ rule disease_json_protein:
     input:
         script = "scripts/build-disease-proteins.py",
         id_list = "data/inputs/disease_IDs.txt",
+        alias_info = "data/inputs/disease2protein.txt",
     output:
         directory("output_pieces_disease/02-proteins")
     params:
         widget_name = "02-proteins",
     shell: """
-        {input.script} disease {input.id_list}  \
+        {input.script} disease {input.id_list} {input.alias_info} \
             --widget-name {params.widget_name} \
             --output-dir {output}
     """        
