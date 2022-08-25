@@ -1,0 +1,16 @@
+# run this script or these commands to open quickly open pages for review
+
+browseURL("https://app.nih-cfde.org/chaise/record/#1/CFDE:anatomy/id=UBERON%3A0000007")
+browseURL("https://app.nih-cfde.org/chaise/record/#1/CFDE:compound/id=G99997WS")
+browseURL("https://app.nih-cfde.org/chaise/record/#1/CFDE:compound/id=1000")
+browseURL("https://app.nih-cfde.org/chaise/record/#1/CFDE:compound/id=10000009")        
+browseURL("https://app.nih-cfde.org/chaise/record/#1/CFDE:compound/id=10000456") 
+browseURL("https://app.nih-cfde.org/chaise/record/#1/CFDE:disease/id=DOID%3A9970") 
+browseURL("https://app.nih-cfde.org/chaise/record/#1/CFDE:disease/id=DOID%3A10016") 
+browseURL("https://app.nih-cfde.org/chaise/record/#1/CFDE:gene/id=ENSG00000000003") 
+browseURL("https://app.nih-cfde.org/chaise/record/#1/CFDE:gene/id=ENSG00000000419") 
+browseURL("https://app.nih-cfde.org/chaise/record/#1/CFDE:gene/id=ENSG00000001626") 
+browseURL("https://app.nih-cfde.org/chaise/record/#1/CFDE:gene/id=NSG00000133136") 
+browseURL("https://app.nih-cfde.org/chaise/record/#1/CFDE:protein/id=A0A023IKK2")
+browseURL("https://app.nih-cfde.org/chaise/record/#1/CFDE:protein/id=P0DTC2")
+browseURL("https://app.nih-cfde.org/chaise/record/#1/CFDE:protein/id=P14210")
