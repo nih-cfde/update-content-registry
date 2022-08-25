@@ -190,9 +190,9 @@ df8 <- df2 %>%
   unnest(disease) %>%
   select(id, DO_ID) %>%
   filter(!is.na(id)) %>%
-  rename(UNIPROT_ACs = id) %>%
+  rename(UNIPROT_AC = id) %>%
   filter(grepl("DOID", DO_ID)) %>%
-  group_by(UNIPROT_ACs) %>%
+  group_by(UNIPROT_AC) %>%
   summarise(DO_ID = toString(DO_ID)) %>%
   mutate(DO_ID = gsub(", ", "|", DO_ID))
 head(df8)

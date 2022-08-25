@@ -178,10 +178,10 @@ rule gene_json_ucsc_genome_browser_widget:
         widget_name = "70-ucsc"
     shell: """
         {input.script} \
-           	{input.id_list} \
-		{input.coord_info} \
-		{params.widget_name} \
-           	{output}
+               {input.id_list} \
+        {input.coord_info} \
+        {params.widget_name} \
+               {output}
     """
 
 rule gene_json_expression_widget:
@@ -465,12 +465,13 @@ rule disease_json_genes:
         script = "scripts/build-disease-genes.py",
         id_list = "data/inputs/disease_IDs.txt",
         alias_info = "data/inputs/disease2gene.txt",
+        gene_name_file = "data/inputs/Homo_sapiens.gene_info_20220304.txt_conv_wNCBI_AC.txt",
     output:
         directory("output_pieces_disease/01-genes")
     params:
         widget_name = "01-genes",
     shell: """
-        {input.script} disease {input.id_list} {input.alias_info} \
+        {input.script} disease {input.id_list} {input.alias_info} {input.gene_name_file} \
             --widget-name {params.widget_name} \
             --output-dir {output}
     """    
@@ -481,12 +482,13 @@ rule disease_json_protein:
         script = "scripts/build-disease-proteins.py",
         id_list = "data/inputs/disease_IDs.txt",
         alias_info = "data/inputs/disease2protein.txt",
+        protein_name_file = "data/inputs/proteins2disease2genes.txt",
     output:
         directory("output_pieces_disease/02-proteins")
     params:
         widget_name = "02-proteins",
     shell: """
-        {input.script} disease {input.id_list} {input.alias_info} \
+        {input.script} disease {input.id_list} {input.alias_info} {input.protein_name_file} \
             --widget-name {params.widget_name} \
             --output-dir {output}
     """        

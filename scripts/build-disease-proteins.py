@@ -15,6 +15,7 @@ def main():
     p.add_argument('term')
     p.add_argument('id_list')
     p.add_argument('alias_file')
+    p.add_argument('protein_name_file')
     p.add_argument('--output-dir', '-o',
                    help="output directory, defaults to 'output_pieces_{termtype}")
     p.add_argument('--widget-name', default="widget",
@@ -54,6 +55,25 @@ def main():
     print(f"Loaded {len(ref_id_list)} reference IDs from {ref_file}",
           file=sys.stderr)
 
+    # load protein names.
+
+    protein_name = {}
+
+    with open(args.protein_name_file, 'r') as PROTEIN_FILE:
+        
+        reader = csv.DictReader(PROTEIN_FILE, delimiter='\t')
+
+        for row in reader:
+            
+            current_id = row['UNIPROT_AC']
+            current_name = row['name']
+
+            if ( current_id != '' and current_name != '' ):
+                
+                protein_name[current_id] = current_name
+
+
+
     # load in alias file.
     alias_info = {}
     with open(args.alias_file, 'r', newline='') as fp:
@@ -79,7 +99,10 @@ def main():
                 x = []
                 for UNIPROT_AC in UNIPROT_ACs: 
                 
-                	x.append(f"[{UNIPROT_AC}](https://app.nih-cfde.org/chaise/record/#1/CFDE:protein/id={UNIPROT_AC})")
+                	if ( UNIPROT_AC in protein_name ):
+                	    x.append(f"[{protein_name[UNIPROT_AC]} ({protein_name})](https://app.nih-cfde.org/chaise/record/#1/CFDE:protein/id={UNIPROT_AC})")
+                	else:     x.append(f"[{UNIPROT_AC}](https://app.nih-cfde.org/chaise/record/#1/CFDE:protein/id={UNIPROT_AC})")
+                	
                 
                 UNIPROT_ACs_string = ", ".join(x)
         
