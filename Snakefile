@@ -18,15 +18,14 @@ rule upload:
     message:
         "upload new content to the registry."
     input:
-       # "upload_json/gene.json",
-       # "upload_json/anatomy.json",
+        "upload_json/gene.json",
+        "upload_json/anatomy.json",
         "upload_json/compound.json",
-       # "upload_json/protein.json",
-       # "upload_json/disease.json",
+        "upload_json/protein.json",
+        "upload_json/disease.json",
     shell: """
         export DERIVA_SERVERNAME=app-staging.nih-cfde.org
-        python3 -m cfde_deriva.registry upload-resources upload_json/compound.json 
-        # upload_json/gene.json  upload_json/anatomy.json  upload_json/disease.json upload_json/protein.json 
+        python3 -m cfde_deriva.registry upload-resources upload_json/disease.json upload_json/protein.json upload_json/compound.json upload_json/gene.json  upload_json/anatomy.json  
         python3 -m cfde_deriva.release refresh-resources 5e0b5f45-2b99-4026-8d22-d1a642a9e903
 
     """
@@ -413,13 +412,14 @@ rule protein_json_disease:
     input:
         script = "scripts/build-protein-disease.py",
         id_list = "data/inputs/proteins_IDs_withdisease.txt",
-        alias_info = "data/inputs/proteins2disease2genes.txt",
+        disease_name_file = "data/inputs/disease_names.txt",
+        alias_info = "data/inputs/protein2disease.txt",
     output:
         directory("output_pieces_protein/01-disease")
     params:
         widget_name = "01-disease",
     shell: """
-        {input.script} protein {input.id_list} {input.alias_info} \
+        {input.script} protein {input.id_list} {input.disease_name_file}  {input.alias_info} \
             --widget-name {params.widget_name} \
             --output-dir {output}
     """
@@ -480,13 +480,12 @@ rule disease_json_protein:
     input:
         script = "scripts/build-disease-proteins.py",
         id_list = "data/inputs/disease_IDs.txt",
-        alias_info = "data/inputs/disease2protein.txt",
     output:
         directory("output_pieces_disease/02-proteins")
     params:
         widget_name = "02-proteins",
     shell: """
-        {input.script} disease {input.id_list} {input.alias_info} \
+        {input.script} disease {input.id_list}  \
             --widget-name {params.widget_name} \
             --output-dir {output}
     """        

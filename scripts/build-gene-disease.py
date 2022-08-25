@@ -86,6 +86,7 @@ def main():
             cv_id = row['ENSEMBL_ID']
 
             DO_IDs = row['DO_ID']
+            
             if not isnull(DO_IDs):
                 DO_IDs = DO_IDs.split('|')
             else:
@@ -99,7 +100,7 @@ def main():
                     DO_ID_URL = DO_ID.replace(':', '%3A')
 
                     if ( DO_ID in disease_name ):
-                        x.append(f"[{DO_ID} ({disease_name[DO_ID]})](https://app.nih-cfde.org/chaise/record/#1/CFDE:disease/id={DO_ID_URL})")
+                        x.append(f"[{disease_name[DO_ID]} ({DO_ID})](https://app.nih-cfde.org/chaise/record/#1/CFDE:disease/id={DO_ID_URL})")
                     else:
                         x.append(f"[{DO_ID}](https://app.nih-cfde.org/chaise/record/#1/CFDE:disease/id={DO_ID_URL})")
 
@@ -134,7 +135,6 @@ def main():
                                             cv_id, resource_markdown)
         else:
             print(f"WARNING: missing markdown for identifier {cv_id}")
-
 
 if __name__ == '__main__':
     sys.exit(main())

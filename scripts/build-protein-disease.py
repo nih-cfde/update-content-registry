@@ -14,6 +14,7 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument('term')
     p.add_argument('id_list')
+    p.add_argument('disease_name_file')
     p.add_argument('alias_file')
     p.add_argument('--output-dir', '-o',
                    help="output directory, defaults to 'output_pieces_{termtype}")
@@ -53,7 +54,25 @@ def main():
 
     print(f"Loaded {len(ref_id_list)} reference IDs from {ref_file}",
           file=sys.stderr)
+          
+    # load disease names.
 
+    disease_name = {}
+
+    with open(args.disease_name_file, 'r') as DISEASE_NAME_FILE:
+        
+        reader = csv.DictReader(DISEASE_NAME_FILE, delimiter='\t')
+
+        for row in reader:
+            
+            current_id = row['DO_ID']
+            current_name = row['NAME']
+
+            if ( current_id != '' and current_name != '' ):
+                
+                disease_name[current_id] = current_name
+                
+                
     # load in alias file.
     alias_info = {}
     with open(args.alias_file, 'r', newline='') as fp:
@@ -66,11 +85,8 @@ def main():
         for row in r:
         
             cv_id = row['UNIPROT_AC']
-            name = row['name']
-            
-
-                 	
-            DO_IDs = row['DO_IDs']
+                                 
+            DO_IDs = row['DO_ID']
             if not isnull(DO_IDs):
                 DO_IDs = DO_IDs.split('|')
             else:
@@ -81,15 +97,17 @@ def main():
                 x = []
                 for DO_ID in DO_IDs: 
                 
-                	DO_ID_URL = DO_ID.replace(':', '%3A') 
-                
-                	x.append(f"[{DO_ID}](https://app.nih-cfde.org/chaise/record/#1/CFDE:disease/id={DO_ID_URL})")
-                
-                DO_IDs_string = ", ".join(x)
-        
+                    DO_ID_URL = DO_ID.replace(':', '%3A')
                     
-            alias_md = f"""**Associated Diseases**: {DO_IDs_string}\n"""
-                       
+                    if ( DO_ID in disease_name ):
+                    
+                        x.append(f"[{disease_name[DO_ID]} ({DO_ID})](https://app.nih-cfde.org/chaise/record/#1/CFDE:disease/id={DO_ID_URL})")
+                    else:
+                                            x.append(f"[{DO_ID}](https://app.nih-cfde.org/chaise/record/#1/CFDE:disease/id={DO_ID_URL})")
+
+                    DO_IDs_string = ", ".join(x)
+                    alias_md = f"""**Associated Diseases**: {DO_IDs_string} \n"""
+                    
             alias_info[cv_id] = alias_md
 
 
@@ -117,7 +135,6 @@ def main():
                                             cv_id, resource_markdown)
         else:
             print(f"WARNING: missing markdown for identifier {cv_id}")
-
 
 if __name__ == '__main__':
     sys.exit(main())
