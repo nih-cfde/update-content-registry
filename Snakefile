@@ -417,13 +417,14 @@ rule gene_json_disease:
     input:
         script = "scripts/build-gene-disease.py",
         id_list = "data/inputs/gene_IDs_withdisease.txt",
+        disease_name_file = "data/inputs/disease_names.txt",
         alias_info = "data/inputs/gene2disease.txt",
     output:
         directory("output_pieces_gene/04-disease")
     params:
         widget_name = "04-disease",
     shell: """
-        {input.script} gene {input.id_list} {input.alias_info} \
+        {input.script} gene {input.id_list} {input.disease_name_file} {input.alias_info} \
             --widget-name {params.widget_name} \
             --output-dir {output}
     """
