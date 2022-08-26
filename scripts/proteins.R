@@ -151,6 +151,8 @@ df6 <- df2 %>%
   inner_join(., df10, by = "DO_ID")
 head(df6)
 
+# gene to disease
+
 df7 <- df2 %>%
   as_tibble() %>%
   arrange(UNIPROT_AC) %>%
@@ -173,6 +175,45 @@ df7 <- df2 %>%
 head(df7)
 
 
+# protein to disease
+
+
+df8 <- df2 %>%
+  as_tibble() %>%
+  arrange(UNIPROT_AC) %>%
+  select(UNIPROT_AC, everything()) %>%
+  rename(id = UNIPROT_AC) %>%
+  left_join(df, ., by = "id") %>%
+  select( -LINK_OUT_URL) %>%
+  filter(disease != "NULL",
+         grepl("Homo", ncbi_taxonomy.name)) %>%
+  unnest(disease) %>%
+  select(id, DO_ID) %>%
+  filter(!is.na(id)) %>%
+  rename(UNIPROT_AC = id) %>%
+  filter(grepl("DOID", DO_ID)) %>%
+  group_by(UNIPROT_AC) %>%
+  summarise(DO_ID = toString(DO_ID)) %>%
+  mutate(DO_ID = gsub(", ", "|", DO_ID))
+head(df8)
+tail(df8)
+
+
+df11 <- df2 %>%
+  as_tibble() %>%
+  arrange(UNIPROT_AC) %>%
+  select(UNIPROT_AC, everything()) %>%
+  rename(id = UNIPROT_AC) %>%
+  left_join(df, ., by = "id") %>%
+  select( -LINK_OUT_URL) %>%
+  filter(disease != "NULL") %>%
+  unnest(disease) %>%
+  select(id, name) %>%
+  distinct(id, name)
+head(df11)
+
+
+
 write.table(df5, "../data/inputs/disease2gene.txt", 
             row.names = F, quote = F, sep = "\t")
 
@@ -181,3 +222,12 @@ write.table(df6, "../data/inputs/disease2protein.txt",
 
 write.table(df7, "../data/inputs/gene2disease.txt", 
             row.names = F, quote = F, sep = "\t")
+
+write.table(df8, "../data/inputs/protein2disease.txt", 
+            row.names = F, quote = F, sep = "\t")
+
+
+write.table(df11, "../data/inputs/protein_names.txt", 
+            row.names = F, quote = F, sep = "\t")
+
+

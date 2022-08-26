@@ -25,8 +25,7 @@ rule upload:
         "upload_json/disease.json",
     shell: """
         export DERIVA_SERVERNAME=app-staging.nih-cfde.org
-        python3 -m cfde_deriva.registry upload-resources upload_json/gene.json upload_json/anatomy.json  upload_json/disease.json upload_json/compound.json upload_json/protein.json 
-
+        python3 -m cfde_deriva.registry upload-resources upload_json/disease.json upload_json/protein.json upload_json/compound.json upload_json/gene.json  upload_json/anatomy.json  
         python3 -m cfde_deriva.release refresh-resources 5e0b5f45-2b99-4026-8d22-d1a642a9e903
 
     """
@@ -72,10 +71,10 @@ rule compound_json:
     message:
         "build markdown content for compound terms."
     input:
-         "output_pieces_compound/00-pubchem",
+         "output_pieces_compound/01-pubchem",
          "output_pieces_compound/02-glycan",
+         "output_pieces_compound/03-kg",
          "output_pieces_compound/04-drugcentral",
-         "output_pieces_compound/30-kg",
     output:
         json = "upload_json/compound.json",
     shell: """
@@ -179,17 +178,17 @@ rule gene_json_ucsc_genome_browser_widget:
         widget_name = "70-ucsc"
     shell: """
         {input.script} \
-           	{input.id_list} \
-		{input.coord_info} \
-		{params.widget_name} \
-           	{output}
+               {input.id_list} \
+        {input.coord_info} \
+        {params.widget_name} \
+               {output}
     """
 
 rule gene_json_expression_widget:
     message: "build expression widgets for genes"
     input:
         script = "scripts/build-markdown-pieces.py",
-        id_list = "data/inputs/gene_IDs_for_expression_widget.txt",
+        id_list = "data/inputs/gene_IDS_for_gtex.txt",
     output:
         directory("output_pieces_gene/10-expression")
     params:
@@ -205,7 +204,7 @@ rule gene_json_transcript_widget:
     message: "build transcript widgets for genes"
     input:
         script = "scripts/build-markdown-pieces.py",
-        id_list = "data/inputs/gene_IDs_for_transcripts_widget.txt",
+        id_list = "data/inputs/gene_IDS_for_gtex.txt",
     output:
         directory("output_pieces_gene/20-transcripts")
     params:
@@ -261,7 +260,54 @@ rule anatomy_json_expression_widget:
            --output-dir {output}
     """
 
+rule compound_json_header:
+    message: "Building Compound links"
+    input:
+        script = "scripts/build-compound-header.py",
+        id_list = "data/inputs/compound_IDs_withmarkdown.txt",
+    output:
+        directory("output_pieces_compound/00-header")
+    params:
+        widget_name = "00-header",
+    shell: """
+        {input.script} compound {input.id_list} \
+            --widget-name {params.widget_name}  \
+            --output-dir {output}
+    """
     
+
+rule compound_json_glytoucan:
+    message: "Building GlyTouCan links"
+    input:
+        script = "scripts/build-compound-glycan.py",
+        id_list = "data/inputs/compound_IDs_GlyTouCan.txt",
+        alias_info = "data/inputs/compounds_glygen2pubchem.tsv",
+    output:
+        directory("output_pieces_compound/02-glycan")
+    params:
+        widget_name = "02-glycan",
+    shell: """
+        {input.script} compound {input.id_list} {input.alias_info} \
+            --widget-name {params.widget_name}  \
+            --output-dir {output}
+    """         
+
+
+
+rule compound_json_kg_widget:
+    message: "build kg widgets for compound terms"
+    input:
+        script = "scripts/build-markdown-pieces-gene-kg.py",
+        id_list = "data/inputs/compound_IDs_for_gene_kg.txt",
+    output:
+        directory("output_pieces_compound/03-kg")
+    params:
+        widget_name = "03-kg"
+    shell: """
+        {input.script} compound {input.id_list} \
+           --widget-name kg_widget \
+           --output-dir {output}
+    """
 
 
 rule compound_json_pubchem:
@@ -270,9 +316,9 @@ rule compound_json_pubchem:
         script = "scripts/build-compound-pubchem.py",
         id_list = "data/inputs/compound_IDs_PubChem.txt",
     output:
-        directory("output_pieces_compound/00-pubchem")
+        directory("output_pieces_compound/01-pubchem")
     params:
-        widget_name = "00-pubchem",
+        widget_name = "01-pubchem",
     shell: """
         {input.script} compound {input.id_list} \
             --widget-name {params.widget_name}  \
@@ -295,24 +341,6 @@ rule compound_json_drugcentral:
             --widget-name {params.widget_name}  \
             --output-dir {output}
     """    
-
-
-rule compound_json_glytoucan:
-    message: "Building GlyTouCan links"
-    input:
-        script = "scripts/build-compound-glycan.py",
-        id_list = "data/inputs/compound_IDs_GlyTouCan_test.txt",
-        alias_info = "data/inputs/compounds_glygen2pubchem.tsv",
-    output:
-        directory("output_pieces_compound/02-glycan")
-    params:
-        widget_name = "02-glycan",
-    shell: """
-        {input.script} compound {input.id_list} {input.alias_info} \
-            --widget-name {params.widget_name}  \
-            --output-dir {output}
-    """         
-
 
 
 rule gene_json_reverse_search_widget:
@@ -362,21 +390,6 @@ rule anatomy_json_kg_widget:
            --output-dir {output}
     """
 
-rule compound_json_kg_widget:
-    message: "build kg widgets for compound terms"
-    input:
-        script = "scripts/build-markdown-pieces-gene-kg.py",
-        id_list = "data/inputs/compound_IDs_for_gene_kg.txt",
-    output:
-        directory("output_pieces_compound/30-kg")
-    params:
-        widget_name = "30-kg"
-    shell: """
-        {input.script} compound {input.id_list} \
-           --widget-name kg_widget \
-           --output-dir {output}
-    """
-
 
 rule protein_json_refseq:
     message: "build protein markdown for refseq"
@@ -399,13 +412,14 @@ rule protein_json_disease:
     input:
         script = "scripts/build-protein-disease.py",
         id_list = "data/inputs/proteins_IDs_withdisease.txt",
-        alias_info = "data/inputs/proteins2disease2genes.txt",
+        disease_name_file = "data/inputs/disease_names.txt",
+        alias_info = "data/inputs/protein2disease.txt",
     output:
         directory("output_pieces_protein/01-disease")
     params:
         widget_name = "01-disease",
     shell: """
-        {input.script} protein {input.id_list} {input.alias_info} \
+        {input.script} protein {input.id_list} {input.disease_name_file}  {input.alias_info} \
             --widget-name {params.widget_name} \
             --output-dir {output}
     """
@@ -433,7 +447,7 @@ rule disease_json_links:
     message: "build links for disease terms"
     input:
         script = "scripts/build-disease-links.py",
-        id_list = "data/inputs/disease_IDs.txt",
+        id_list = "data/inputs/test/disease_IDs.txt",
     output:
         directory("output_pieces_disease/00-links")
     params:
@@ -451,12 +465,13 @@ rule disease_json_genes:
         script = "scripts/build-disease-genes.py",
         id_list = "data/inputs/disease_IDs.txt",
         alias_info = "data/inputs/disease2gene.txt",
+        gene_name_file = "data/inputs/Homo_sapiens.gene_info_20220304.txt_conv_wNCBI_AC.txt",
     output:
         directory("output_pieces_disease/01-genes")
     params:
         widget_name = "01-genes",
     shell: """
-        {input.script} disease {input.id_list} {input.alias_info} \
+        {input.script} disease {input.id_list} {input.alias_info} {input.gene_name_file} \
             --widget-name {params.widget_name} \
             --output-dir {output}
     """    
@@ -467,12 +482,13 @@ rule disease_json_protein:
         script = "scripts/build-disease-proteins.py",
         id_list = "data/inputs/disease_IDs.txt",
         alias_info = "data/inputs/disease2protein.txt",
+        protein_name_file = "data/inputs/protein_names.txt",
     output:
         directory("output_pieces_disease/02-proteins")
     params:
         widget_name = "02-proteins",
     shell: """
-        {input.script} disease {input.id_list} {input.alias_info} \
+        {input.script} disease {input.id_list} {input.alias_info} {input.protein_name_file} \
             --widget-name {params.widget_name} \
             --output-dir {output}
     """        

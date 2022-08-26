@@ -15,6 +15,7 @@ def main():
     p.add_argument('term')
     p.add_argument('id_list')
     p.add_argument('alias_file')
+    p.add_argument('gene_name_file')
     p.add_argument('--output-dir', '-o',
                    help="output directory, defaults to 'output_pieces_{termtype}")
     p.add_argument('--widget-name', default="widget",
@@ -53,6 +54,26 @@ def main():
 
     print(f"Loaded {len(ref_id_list)} reference IDs from {ref_file}",
           file=sys.stderr)
+          
+          
+          
+    # load gene names.
+
+    gene_name = {}
+
+    with open(args.gene_name_file, 'r') as GENE_NAME_FILE:
+        
+        reader = csv.DictReader(GENE_NAME_FILE, delimiter='\t')
+
+        for row in reader:
+            
+            current_id = row['ENSEMBL']
+            current_name = row['SYMBOL']
+
+            if ( current_id != '' and current_name != '' ):
+                
+                gene_name[current_id] = current_name
+
 
     # load in alias file.
     alias_info = {}
@@ -79,15 +100,16 @@ def main():
                 x = []
                 for ENSEMBL_ID in ENSEMBL_IDs: 
                 
-                	x.append(f"[{ENSEMBL_ID}](https://app.nih-cfde.org/chaise/record/#1/CFDE:gene/id={ENSEMBL_ID})")
+                	if ( ENSEMBL_ID in gene_name ):
+                	    x.append(f"[{gene_name[ENSEMBL_ID]} ({ENSEMBL_ID})](https://app.nih-cfde.org/chaise/record/#1/CFDE:gene/id={ENSEMBL_ID})")
+                	else:     x.append(f"[{ENSEMBL_ID}](https://app.nih-cfde.org/chaise/record/#1/CFDE:gene/id={ENSEMBL_ID})")
                 
                 ENSEMBL_IDs_string = ", ".join(x)
         
                     
-            alias_md = f"""## Associated Genes\n {ENSEMBL_IDs_string} \n"""
+            alias_md = f"""**Associated Genes**: {ENSEMBL_IDs_string}\n"""
                        
             alias_info[cv_id] = alias_md
-
 
     # load in id list
     id_list = set()

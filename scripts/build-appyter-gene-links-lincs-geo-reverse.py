@@ -14,11 +14,7 @@ __root__, _ = os.path.split(__directory__)
 INPUT_GENE_ID_LIST = os.path.join('data', 'inputs', 'gene_IDs_for_lincs_geo_reverse_appyter.txt')
 
 def make_markdown(cv_id, genesym):
-    return f"""
-
-The **LINCS Gene Centric GEO Reverse Search Appyter** for [{genesym} ({cv_id})](https://appyters.maayanlab.cloud/Gene_Centric_GEO_Reverse_Search/#?args.species_input=Human&args.human_gene={genesym}&submit) allows users to query for a gene in a species of interest and returns an interactive volcano plot visualization of LINCS L1000 signatures in which the given gene is up- or down-regulated.
-
-"""
+    return f"""The **LINCS Gene Centric GEO Reverse Search Appyter** for [{genesym} ({cv_id})](https://appyters.maayanlab.cloud/Gene_Centric_GEO_Reverse_Search/#?args.species_input=Human&args.human_gene={genesym}&submit) allows users to query for a gene in a species of interest and returns an interactive volcano plot visualization of LINCS L1000 signatures in which the given gene is up- or down-regulated.\n"""
 
 def build_id_list():
     ''' Usage:

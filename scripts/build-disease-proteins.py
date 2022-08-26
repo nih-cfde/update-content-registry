@@ -15,6 +15,7 @@ def main():
     p.add_argument('term')
     p.add_argument('id_list')
     p.add_argument('alias_file')
+    p.add_argument('protein_name_file')
     p.add_argument('--output-dir', '-o',
                    help="output directory, defaults to 'output_pieces_{termtype}")
     p.add_argument('--widget-name', default="widget",
@@ -54,6 +55,24 @@ def main():
     print(f"Loaded {len(ref_id_list)} reference IDs from {ref_file}",
           file=sys.stderr)
 
+    # load protein names.
+
+    protein_name = {}
+
+    with open(args.protein_name_file, 'r') as PROTEIN_FILE:
+        
+        reader = csv.DictReader(PROTEIN_FILE, delimiter='\t')
+
+        for row in reader:
+            
+            cv_id = row['id']
+            name = row['name']
+            
+            if ( cv_id != '' and name != '' ):
+                
+                protein_name[cv_id] = name            
+
+
     # load in alias file.
     alias_info = {}
     with open(args.alias_file, 'r', newline='') as fp:
@@ -66,9 +85,8 @@ def main():
         for row in r:
         
             cv_id = row['DO_ID']
-
-                             	
             UNIPROT_ACs = row['UNIPROT_ACs']
+            
             if not isnull(UNIPROT_ACs):
                 UNIPROT_ACs = UNIPROT_ACs.split('|')
             else:
@@ -78,13 +96,13 @@ def main():
             if UNIPROT_ACs:
                 x = []
                 for UNIPROT_AC in UNIPROT_ACs: 
-                
-                	x.append(f"[{UNIPROT_AC}](https://app.nih-cfde.org/chaise/record/#1/CFDE:protein/id={UNIPROT_AC})")
+                    x.append(f"[{protein_name[UNIPROT_AC]} ({UNIPROT_AC})](https://app.nih-cfde.org/chaise/record/#1/CFDE:protein/id={UNIPROT_AC})")
+
                 
                 UNIPROT_ACs_string = ", ".join(x)
         
                     
-            alias_md = f"""## Associated Proteins\n {UNIPROT_ACs_string} \n"""
+            alias_md = f"""**Associated Proteins**: {UNIPROT_ACs_string}\n"""
                        
             alias_info[cv_id] = alias_md
 
