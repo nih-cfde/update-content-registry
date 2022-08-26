@@ -463,7 +463,7 @@ rule disease_json_genes:
     message: "build links to genes associated with diseases"
     input:
         script = "scripts/build-disease-genes.py",
-        id_list = "data/inputs/test/disease_IDs.txt",
+        id_list = "data/inputs/disease_IDs.txt",
         alias_info = "data/inputs/disease2gene.txt",
         gene_name_file = "data/inputs/Homo_sapiens.gene_info_20220304.txt_conv_wNCBI_AC.txt",
     output:
@@ -480,7 +480,7 @@ rule disease_json_protein:
     message: "build links to proteins associated with diseases"
     input:
         script = "scripts/build-disease-proteins.py",
-        id_list = "data/inputs/test/disease_IDs.txt",
+        id_list = "data/inputs/disease_IDs.txt",
         alias_info = "data/inputs/disease2protein.txt",
         protein_name_file = "data/inputs/protein_names.txt",
     output:

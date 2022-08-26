@@ -67,6 +67,10 @@ def main():
             
             cv_id = row['id']
             name = row['name']
+            
+            if ( cv_id != '' and name != '' ):
+                
+                protein_name[cv_id] = name            
 
 
     # load in alias file.
@@ -92,7 +96,7 @@ def main():
             if UNIPROT_ACs:
                 x = []
                 for UNIPROT_AC in UNIPROT_ACs: 
-                    x.append(f"[{name} ({cv_id})](https://app.nih-cfde.org/chaise/record/#1/CFDE:protein/id={cv_id})")
+                    x.append(f"[{protein_name[UNIPROT_AC]} ({UNIPROT_AC})](https://app.nih-cfde.org/chaise/record/#1/CFDE:protein/id={UNIPROT_AC})")
 
                 
                 UNIPROT_ACs_string = ", ".join(x)
