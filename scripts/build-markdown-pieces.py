@@ -84,9 +84,9 @@ def main():
         resource_markdown = None
         if term =='gene':
             if template_name == 'expression_widget':
-                resource_markdown = f"::: iframe [**Expression data (via GTEx API):**](https://mii.podvis.org/cfde-ge1/#/gene_tissues?gencode_id={cv_id}&width=1200&height=450&numTopTissues=10){{width=\"1200\" height=\"450\" style=\"border: 1px solid black;\" caption-style=\"font-size: 24px;\" caption-link=\"https://gtexportal.org/home/api-docs/index.html#/expression\" caption-target=\"_blank\"}} \n:::\n"
+                resource_markdown = f"::: iframe [**Expression data (via GTEx API):**](https://app.nih-cfde.org/gexb/#/gene_tissues?gencode_id={cv_id}&width=1200&height=450&numTopTissues=10){{width=\"1200\" height=\"450\" style=\"border: 1px solid black;\" caption-style=\"font-size: 24px;\" caption-link=\"https://gtexportal.org/home/api-docs/index.html#/expression\" caption-target=\"_blank\"}} \n:::\n"
             elif template_name == 'transcripts_widget':
-                resource_markdown = f"::: iframe [**Transcript list (via GTEx API):**](https://mii.podvis.org/cfde-ge1/#/gene_transcripts?gencode_id={cv_id}&width=1200&height=300){{width=\"1200\" height=\"300\" style=\"border: 1px solid black;\" caption-style=\"font-size: 24px;\" caption-link=\"https://gtexportal.org/home/api-docs/index.html#/reference\" caption-target=\"_blank\"}} \n:::\n";
+                resource_markdown = f"::: iframe [**Transcript list (via GTEx API):**](https://app.nih-cfde.org/gexb/#/gene_transcripts?gencode_id={cv_id}&width=1200&height=300){{width=\"1200\" height=\"300\" style=\"border: 1px solid black;\" caption-style=\"font-size: 24px;\" caption-link=\"https://gtexportal.org/home/api-docs/index.html#/reference\" caption-target=\"_blank\"}} \n:::\n";
             elif template_name == 'alias_tables':
                 assert 0
             else:
@@ -94,7 +94,7 @@ def main():
         elif term =='anatomy':
             if template_name == 'expression_widget':
                 cv_id_encoded = urllib.parse.quote(cv_id)
-                resource_markdown = f"::: iframe [**Expression data from GTEx:**](https://mii.podvis.org/cfde-ge1/#/anatomy?uberon_ids={cv_id_encoded}&width=1400&height=550&numTopGenes=25){{width=\"1400\" height=\"550\" style=\"border: 1px solid black;\" caption-style=\"font-size: 24px;\" caption-link=\"https://gtexportal.org/home/api-docs/index.html#/expression\" caption-target=\"_blank\"}} \n:::\n"
+                resource_markdown = f"::: iframe [**Expression data from GTEx:**](https://app.nih-cfde.org/gexb/#/anatomy?uberon_ids={cv_id_encoded}&width=1400&height=550&numTopGenes=25){{width=\"1400\" height=\"550\" style=\"border: 1px solid black;\" caption-style=\"font-size: 24px;\" caption-link=\"https://gtexportal.org/home/api-docs/index.html#/expression\" caption-target=\"_blank\"}} \n:::\n"
             else:
                 assert 0
         elif term == 'compound':
