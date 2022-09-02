@@ -17,4 +17,5 @@ jobs:
         run: |
           python3 -m pip install --upgrade pip     # install pip
           python3 -m pip install snakemake         # ...and snakemake
+          python3 -m pip install pandas         # ...and pandas
       - run: snakemake -j 1
