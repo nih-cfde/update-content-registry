@@ -1,9 +1,12 @@
 """
 Utility code common to content registry foo.
 """
+
 import os.path
 import urllib.parse
 import json
+from urllib.request import urlopen
+import pandas as pd
 
 
 REF_FILES = {
@@ -35,3 +38,17 @@ def write_output_pieces(output_dir, widget_name, cv_id, md, *, verbose=False):
 
     if verbose:
         print(f"Wrote markdown to {output_filename}")
+
+
+def get_portal_page_ids(term):
+    # get list of ids with portal pages from json
+    url = f'https://app.nih-cfde.org/ermrest/catalog/1/attribute/CFDE:{term}/id@sort(id)' 
+    response = urlopen(url)
+    data_json = json.loads(response.read())
+    df = pd.json_normalize(data_json)    
+    ids = df["id"].to_numpy()
+    
+    print(f"Loaded {len(ids)} {term} IDs in the CFDE Portal from {url}")
+    
+    return(ids)
+    

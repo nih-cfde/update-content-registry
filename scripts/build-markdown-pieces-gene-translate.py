@@ -6,8 +6,6 @@ import json
 import urllib.parse
 import os.path
 from collections import defaultdict
-from urllib.request import urlopen
-import pandas as pd
 
 import cfde_common
 
@@ -149,38 +147,18 @@ def main():
 
     print(f"Loaded {len(id_list)} IDs from {args.id_list}",
           file=sys.stderr)
+    
+    
+    # filter by ids with a page in the portal
+    
+    id_pages = cfde_common.get_portal_page_ids(term)
 
-
-    # retrieve list of ids with portal pages
-    url = "https://app.nih-cfde.org/ermrest/catalog/1/attribute/CFDE:gene/id@sort(id)"  
-    response = urlopen(url)
-    data_json = json.loads(response.read())
-    portal_pages = pd.json_normalize(data_json)    
-    portal_page_ids = portal_pages["id"].to_numpy()
-
-    # load up each ID in id_list file - does it have a portal page?
-    # if not, complain.
-    # we could also remove them here. we don't want to output markdown
-    # for them!
-    id_list2 = set()
-    with open(args.id_list, 'rt') as fp:
-        for line in fp:
-            line = line.strip()
-            if line:
-                if line not in portal_page_ids:
-                    print(f"ERROR: requested input id {line} not found in portal_page_ids", file=sys.stderr)
-                    print(f"skipping!", file=sys.stderr)
-                    continue
-                    #sys.exit(-1)
-
-                id_list2.add(line)
-
-    print(f"Loaded {len(id_list2)} IDs contained in both the ref list and the portal page list.",
-          file=sys.stderr)
-
+    id_list_filtered = [value for value in id_list if value in id_pages]        
+    
+    print(f"Processing {len(id_list_filtered)} {term} IDs.")
 
     template_name = 'alias_tables'
-    for cv_id in sorted(id_list2):
+    for cv_id in sorted(id_list_filtered):
         resource_markdown = alias_info.get(cv_id)
         if resource_markdown:
             # write out JSON pieces for aggregation & upload
