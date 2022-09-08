@@ -249,7 +249,7 @@ rule anatomy_json_expression_widget:
     message: "build expression widgets for anatomy terms"
     input:
         script = "scripts/build-markdown-pieces.py",
-        id_list = "data/inputs/anatomy_gtex.txt",
+        id_list = "data/inputs/anatomy_IDs_for_gtex.txt",
     output:
         directory("output_pieces_anatomy/10-expression")
     params:
@@ -447,7 +447,7 @@ rule disease_json_links:
     message: "build links for disease terms"
     input:
         script = "scripts/build-disease-links.py",
-        id_list = "data/inputs/test/disease_IDs.txt",
+        id_list = "data/inputs/disease_IDs.txt",
     output:
         directory("output_pieces_disease/00-links")
     params:
