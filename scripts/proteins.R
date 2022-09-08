@@ -70,7 +70,7 @@ df4 <- df2 %>%
   rename(UNIPROT_AC = id)
 head(df4)
 
-write.table(df4, "../data/inputs/proteins2disease2genes.txt", 
+write.table(df4, "../data/inputs/protein2disease.txt", 
             row.names = F, quote = F, sep = "\t")
 
 proteinswithdisease <- pull(df4, UNIPROT_AC )

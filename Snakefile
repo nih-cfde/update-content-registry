@@ -411,7 +411,7 @@ rule protein_json_disease:
     message: "build protein markdown for diseases"
     input:
         script = "scripts/build-protein-disease.py",
-        id_list = "data/inputs/proteins_IDs_withdisease.txt",
+        id_list = "data/inputs/protein_IDs_for_disease.txt",
         disease_name_file = "data/inputs/disease_names.txt",
         alias_info = "data/inputs/protein2disease.txt",
     output:
