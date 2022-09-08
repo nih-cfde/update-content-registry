@@ -67,6 +67,7 @@ df4 <- df2 %>%
   mutate(DO_IDs = paste0(DO_ID, collapse = "|"))  %>%
   select(-DO_ID) %>%
   distinct() %>%
+  rename(DO_ID = DO_IDs) %>%
   rename(UNIPROT_AC = id)
 head(df4)
 
