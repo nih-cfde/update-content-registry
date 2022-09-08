@@ -164,7 +164,13 @@ def main():
     print(f"Loaded {len(id_list)} IDs from {args.id_list}",
           file=sys.stderr)
 
-    for cv_id in sorted(id_list):
+    # filter by ids with a page in the portal
+    id_pages = cfde_common.get_portal_page_ids(term)
+    id_list_filtered = [value for value in id_list if value in id_pages]        
+    print(f"Using  {len(id_list_filtered)} {term} IDs.")
+
+
+    for cv_id in sorted(id_list_filtered):
         resource_markdown = None
         if term =='gene':
             if template_name == 'kg_widget':

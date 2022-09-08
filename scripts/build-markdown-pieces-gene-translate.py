@@ -150,12 +150,9 @@ def main():
     
     
     # filter by ids with a page in the portal
-    
     id_pages = cfde_common.get_portal_page_ids(term)
-
     id_list_filtered = [value for value in id_list if value in id_pages]        
-    
-    print(f"Processing {len(id_list_filtered)} {term} IDs.")
+    print(f"Using  {len(id_list_filtered)} {term} IDs.")
 
     template_name = 'alias_tables'
     for cv_id in sorted(id_list_filtered):
