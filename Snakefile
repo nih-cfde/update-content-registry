@@ -124,7 +124,7 @@ rule gene_json_alias_widget:
     message: "build alias widgets for genes"
     input:
         script = "scripts/build-markdown-pieces-gene-translate.py",
-        id_list = "data/inputs/STAGING_PORTAL__available_genes__2022-08-19.txt",
+        id_list = "data/inputs/gene_IDs_for_alias_tables.txt",
         alias_info = "data/inputs/Homo_sapiens.gene_info_20220304.txt_conv_wNCBI_AC.txt",
     output:
         directory("output_pieces_gene/00-alias")
@@ -140,7 +140,7 @@ rule gene_json_appyter_link:
     message: "build gene/appyter links for genes"
     input:
         script = "scripts/build-appyter-gene-links.py",
-        id_list = "data/inputs/STAGING_PORTAL__available_genes__2022-08-19.txt",
+        id_list = "data/inputs/gene_IDs_for_alias_tables.txt",
     output:
         directory("output_pieces_gene/01-appyter")
     params:
@@ -234,7 +234,7 @@ rule anatomy_link:
     message: "add link to embl ols"
     input:
         script = "scripts/build-anatomy-links.py",
-        id_list = "data/inputs/STAGING_PORTAL__anatomy__2022-07-22.txt",
+        id_list = "data/inputs/anatomy_IDs_for_embl.txt",
     output:
         directory("output_pieces_anatomy/01-embl")
     params:
