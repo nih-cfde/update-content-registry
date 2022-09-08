@@ -29,12 +29,17 @@ write.table(df, "../data/inputs/gene_IDs_for_MetGene.txt",
 # gunzip GTEx_Analysis_2017-06-05_v8_RNASeQCv1.1.9_gene_reads.gct.gz
 # sed '1,2d' GTEx_Analysis_2017-06-05_v8_RNASeQCv1.1.9_gene_reads.gct | cut -f 1  > GTEx.list.txt
 
-df2 <- read.table("~/Downloads/GTEx.list.txt", header = T) %>%
+
+df2 <- read_tsv("../data/validate/ensembl_genes.tsv") %>%
+  rename(V1 = id) %>%
+  select(V1)
+head(df2)
+
+df3 <- read.table("~/Downloads/GTEx.list.txt", header = T) %>%
   arrange(Name) %>%
   separate(Name, into = c("V1", "Transcript"), sep  = "\\.") %>%
   select(V1) %>%
-  distinct(V1) %>%
-  filter(grepl("ENSG", V1))
+  inner_join(., df2) 
 
-write.table(df2, "../data/inputs/gene_IDS_for_gtex.txt", 
+write.table(df3, "../data/inputs/gene_IDS_for_gtex.txt", 
             row.names = F, col.names = F, quote =  F)
