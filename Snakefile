@@ -5,7 +5,7 @@
 ## 'anatomy', 'compound', 'disease', 'gene', 'protein'
 
 
-TERM_TYPES = ['anatomy', 'compound', 'disease', 'gene', 'protein']
+TERM_TYPES = ['protein']
 
 rule all:
     message:
@@ -447,7 +447,7 @@ rule disease_json_links:
     message: "build links for disease terms"
     input:
         script = "scripts/build-disease-links.py",
-        id_list = "data/inputs/test/disease_IDs.txt",
+        id_list = "data/inputs/disease_IDs.txt",
     output:
         directory("output_pieces_disease/00-links")
     params:
