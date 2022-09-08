@@ -110,9 +110,16 @@ def main():
 
     print(f"Loaded {len(id_list)} IDs from {args.id_list}",
           file=sys.stderr)
+          
+          
+    # filter by ids with a page in the portal
+    id_pages = cfde_common.get_portal_page_ids(term)
+    id_list_filtered = [value for value in id_list if value in id_pages]        
+    print(f"Using  {len(id_list_filtered)} {term} IDs.")
+
 
     template_name = 'alias_tables'
-    for cv_id in sorted(id_list):
+    for cv_id in sorted(id_list_filtered):
         resource_markdown = alias_info.get(cv_id)
         if resource_markdown:
             # write out JSON pieces for aggregation & upload
