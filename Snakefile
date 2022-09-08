@@ -5,7 +5,7 @@
 ## 'anatomy', 'compound', 'disease', 'gene', 'protein'
 
 
-TERM_TYPES = ['protein']
+TERM_TYPES = ['gene']
 
 rule all:
     message:
