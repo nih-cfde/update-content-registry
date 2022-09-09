@@ -1,6 +1,9 @@
 all:
 	snakemake -j 1
 
+retrieve:
+	snakemake -j 1 retrieve
+
 upload:
 	snakemake -j 1 upload
 
