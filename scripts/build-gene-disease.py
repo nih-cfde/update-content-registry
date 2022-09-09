@@ -134,7 +134,7 @@ def main():
             cfde_common.write_output_pieces(output_dir, args.widget_name,
                                             cv_id, resource_markdown)
         else:
-            print(f"WARNING: missing markdown for identifier {cv_id}")
+            print(f"WARNING: missing alias information for {cv_id}")
 
 if __name__ == '__main__':
     sys.exit(main())

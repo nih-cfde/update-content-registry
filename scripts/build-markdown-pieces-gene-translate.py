@@ -38,7 +38,7 @@ def main():
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
 
-    ref_file = cfde_common.REF_FILES.get(term)
+    ref_file = cfde_common.ID_FILES.get(term)
     if ref_file is None:
         print(f"ERROR: no ref file for term. Dying terribly.", file=sys.stderr)
         sys.exit(-1)
@@ -46,7 +46,7 @@ def main():
     # load in ref file; ID is first column
     ref_id_list = set()
     with open(ref_file, 'r', newline='') as fp:
-        r = csv.DictReader(fp, delimiter='\t')
+        r = csv.DictReader(fp, delimiter=',')
         for row in r:
             ref_id = row['id']
             ref_id_list.add(ref_id)
@@ -149,13 +149,8 @@ def main():
           file=sys.stderr)
     
     
-    # filter by ids with a page in the portal
-    id_pages = cfde_common.get_portal_page_ids(term)
-    id_list_filtered = [value for value in id_list if value in id_pages]        
-    print(f"Using  {len(id_list_filtered)} {term} IDs.")
-
     template_name = 'alias_tables'
-    for cv_id in sorted(id_list_filtered):
+    for cv_id in sorted(id_list):
         resource_markdown = alias_info.get(cv_id)
         if resource_markdown:
             # write out JSON pieces for aggregation & upload
