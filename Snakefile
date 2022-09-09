@@ -24,11 +24,7 @@ rule retrieve:
         "data/validate/gene.csv",
         "data/validate/protein.csv",
     shell: """
-        curl -L "https://app.nih-cfde.org/ermrest/catalog/1/attribute/CFDE:anatomy/id@sort(id)?accept=csv" -o data/validate/anatomy.csv
-        curl -L "https://app.nih-cfde.org/ermrest/catalog/1/attribute/CFDE:gene/id@sort(id)?accept=csv" -o data/validate/gene.csv
-        curl -L "https://app.nih-cfde.org/ermrest/catalog/1/attribute/CFDE:compound/id@sort(id)?accept=csv" -o data/validate/compound.csv
-        curl -L "https://app.nih-cfde.org/ermrest/catalog/1/attribute/CFDE:disease/id@sort(id)?accept=csv" -o data/validate/disease.csv
-        curl -L "https://app.nih-cfde.org/ermrest/catalog/1/attribute/CFDE:protein/id@sort(id)?accept=csv" -o data/validate/protein.csv
+        bash scripts/retrieve-ids.sh
     """
 
 
