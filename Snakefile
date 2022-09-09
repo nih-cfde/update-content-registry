@@ -5,13 +5,31 @@
 ## 'anatomy', 'compound', 'disease', 'gene', 'protein'
 
 
-TERM_TYPES = ['gene']
+TERM_TYPES = ['anatomy', 'compound', 'disease', 'gene', 'protein']
 
 rule all:
     message:
         f"Building content for all {len(TERM_TYPES)} controlled vocab types."
     input:
         expand('upload_json/{t}.json', t=TERM_TYPES)
+
+
+rule retrieve: 
+    message:
+        f"retrieve list of ids in the registry"
+    output:
+        "data/validate/anatomy.csv",
+        "data/validate/disease.csv",
+        "data/validate/compound.csv",
+        "data/validate/gene.csv",
+        "data/validate/protein.csv",
+    shell: """
+        curl -L "https://app.nih-cfde.org/ermrest/catalog/1/attribute/CFDE:anatomy/id@sort(id)?accept=csv" -o data/validate/anatomy.csv
+        curl -L "https://app.nih-cfde.org/ermrest/catalog/1/attribute/CFDE:gene/id@sort(id)?accept=csv" -o data/validate/gene.csv
+        curl -L "https://app.nih-cfde.org/ermrest/catalog/1/attribute/CFDE:compound/id@sort(id)?accept=csv" -o data/validate/compound.csv
+        curl -L "https://app.nih-cfde.org/ermrest/catalog/1/attribute/CFDE:disease/id@sort(id)?accept=csv" -o data/validate/disease.csv
+        curl -L "https://app.nih-cfde.org/ermrest/catalog/1/attribute/CFDE:protein/id@sort(id)?accept=csv" -o data/validate/protein.csv
+    """
 
 
 rule upload:
@@ -37,12 +55,12 @@ rule gene_json:
     input:
         "output_pieces_gene/00-alias",
         "output_pieces_gene/01-appyter",
-        "output_pieces_gene/02-appyter-lincs-geo-reverse",
-        "output_pieces_gene/03-kg",
+        #"output_pieces_gene/02-appyter-lincs-geo-reverse",
+        #"output_pieces_gene/03-kg",
         "output_pieces_gene/04-disease",
         "output_pieces_gene/05-MetGene",
         "output_pieces_gene/10-expression",
-        "output_pieces_gene/11-reverse-search",
+        #"output_pieces_gene/11-reverse-search",
         "output_pieces_gene/20-transcripts",
         "output_pieces_gene/70-ucsc",
     output:
@@ -57,7 +75,7 @@ rule anatomy_json:
         "build markdown content for anatomy terms."
     input:
         "output_pieces_anatomy/01-embl",
-        "output_pieces_anatomy/01-kg",
+        #"output_pieces_anatomy/01-kg",
         "output_pieces_anatomy/10-expression",
 
     output:
@@ -73,7 +91,7 @@ rule compound_json:
     input:
          "output_pieces_compound/01-pubchem",
          "output_pieces_compound/02-glycan",
-         "output_pieces_compound/03-kg",
+         #"output_pieces_compound/03-kg",
          "output_pieces_compound/04-drugcentral",
     output:
         json = "upload_json/compound.json",
