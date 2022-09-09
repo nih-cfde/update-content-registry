@@ -16,6 +16,14 @@ REF_FILES = {
     'gene': 'data/validate/ensembl_genes.tsv',
     'protein': 'data/validate/protein.tsv',
     }
+    
+ID_FILES = {
+    'anatomy': 'data/validate/anatomy.csv',
+    'compound': 'data/validate/compound.csv',
+    'disease': 'data/validate/disease.csv',
+    'gene': 'data/validate/gene.csv',
+    'protein': 'data/validate/protein.csv',
+    }    
 
 
 def write_output_pieces(output_dir, widget_name, cv_id, md, *, verbose=False):
