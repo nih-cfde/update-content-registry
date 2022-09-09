@@ -67,10 +67,11 @@ df4 <- df2 %>%
   mutate(DO_IDs = paste0(DO_ID, collapse = "|"))  %>%
   select(-DO_ID) %>%
   distinct() %>%
+  rename(DO_ID = DO_IDs) %>%
   rename(UNIPROT_AC = id)
 head(df4)
 
-write.table(df4, "../data/inputs/proteins2disease2genes.txt", 
+write.table(df4, "../data/inputs/protein2disease.txt", 
             row.names = F, quote = F, sep = "\t")
 
 proteinswithdisease <- pull(df4, UNIPROT_AC )

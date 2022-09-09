@@ -124,7 +124,7 @@ rule gene_json_alias_widget:
     message: "build alias widgets for genes"
     input:
         script = "scripts/build-markdown-pieces-gene-translate.py",
-        id_list = "data/inputs/STAGING_PORTAL__available_genes__2022-08-19.txt",
+        id_list = "data/inputs/gene_IDs_for_alias_tables.txt",
         alias_info = "data/inputs/Homo_sapiens.gene_info_20220304.txt_conv_wNCBI_AC.txt",
     output:
         directory("output_pieces_gene/00-alias")
@@ -140,7 +140,7 @@ rule gene_json_appyter_link:
     message: "build gene/appyter links for genes"
     input:
         script = "scripts/build-appyter-gene-links.py",
-        id_list = "data/inputs/STAGING_PORTAL__available_genes__2022-08-19.txt",
+        id_list = "data/inputs/gene_IDs_for_alias_tables.txt",
     output:
         directory("output_pieces_gene/01-appyter")
     params:
@@ -234,7 +234,7 @@ rule anatomy_link:
     message: "add link to embl ols"
     input:
         script = "scripts/build-anatomy-links.py",
-        id_list = "data/inputs/STAGING_PORTAL__anatomy__2022-07-22.txt",
+        id_list = "data/inputs/anatomy_IDs_for_embl.txt",
     output:
         directory("output_pieces_anatomy/01-embl")
     params:
@@ -249,7 +249,7 @@ rule anatomy_json_expression_widget:
     message: "build expression widgets for anatomy terms"
     input:
         script = "scripts/build-markdown-pieces.py",
-        id_list = "data/inputs/anatomy_gtex.txt",
+        id_list = "data/inputs/anatomy_IDs_for_gtex.txt",
     output:
         directory("output_pieces_anatomy/10-expression")
     params:
@@ -411,7 +411,7 @@ rule protein_json_disease:
     message: "build protein markdown for diseases"
     input:
         script = "scripts/build-protein-disease.py",
-        id_list = "data/inputs/proteins_IDs_withdisease.txt",
+        id_list = "data/inputs/protein_IDs_for_disease.txt",
         disease_name_file = "data/inputs/disease_names.txt",
         alias_info = "data/inputs/protein2disease.txt",
     output:
@@ -447,7 +447,7 @@ rule disease_json_links:
     message: "build links for disease terms"
     input:
         script = "scripts/build-disease-links.py",
-        id_list = "data/inputs/test/disease_IDs.txt",
+        id_list = "data/inputs/disease_IDs.txt",
     output:
         directory("output_pieces_disease/00-links")
     params:
