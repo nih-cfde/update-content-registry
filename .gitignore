@@ -4,3 +4,8 @@ upload_json
 .snakemake
 __pycache__
 .DS_Store
+data/validate/anatomy.csv
+data/validate/compound.csv
+data/validate/disease.csv
+data/validate/gene.csv
+data/validate/protein.csv

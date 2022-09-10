@@ -2,10 +2,20 @@
 ## Workflow logic to build and then upload content registry information.
 ##
 
-## 'anatomy', 'compound', 'disease', 'gene', 'protein'
-
-
 TERM_TYPES = ['anatomy', 'compound', 'disease', 'gene', 'protein']
+
+# dictionary mapping terms to list of valid IDs.
+#
+# note: could do further magic by just building the URL directly, but this
+# is simpler to grok, I think.
+VALID_ID_URLS = {
+    'anatomy': 'https://app.nih-cfde.org/ermrest/catalog/1/attribute/CFDE:anatomy/id@sort(id)?accept=csv',
+    'gene': 'https://app.nih-cfde.org/ermrest/catalog/1/attribute/CFDE:gene/id@sort(id)?accept=csv',
+    'protein': 'https://app.nih-cfde.org/ermrest/catalog/1/attribute/CFDE:protein/id@sort(id)?accept=csv',
+    'disease': 'https://app.nih-cfde.org/ermrest/catalog/1/attribute/CFDE:disease/id@sort(id)?accept=csv',
+    'compound': 'https://app.nih-cfde.org/ermrest/catalog/1/attribute/CFDE:compound/id@sort(id)?accept=csv',
+    }
+
 
 rule all:
     message:
@@ -17,14 +27,19 @@ rule all:
 rule retrieve: 
     message:
         f"retrieve list of ids in the registry"
+    input:
+        expand("data/validate/{term}.csv", term=TERM_TYPES)
+
+
+# use wildcards to pull down the valid IDs file for each term
+rule retrieve_term_wc:
     output:
-        "data/validate/anatomy.csv",
-        "data/validate/disease.csv",
-        "data/validate/compound.csv",
-        "data/validate/gene.csv",
-        "data/validate/protein.csv",
+        "data/validate/{term}.csv",
+    params:
+        # construct url by looking up term in VALID_ID_URLS dynamically
+        url = lambda w: VALID_ID_URLS[w.term]
     shell: """
-        bash scripts/retrieve-ids.sh
+        CURL -L "{params.url}" -o {output}
     """
 
 
@@ -32,14 +47,10 @@ rule upload:
     message:
         "upload new content to the registry."
     input:
-        "upload_json/gene.json",
-        "upload_json/anatomy.json",
-        "upload_json/compound.json",
-        "upload_json/protein.json",
-        "upload_json/disease.json",
+        expand('upload_json/{term}.json', term=TERM_TYPES)
     shell: """
         export DERIVA_SERVERNAME=app-staging.nih-cfde.org
-        python3 -m cfde_deriva.registry upload-resources upload_json/disease.json upload_json/protein.json upload_json/compound.json upload_json/gene.json  upload_json/anatomy.json  
+        python3 -m cfde_deriva.registry upload-resources {input}
         python3 -m cfde_deriva.release refresh-resources 5e0b5f45-2b99-4026-8d22-d1a642a9e903
 
     """
