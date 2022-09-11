@@ -118,7 +118,7 @@ def main():
             line = line.strip()
             if line:
                 if line not in ref_id_list:
-                    print(f"ERROR: requested input id {line} not found in ref_id_list", file=sys.stderr)
+                    print(f"WARNING requested input id {line} not found in {ref_file}", file=sys.stderr)
                     sys.exit(-1)
 
                 id_list.add(line)
