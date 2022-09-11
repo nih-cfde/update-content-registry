@@ -39,7 +39,7 @@ rule retrieve_term_wc:
         # construct url by looking up term in VALID_ID_URLS dynamically
         url = lambda w: VALID_ID_URLS[w.term]
     shell: """
-        CURL -L "{params.url}" -o {output}
+        curl -L "{params.url}" -o {output}
     """
 
 
