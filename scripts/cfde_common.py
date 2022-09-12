@@ -7,6 +7,8 @@ import urllib.parse
 import json
 from urllib.request import urlopen
 import pandas as pd
+import csv
+import sys
 
 
 REF_FILES = {
@@ -48,15 +50,24 @@ def write_output_pieces(output_dir, widget_name, cv_id, md, *, verbose=False):
         print(f"Wrote markdown to {output_filename}")
 
 
-def get_portal_page_ids(term):
-    # get list of ids with portal pages from json
-    url = f'https://app.nih-cfde.org/ermrest/catalog/1/attribute/CFDE:{term}/id@sort(id)' 
-    response = urlopen(url)
-    data_json = json.loads(response.read())
-    df = pd.json_normalize(data_json)    
-    ids = df["id"].to_numpy()
+def get_validation_ids(term):
+    # get list of validation retrieved form portal pages
+    validation_file = ID_FILES.get(term)
+    if validation_file is None:
+        print(f"ERROR: no validation file. Run `make retrieve`.", file=sys.stderr)
+        sys.exit(-1)
+        
+    # load validation; ID is first column
+    validation_ids = set()
+    with open(validation_file, 'r', newline='') as fp:
+        r = csv.DictReader(fp, delimiter=',')
+        for row in r:
+            validation_id = row['id']
+            validation_ids.add(validation_id)
+
+    print(f"Loaded {len(validation_ids)} validation IDs from {validation_file}",
+          file=sys.stderr)
+          
+    return(validation_ids)      
     
-    print(f"Loaded {len(ids)} {term} IDs in the CFDE Portal from {url}")
-    
-    return(ids)
     

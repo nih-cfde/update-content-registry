@@ -28,8 +28,9 @@ def main():
         sys.exit(-1)
 
     print(f"Running with term: {term}", file=sys.stderr)
+    
 
-    # output dir default
+    # output dir defau dlt
     output_dir = args.output_dir
     if output_dir is None:
         output_dir = f"output_pieces_{term}"
@@ -38,21 +39,11 @@ def main():
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
 
-    ref_file = cfde_common.ID_FILES.get(term)
-    if ref_file is None:
-        print(f"ERROR: no ref file for term. Dying terribly.", file=sys.stderr)
-        sys.exit(-1)
+    # print length of input list
+    with open(args.id_list, 'r') as fp:
+        x = len(fp.readlines())
+    print(f"Loaded {x} IDs from {args.id_list}.", file=sys.stderr)
 
-    # load in ref file; ID is first column
-    ref_id_list = set()
-    with open(ref_file, 'r', newline='') as fp:
-        r = csv.DictReader(fp, delimiter='\t')
-        for row in r:
-            ref_id = row['id']
-            ref_id_list.add(ref_id)
-
-    print(f"Loaded {len(ref_id_list)} reference IDs from {ref_file}",
-          file=sys.stderr)
 
     # load in alias file.
     alias_info = {}
@@ -125,14 +116,19 @@ def main():
             alias_info[cv_id] = alias_md
 
 
-    # load in id list
+    # validate ids
+    validation_ids = cfde_common.get_validation_ids(term)
+
     skipped_list = set()
     id_list = set()
     with open(args.id_list, 'rt') as fp:
         for line in fp:
             line = line.strip()
             if line:
-                if line not in ref_id_list:
+                if line in validation_ids:
+                    id_list.add(line)
+
+                if line not in validation_ids:
                 
                     skipped_list.add(line)
                     
@@ -140,12 +136,11 @@ def main():
                     f.write(f"{args.widget_name},{term},{line},ref\n")
                     f.close()
 
-                id_list.add(line)
-
-    print(f"Loaded {len(id_list)} IDs from {args.id_list}.\nSkipped {len(skipped_list)} IDs not found in {ref_file}.",
+    print(f"Validated {len(id_list)} IDs from {args.id_list}.\nSkipped {len(skipped_list)} IDs not found in validation file.",
           file=sys.stderr)
 
 
+    # create markdown for files with alias info
     template_name = 'alias_tables'
     skipped_list2 = set()
     for cv_id in sorted(id_list):
@@ -154,6 +149,7 @@ def main():
             # write out JSON pieces for aggregation & upload
             cfde_common.write_output_pieces(output_dir, args.widget_name,
                                             cv_id, resource_markdown)
+                               
         else:
             skipped_list2.add(cv_id)
             
@@ -161,8 +157,13 @@ def main():
             f.write(f"{args.widget_name},{term},{cv_id},alias\n")
             f.close()
 
-    print(f"Skipped {len(skipped_list2)} IDs not found in {args.alias_file}.",
+    print(f"Skipped {len(skipped_list2)} IDs not found in alias table.",
           file=sys.stderr)
+    
+    
+    num_json_files =   round( len(cv_id) / 2 )   
+    print(f"Wrote {num_json_files} .json files to {output_dir}.",
+          file=sys.stderr)       
           
           
 if __name__ == '__main__':
