@@ -143,9 +143,11 @@ def main():
     # create markdown for files with alias info
     template_name = 'alias_tables'
     skipped_list2 = set()
+    id_list2 = set()
     for cv_id in sorted(id_list):
         resource_markdown = alias_info.get(cv_id)
         if resource_markdown:
+            id_list2.add(cv_id)
             # write out JSON pieces for aggregation & upload
             cfde_common.write_output_pieces(output_dir, args.widget_name,
                                             cv_id, resource_markdown)
@@ -161,7 +163,7 @@ def main():
           file=sys.stderr)
     
     # summarize output  
-    print(f"Wrote {len(cv_id)} .json files to {output_dir}.",
+    print(f"Wrote {len(id_list2)} .json files to {output_dir}.",
           file=sys.stderr)       
           
           
