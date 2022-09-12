@@ -160,9 +160,8 @@ def main():
     print(f"Skipped {len(skipped_list2)} IDs not found in alias table.",
           file=sys.stderr)
     
-    # summarize output
-    num_json_files =   round( len(cv_id) / 2 )   
-    print(f"Wrote {num_json_files} .json files to {output_dir}.",
+    # summarize output  
+    print(f"Wrote {len(cv_id)} .json files to {output_dir}.",
           file=sys.stderr)       
           
           

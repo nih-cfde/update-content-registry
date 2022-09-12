@@ -64,6 +64,8 @@ def main():
         for line in fp:
             line = line.strip()
             if line:
+                if line in ref_id_list:
+                    id_list.add(line)
                 if line not in ref_id_list:
                 
                     skipped_list.add(line)
@@ -72,8 +74,7 @@ def main():
                     f.write(f"{args.widget_name},{term},{line},ref\n")
                     f.close()
 
-                id_list.add(line)
-
+            
     print(f"Loaded {len(id_list)} IDs from {args.id_list}.\nSkipped {len(skipped_list)} IDs not found in {ref_file}.",
           file=sys.stderr)
 

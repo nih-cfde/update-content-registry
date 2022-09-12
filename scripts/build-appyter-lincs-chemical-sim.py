@@ -112,6 +112,8 @@ def main():
         for line in fp:
             line = line.strip()
             if line:
+                if line in ref_id_list:
+                    id_list.add(line)
                 if line not in ref_id_list:
                     skipped_list.add(line)
                     
@@ -119,10 +121,8 @@ def main():
                     f.write(f"{args.widget_name},{term},{line},alias\n")
                     f.close()
 
-                id_list.add(line)
-
-    print(f"Skipped {len(skipped_list)} IDs not found in {ref_file}.",
-          file=sys.stderr)
+        
+    print(f"Skipped {len(skipped_list)} IDs not found in {ref_file}.",  file=sys.stderr)
           
 
     # validate ids
@@ -135,7 +135,7 @@ def main():
             line = line.strip()
             if line:
                 if line in validation_ids:
-                    id_list.add(line)
+                    id_list2.add(line)
 
                 if line not in validation_ids:
                 
