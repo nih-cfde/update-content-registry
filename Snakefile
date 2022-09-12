@@ -458,7 +458,7 @@ rule protein_json_refseq:
     message: "build protein markdown for refseq"
     input:
         script = "scripts/build-protein-refseq.py",
-        id_list = "data/inputs/test/protein_IDs.txt",
+        id_list = "data/inputs/protein_IDs.txt",
         alias_info = "data/validate/protein.tsv",
         validate_csv = expand("data/validate/{term}.csv", term=TERM_TYPES)
     output:
@@ -475,7 +475,7 @@ rule protein_json_disease:
     message: "build protein markdown for diseases"
     input:
         script = "scripts/build-protein-disease.py",
-        id_list = "data/inputs/test/protein_IDs.txt",
+        id_list = "data/inputs/protein_IDs.txt",
         disease_name_file = "data/inputs/disease_names.txt",
         alias_info = "data/inputs/protein2disease.txt",
         validate_csv = expand("data/validate/{term}.csv", term=TERM_TYPES)
