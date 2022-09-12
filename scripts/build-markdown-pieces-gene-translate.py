@@ -152,7 +152,7 @@ def main():
     skipped_list2 = set()
     id_list2 = set()
     for cv_id in sorted(id_list):
-        if cv_id in sorted(id_list):
+        if cv_id in id_list:
             resource_markdown = alias_info.get(cv_id)
             if resource_markdown:
                 id_list2.add(cv_id)
