@@ -65,10 +65,7 @@ def main():
         f.write(f"{dirpath},{jsonCounter}\n")
         f.close()
         
-        
-
-
-    
+           
     
     #
     # now, merge 'resource_markdown' entries by (sorted) filename.
