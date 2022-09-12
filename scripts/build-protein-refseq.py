@@ -136,7 +136,7 @@ def main():
                 
                     skipped_list.add(line)
                     
-                    f = open("logs/skipped.csv", "w")
+                    f = open("logs/skipped.csv", "a")
                     f.write(f"{args.widget_name},{term},{line},ref\n")
                     f.close()
 

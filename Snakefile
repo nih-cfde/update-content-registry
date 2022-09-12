@@ -84,7 +84,7 @@ rule anatomy_json:
         "build markdown content for anatomy terms."
     input:
         "output_pieces_anatomy/01-embl",
-        #"output_pieces_anatomy/01-kg",
+        "output_pieces_anatomy/01-kg",
         "output_pieces_anatomy/10-expression",
 
     output:

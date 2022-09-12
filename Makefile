@@ -10,4 +10,6 @@ upload:
 update: upload
 
 clean:
-	rm -fr output_pieces_* upload_json logs/skipped.csv
+	rm -fr output_pieces_* upload_json logs/*.csv
+	touch logs/skipped.csv
+	touch logs/chunks.csv
