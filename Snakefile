@@ -202,7 +202,7 @@ rule gene_json_ucsc_genome_browser_widget:
     message: "build UCSC genome browser iframe-include for genes"
     input:
         script = "scripts/build-markdown-pieces-ucsc-genome-browser-widget.pl",
-        id_list = "data/inputs/gene_IDs_for_UCSC_genome_browser_widget.txt",
+        id_list = "data/inputs/gene_IDs_for_alias_tables.txt",
         coord_info = "data/inputs/homo_sapiens.coords.tsv",
         validate_csv = expand("data/validate/{term}.csv", term=TERM_TYPES)
     output:
