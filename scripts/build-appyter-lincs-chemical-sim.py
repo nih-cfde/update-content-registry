@@ -121,9 +121,33 @@ def main():
 
                 id_list.add(line)
 
-    print(f"Loaded {len(id_list)} IDs from {args.id_list}.\nSkipped {len(skipped_list)} IDs not found in {ref_file}.",
+    print(f"Skipped {len(skipped_list)} IDs not found in {ref_file}.",
           file=sys.stderr)
           
+
+    # validate ids
+    validation_ids = cfde_common.get_validation_ids(term)
+
+    skipped_list2 = set()
+    id_list2 = set()
+    with open(args.id_list, 'rt') as fp:
+        for line in fp:
+            line = line.strip()
+            if line:
+                if line in validation_ids:
+                    id_list.add(line)
+
+                if line not in validation_ids:
+                
+                    skipped_list.add(line)
+                    
+                    f = open("logs/skipped.csv", "a")
+                    f.write(f"{args.widget_name},{term},{line},ref\n")
+                    f.close()
+
+    print(f"Validated {len(id_list)} IDs from {args.id_list}.\nSkipped {len(skipped_list)} IDs not found in validation file.",
+          file=sys.stderr)
+
 
 
     # now iterate over and make markdown, then save JSON + md.
@@ -134,6 +158,9 @@ def main():
         cfde_common.write_output_pieces(output_dir, args.widget_name,
                                         cv_id, md)
 
-
+    # summarize output 
+    print(f"Wrote {len(id_list2)} .json files to {output_dir}.",
+          file=sys.stderr)  
+          
 if __name__ == '__main__':
     sys.exit(main())

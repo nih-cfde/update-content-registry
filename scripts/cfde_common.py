@@ -65,7 +65,7 @@ def get_validation_ids(term):
             validation_id = row['id']
             validation_ids.add(validation_id)
 
-    print(f"Loaded {len(validation_ids)} validation IDs from {validation_file}",
+    print(f"Loaded {len(validation_ids)} validation IDs from {validation_file}.",
           file=sys.stderr)
           
     return(validation_ids)      
