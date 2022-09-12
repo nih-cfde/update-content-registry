@@ -108,31 +108,41 @@ def main():
 
 
     # load in id list
+    skipped_list = set()
     id_list = set()
     with open(args.id_list, 'rt') as fp:
         for line in fp:
             line = line.strip()
             if line:
                 if line not in ref_id_list:
-                    print(f"WARNING: requested input id {line} not found in {ref_file}", file=sys.stderr)
-                    sys.exit(-1)
+                
+                    skipped_list.add(line)
+                    
+                    f = open("logs/skipped.csv", "a")
+                    f.write(f"{args.widget_name},{term},{line},ref\n")
+                    f.close()
 
                 id_list.add(line)
 
-    print(f"Loaded {len(id_list)} IDs from {args.id_list}",
+    print(f"Loaded {len(id_list)} IDs from {args.id_list}.\nSkipped {len(skipped_list)} IDs not found in {ref_file}.",
           file=sys.stderr)
+
           
 
-
     template_name = 'alias_tables'
+    skipped_list2 = set()
     for cv_id in sorted(id_list):
         resource_markdown = alias_info.get(cv_id)
         if resource_markdown:
             # write out JSON pieces for aggregation & upload
             cfde_common.write_output_pieces(output_dir, args.widget_name,
                                             cv_id, resource_markdown)
-        #else:
-            #print(f"WARNING: missing alias information for {cv_id}")
+        else:
+            skipped_list2.add(cv_id)
+            
+            f = open("logs/skipped.csv", "a")
+            f.write(f"{args.widget_name},{term},{cv_id},alias\n")
+            f.close()
 
 
 if __name__ == '__main__':

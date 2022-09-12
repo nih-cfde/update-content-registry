@@ -134,22 +134,29 @@ def main():
                 alias_info[ensembl_id] = alias_md
 
     # load in id list
+    skipped_list = set()
     id_list = set()
     with open(args.id_list, 'rt') as fp:
         for line in fp:
             line = line.strip()
             if line:
                 if line not in ref_id_list:
-                    print(f"WARNING: requested input id {line} not found in {ref_file}", file=sys.stderr)
-                    #sys.exit(-1)
+                
+                    skipped_list.add(line)
+                    
+                    f = open("logs/skipped.csv", "a")
+                    f.write(f"{args.widget_name},{term},{line},ref\n")
+                    f.close()
 
                 id_list.add(line)
 
-    print(f"Loaded {len(id_list)} IDs from {args.id_list}",
+    print(f"Loaded {len(id_list)} IDs from {args.id_list}.\nSkipped {len(skipped_list)} IDs not found in {ref_file}.",
           file=sys.stderr)
+
     
     
     template_name = 'alias_tables'
+    skipped_list2 = set()
     for cv_id in sorted(id_list):
         resource_markdown = alias_info.get(cv_id)
         if resource_markdown:
@@ -157,7 +164,15 @@ def main():
             cfde_common.write_output_pieces(output_dir, args.widget_name,
                                             cv_id, resource_markdown)
         else:
-            print(f"WARNING: missing markdown for identifier {cv_id}")
+            skipped_list2.add(line)
+            
+            f = open("logs/skipped.csv", "a")
+            f.write(f"{args.widget_name},{term},{line},alias\n")
+            f.close()
+
+    print(f"Skipped {len(skipped_list2)} IDs not found in {args.alias_file}.",
+          file=sys.stderr)
+
 
 
 if __name__ == '__main__':

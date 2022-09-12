@@ -66,18 +66,23 @@ def main():
           file=sys.stderr)
 
     # load in id list
+    skipped_list = set()
     id_list = set()
     with open(args.id_list, 'rt') as fp:
         for line in fp:
             line = line.strip()
             if line:
                 if line not in ref_id_list:
-                    print(f"Warning: requested input id {line} not found in {ref_file}. Skipping!", file=sys.stderr)
-                    #sys.exit(-1)
+                
+                    skipped_list.add(line)
+                    
+                    f = open("logs/skipped.csv", "a")
+                    f.write(f"{args.widget_name},{term},{line},ref\n")
+                    f.close()
 
                 id_list.add(line)
 
-    print(f"Loaded {len(id_list)} IDs from {args.id_list}",
+    print(f"Loaded {len(id_list)} IDs from {args.id_list}.\nSkipped {len(skipped_list)} IDs not found in {ref_file}.",
           file=sys.stderr)
           
     for cv_id in sorted(id_list):

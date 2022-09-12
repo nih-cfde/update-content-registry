@@ -63,21 +63,26 @@ def main():
     print(f"Loaded {len(ref_id_list)} reference IDs from {ref_file}",
           file=sys.stderr)
 
-    # load up each ID in id_list file - is it in the ref_id_list?
-    # if not, complain.
-    # we could also remove them here. we don't want to output markdown
-    # for them!
+    # load in id list
+    skipped_list = set()
     id_list = set()
     with open(args.id_list, 'rt') as fp:
         for line in fp:
             line = line.strip()
             if line:
                 if line not in ref_id_list:
-                    print(f"Warning: requested input id {line} not found in {ref_file}. Skipping!", file=sys.stderr)
+                
+                    skipped_list.add(line)
+                    
+                    f = open("logs/skipped.csv", "a")
+                    f.write(f"{args.widget_name},{term},{line}\n")
+                    f.close()
+
                 id_list.add(line)
 
-    print(f"Loaded {len(id_list)} IDs from {args.id_list}",
+    print(f"Loaded {len(id_list)} IDs from {args.id_list}.\nSkipped {len(skipped_list)} IDs not found in {ref_file}.",
           file=sys.stderr)
+
 
     # now iterate over and make markdown, then save JSON + md.
     for cv_id in id_list:

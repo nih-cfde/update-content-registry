@@ -58,18 +58,24 @@ def main():
     # we could also remove them here. we don't want to output markdown
     # for them!
     id_list = set()
+    skipped_list = set()
     with open(args.id_list, 'rt') as fp:
         for line in fp:
             line = line.strip()
             if line:
                 if line not in ref_id_list:
-                    print(f"Warning: requested input id {line} not found in {ref_file}. Skipping!", file=sys.stderr)
+                    skipped_list.add(line)
+                    
+                    f = open("logs/skipped.csv", "a")
+                    f.write(f"{args.widget_name},{term},{line},ref\n")
+                    f.close()
+                                        
                     continue
                     #sys.exit(-1)
 
                 id_list.add(line)
 
-    print(f"Loaded {len(id_list)} IDs from {args.id_list}",
+    print(f"Loaded {len(id_list)} IDs from {args.id_list}.\nSkipped {len(skipped_list)} IDs not found in {ref_file}.",
           file=sys.stderr)
           
     # now iterate over and make markdown, then save JSON + md.

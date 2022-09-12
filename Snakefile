@@ -2,7 +2,9 @@
 ## Workflow logic to build and then upload content registry information.
 ##
 
-TERM_TYPES = ['anatomy', 'compound', 'disease', 'gene', 'protein']
+## 'anatomy', 'compound', 'disease', 'gene', 'protein'
+
+TERM_TYPES = [ 'anatomy', 'compound', 'disease', 'gene', 'protein']
 
 # dictionary mapping terms to list of valid IDs.
 #
@@ -62,12 +64,12 @@ rule gene_json:
     input:
         "output_pieces_gene/00-alias",
         "output_pieces_gene/01-appyter",
-        #"output_pieces_gene/02-appyter-lincs-geo-reverse",
-        #"output_pieces_gene/03-kg",
+        "output_pieces_gene/02-appyter-lincs-geo-reverse",
+        "output_pieces_gene/03-kg",
         "output_pieces_gene/04-disease",
         "output_pieces_gene/05-MetGene",
         "output_pieces_gene/10-expression",
-        #"output_pieces_gene/11-reverse-search",
+        "output_pieces_gene/11-reverse-search",
         "output_pieces_gene/20-transcripts",
         "output_pieces_gene/70-ucsc",
     output:
@@ -193,7 +195,8 @@ rule gene_json_appyter_lincs_geo_reverse_link:
            --widget-name {params.widget_name} \
            --output-dir {output}
     """
-
+    
+    
 rule gene_json_ucsc_genome_browser_widget:
     message: "build UCSC genome browser iframe-include for genes"
     input:
