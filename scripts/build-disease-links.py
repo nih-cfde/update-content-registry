@@ -88,6 +88,9 @@ def main():
         cfde_common.write_output_pieces(output_dir, args.widget_name,
                                         cv_id, md)
 
+    print(f"Skipped {len(skipped_list)} IDs not found in alias table.",
+          file=sys.stderr)
+
     # summarize written files
     num_json_files =  len(id_list) 
     print(f"Wrote {num_json_files} .json files to {output_dir}.",

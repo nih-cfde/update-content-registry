@@ -124,22 +124,27 @@ def main():
           
 
     template_name = 'alias_tables'
-    skipped_list2 = set()
+    skipped_list = set()
+    id_list2 = set()
     for cv_id in sorted(id_list):
         resource_markdown = alias_info.get(cv_id)
         if resource_markdown:
+            id_list2.add(cv_id)
             # write out JSON pieces for aggregation & upload
             cfde_common.write_output_pieces(output_dir, args.widget_name,
                                             cv_id, resource_markdown)
         else:
-            skipped_list2.add(cv_id)
+            skipped_list.add(cv_id)
             
             f = open("logs/skipped.csv", "a")
             f.write(f"{args.widget_name},{term},{cv_id},alias\n")
             f.close()
 
+    print(f"Skipped {len(skipped_list)} IDs not found in alias table.",
+          file=sys.stderr)
+
     # summarize written files
-    num_json_files =  len(id_list) 
+    num_json_files =  len(id_list2) 
     print(f"Wrote {num_json_files} .json files to {output_dir}.",
           file=sys.stderr) 
 
