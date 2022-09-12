@@ -11,3 +11,4 @@ data/validate/gene.csv
 data/validate/protein.csv
 logs/skipped.csv
 logs/chunks.csv
+Rplots.pdf
