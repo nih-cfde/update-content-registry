@@ -4,7 +4,7 @@
 
 ## 'anatomy', 'compound', 'disease', 'gene', 'protein'
 
-TERM_TYPES = [ 'anatomy', 'compound', 'disease', 'gene', 'protein']
+TERM_TYPES = [ 'anatomy', 'compound', 'disease', 'gene', 'protein' ]
 
 # dictionary mapping terms to list of valid IDs.
 #
@@ -100,7 +100,8 @@ rule compound_json:
     input:
          "output_pieces_compound/01-pubchem",
          "output_pieces_compound/02-glycan",
-         #"output_pieces_compound/03-kg",
+         "output_pieces_compound/03-kg",
+         "output_pieces_compound/03-appyter-lincs-chemical-sim",
          "output_pieces_compound/04-drugcentral",
     output:
         json = "upload_json/compound.json",
@@ -349,6 +350,22 @@ rule compound_json_kg_widget:
            --output-dir {output}
     """
 
+rule compound_json_appyter_lincs_chemical_sim:
+    message: "build compound/lincs chemical similarity appyter links for compounds"
+    input:
+        script = "scripts/build-appyter-lincs-chemical-sim.py",
+        id_list = "data/inputs/compound_IDs_for_lincs_chemical_sim_appyter.txt",
+        validate_csv = expand("data/validate/{term}.csv", term=TERM_TYPES)
+    output:
+        directory("output_pieces_compound/03-appyter-lincs-chemical-sim")
+    params:
+        widget_name = "03-chemical-sim"
+    shell: """
+        {input.script} compound {input.id_list} \
+           --widget-name {params.widget_name} \
+           --output-dir {output}
+    """
+
 
 rule compound_json_pubchem:
     message: "Building PubChem links"
@@ -383,6 +400,7 @@ rule compound_json_drugcentral:
             --widget-name {params.widget_name}  \
             --output-dir {output}
     """    
+
 
 
 rule gene_json_reverse_search_widget:
@@ -543,3 +561,13 @@ rule disease_json_protein:
             --widget-name {params.widget_name} \
             --output-dir {output}
     """        
+
+rule summary_graphs:
+    message: "making summary plots"
+    input: 
+        "logs/chunks.csv",
+        "logs/skipped.csv",
+    output: 
+        "logs/chunks.png",
+        "logs/skipped.png",
+    shell: """Rscript logs/plots.R"""
