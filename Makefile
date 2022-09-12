@@ -1,5 +1,4 @@
 all:
-	touch logs/skipped.csv 
 	snakemake -j 1
 
 retrieve:
