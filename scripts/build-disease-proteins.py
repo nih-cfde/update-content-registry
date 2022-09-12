@@ -120,9 +120,8 @@ def main():
                        
             alias_info[cv_id] = alias_md
 
-
-          
-
+         
+    # make markdown
     template_name = 'alias_tables'
     skipped_list = set()
     id_list2 = set()
