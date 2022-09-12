@@ -6,6 +6,9 @@ retrieve:
 
 upload:
 	snakemake -j 1 upload
+	
+plots:
+	snakemake -j 1 summary_graphs	
 
 update: upload
 
