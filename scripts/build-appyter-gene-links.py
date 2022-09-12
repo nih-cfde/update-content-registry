@@ -87,6 +87,10 @@ def main():
         cfde_common.write_output_pieces(output_dir, args.widget_name,
                                         cv_id, md)
 
+    # summarize output 
+    print(f"Wrote {len(id_list)} .json files to {output_dir}.",
+          file=sys.stderr)  
+
 
 if __name__ == '__main__':
     sys.exit(main())

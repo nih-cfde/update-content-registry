@@ -78,7 +78,14 @@ def main():
 
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
+        
+    # print length of input list
+    with open(args.id_list, 'r') as fp:
+        x = len(fp.readlines())
+    print(f"Loaded {x} IDs from {args.id_list}.", file=sys.stderr)
 
+        
+    
     # validate that ID list is contained within actual IDs in database
     ref_file = cfde_common.REF_FILES.get(term)
     if ref_file is None:
