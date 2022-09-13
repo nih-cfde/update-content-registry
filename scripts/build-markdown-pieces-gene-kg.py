@@ -182,7 +182,7 @@ def main():
             if cv_id not in id_list:
                 skipped_list.add(cv_id)
                 f = open("logs/skipped.csv", "a")
-                f.write(f"{args.widget_name},{term},{cv_id}\n")
+                f.write(f"{args.widget_name},{term},{cv_id},alias\n")
                 f.close()
 
 

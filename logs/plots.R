@@ -4,14 +4,14 @@ suppressPackageStartupMessages(library(scales))
 df <- read.csv("logs/skipped.csv", header = F)  %>%
   mutate(widget = paste(V2, V1, sep = "-")) %>%
   group_by(V2, widget, V4) %>% 
-  summarize(count = n())
+  summarize(count = n()) %>%
 head(df)
 
 p1 <- ggplot(df, aes(x = widget, y = count, fill = V2)) +
   geom_bar(stat = "identity") +
   coord_flip() +
-  facet_wrap(~V4, nrow = 1) +
-  labs(subtitle = "Number of input IDs not present in alias or reference (ref) files", fill = "") +
+  facet_grid(rows = vars(V4), scales = "free", space = "free") + 
+  labs(subtitle = "Number of input IDs not present in alias or reference (ref) files", fill = "term") +
   geom_text(aes(label = count), hjust = 0.5, size = 3) +
   theme(legend.position = "bottom")
 p1
