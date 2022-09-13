@@ -567,6 +567,7 @@ rule summary_graphs:
     input: 
         "logs/chunks.csv",
         "logs/skipped.csv",
+        "logs/plots.R",
     output: 
         "logs/chunks.png",
         "logs/skipped.png",

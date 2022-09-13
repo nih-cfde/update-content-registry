@@ -33,10 +33,11 @@ head(df2)
 p2 <- ggplot(df2, aes(x = V1, y = V2, fill = term)) +
   geom_bar(stat = "identity") +
   scale_y_continuous(labels = scales::comma) +
-  theme(legend.position = "bottom") +
+  theme(legend.position = "none") +
   coord_flip() +
   geom_text(aes(label = V2), hjust = 0.5, size = 3) +
-  labs(subtitle = "Number of json files generated", fill = "", y = "Count", x = "Widget")
+  labs(subtitle = "Number of json files generated", fill = "", y = "Count", x = "Widget") +
+  facet_grid(rows = vars(term), scales = "free", space = "free")
 p2
 
 print("Saving plot of json files generated.")
