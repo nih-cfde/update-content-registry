@@ -4,7 +4,7 @@ suppressPackageStartupMessages(library(scales))
 df <- read.csv("logs/skipped.csv", header = F)  %>%
   mutate(widget = paste(V2, V1, sep = "-")) %>%
   group_by(V2, widget, V4) %>% 
-  summarize(count = n()) %>%
+  summarize(count = n()) 
 head(df)
 
 p1 <- ggplot(df, aes(x = widget, y = count, fill = V2)) +
