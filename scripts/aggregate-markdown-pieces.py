@@ -8,6 +8,7 @@ import sys
 import os
 import json
 from collections import defaultdict
+import glob
 
 
 # utility function: walk all directories on the comand line
@@ -57,6 +58,15 @@ def main():
 
             n_loaded += 1
 
+    
+        # print results
+        jsonCounter = len(glob.glob1(dirpath,"*.json"))
+        f = open("logs/chunks.csv", "a")
+        f.write(f"{dirpath},{jsonCounter}\n")
+        f.close()
+        
+           
+    
     #
     # now, merge 'resource_markdown' entries by (sorted) filename.
     #
@@ -92,7 +102,7 @@ def main():
         json.dump(chunks, fp)
 
     print(f"Loaded {n_loaded} chunks total.", file=sys.stderr)
-    print(F"Skipped {n_skipped} files for not ending in .json.", file=sys.stderr)
+    #print(F"Skipped {n_skipped} files for not ending in .json.", file=sys.stderr)
     print(f"Wrote {len(chunks)} chunks to {args.output_json}", file=sys.stderr)
 
 

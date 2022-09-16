@@ -49,37 +49,36 @@ def main():
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
 
-    ref_file = cfde_common.REF_FILES.get(term)
-    if ref_file is None:
-        print(f"ERROR: no ref file for term. Dying terribly.", file=sys.stderr)
-        sys.exit(-1)
+    # print length of input list
+    with open(args.id_list, 'r') as fp:
+        x = len(fp.readlines())
+    print(f"Loaded {x} IDs from {args.id_list}.", file=sys.stderr)
 
-    # load in ref file; ID is first column
-    ref_id_list = set()
-    with open(ref_file, 'r', newline='') as fp:
-        r = csv.DictReader(fp, delimiter='\t')
-        for row in r:
-            ref_id = row['id']
-            ref_id_list.add(ref_id)
 
-    print(f"Loaded {len(ref_id_list)} reference IDs from {ref_file}",
-          file=sys.stderr)
+    # validate ids
+    validation_ids = cfde_common.get_validation_ids(term)
 
-    # load in id list
+    skipped_list = set()
     id_list = set()
     with open(args.id_list, 'rt') as fp:
         for line in fp:
             line = line.strip()
             if line:
-                if line not in ref_id_list:
-                    print(f"ERROR: requested input id {line} not found in ref_id_list", file=sys.stderr)
-                    sys.exit(-1)
+                if line in validation_ids:
+                    id_list.add(line)
 
-                id_list.add(line)
+                if line not in validation_ids:
+                
+                    skipped_list.add(line)
+                    
+                    f = open("logs/skipped.csv", "a")
+                    f.write(f"{args.widget_name},{term},{line},ref\n")
+                    f.close()
 
-    print(f"Loaded {len(id_list)} IDs from {args.id_list}",
+    print(f"Validated {len(id_list)} IDs from {args.id_list}.\nSkipped {len(skipped_list)} IDs not found in validation file.",
           file=sys.stderr)
-
+          
+          
     for cv_id in sorted(id_list):
         resource_markdown = None
         if term =='gene':
@@ -107,6 +106,11 @@ def main():
         # write out JSON pieces for aggregation & upload
         cfde_common.write_output_pieces(output_dir, args.widget_name,
                                         cv_id, resource_markdown)
+
+    # summarize output
+    num_json_files =   len(id_list)   
+    print(f"Wrote {num_json_files} .json files to {output_dir}.",
+          file=sys.stderr)    
 
 
 if __name__ == '__main__':

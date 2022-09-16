@@ -73,6 +73,15 @@ def main():
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
 
+
+    # print length of input list
+    with open(args.id_list, 'r') as fp:
+        x = len(fp.readlines())
+    print(f"Loaded {x} IDs from {args.id_list}.", file=sys.stderr)
+
+
+
+
     # validate that ID list is contained within actual IDs in database
     ref_file = cfde_common.REF_FILES.get(term)
     if ref_file is None:
@@ -92,25 +101,47 @@ def main():
     print(f"Loaded {len(ref_id_list)} reference IDs from {ref_file}",
           file=sys.stderr)
 
-    # load up each ID in id_list file - is it in the ref_id_list?
-    # if not, complain.
-    # we could also remove them here. we don't want to output markdown
-    # for them!
+    # load in id list
     id_list = set()
+    skipped_list = set()
     with open(args.id_list, 'rt') as fp:
         for line in fp:
             line = line.strip()
             if line:
                 if line not in ref_id_list:
-                    print(f"ERROR: requested input id {line} not found in ref_id_list", file=sys.stderr)
-                    print(f"skipping!", file=sys.stderr)
-                    continue
-                    #sys.exit(-1)
+                    skipped_list.add(line)
+                    
+                    f = open("logs/skipped.csv", "a")
+                    f.write(f"{args.widget_name},{term},{line},alias\n")
+                    f.close()
 
                 id_list.add(line)
 
-    print(f"Loaded {len(id_list)} IDs from {args.id_list}",
+    print(f"Skipped {len(skipped_list)} IDs not found in {ref_file}.",
           file=sys.stderr)
+          
+    # validate ids
+    validation_ids = cfde_common.get_validation_ids(term)
+
+    skipped_list2 = set()
+    id_list2 = set()
+    for line in id_list:
+        if line:
+            if line in validation_ids:
+                id_list2.add(line)
+            if line not in validation_ids:
+                
+                skipped_list2.add(line)    
+                f = open("logs/skipped.csv", "a")
+                f.write(f"{args.widget_name},{term},{line},ref\n")
+                f.close()
+
+    print(f"Skipped {len(skipped_list2)} IDs not found in validation file.",
+          file=sys.stderr)
+
+
+
+          
 
     # now iterate over and make markdown, then save JSON + md.
     for cv_id in id_list:
@@ -120,6 +151,9 @@ def main():
         cfde_common.write_output_pieces(output_dir, args.widget_name,
                                         cv_id, md)
 
+    # summarize output    
+    print(f"Wrote {len(id_list2)} .json files to {output_dir}.",
+          file=sys.stderr)   
 
 if __name__ == '__main__':
     sys.exit(main())
