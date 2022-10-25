@@ -295,21 +295,6 @@ rule anatomy_json_expression_widget:
            --widget-name expression_widget \
            --output-dir {output}
     """
-
-rule compound_json_header:
-    message: "Building Compound links"
-    input:
-        script = "scripts/build-compound-header.py",
-        id_list = "data/inputs/compound_IDs_withmarkdown.txt",
-    output:
-        directory("output_pieces_compound/00-header")
-    params:
-        widget_name = "00-header",
-    shell: """
-        {input.script} compound {input.id_list} \
-            --widget-name {params.widget_name}  \
-            --output-dir {output}
-    """
     
 
 rule compound_json_glytoucan:
