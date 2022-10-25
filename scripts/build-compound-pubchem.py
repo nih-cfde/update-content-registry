@@ -24,6 +24,11 @@ def main():
                    help="output directory, defaults to 'output_pieces_{termtype}")
     args = p.parse_args()
 
+    # validate term
+    term = args.termtype
+    if term not in cfde_common.ID_FILES:
+        print(f"ERROR: unknown term type '{term}'", file=sys.stderr)
+        sys.exit(-1)
 
     print(f"Running with term: {term}", file=sys.stderr)
 
@@ -63,10 +68,9 @@ def main():
             line = line.strip()
             if line:
                 if line not in ref_id_list:
-                    print(f"ERROR: requested input id {line} not found in ref_id_list", file=sys.stderr)
+                    print(f"Warning: requested input id {line} not found in ref_id_list", file=sys.stderr)
                     print(f"skipping!", file=sys.stderr)
                     continue
-                    #sys.exit(-1)
 
                 id_list.add(line)
 

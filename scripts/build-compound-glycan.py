@@ -21,6 +21,12 @@ def main():
                    help="widget name, used to set the output filename(s)")
     args = p.parse_args()
 
+    # validate term
+    term = args.term
+    if term not in cfde_common.REF_FILES:
+        print(f"ERROR: unknown term type '{term}'", file=sys.stderr)
+        sys.exit(-1)
+
     print(f"Running with term: {term}", file=sys.stderr)
 
     # output dir default
@@ -97,8 +103,7 @@ def main():
             line = line.strip()
             if line:
                 if line not in ref_id_list:
-                    print(f"ERROR: requested input id {line} not found in ref_id_list", file=sys.stderr)
-                    sys.exit(-1)
+                    print(f"Warning: requested input id {line} not found in ref_id_list", file=sys.stderr)
 
                 id_list.add(line)
 
