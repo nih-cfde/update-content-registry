@@ -14,6 +14,14 @@ REF_FILES = {
     'protein': 'data/validate/protein.tsv',
     }
 
+ID_FILES = {
+    'anatomy': 'data/validate/anatomy.csv',
+    'compound': 'data/validate/compound.csv',
+    'disease': 'data/validate/disease.csv',
+    'gene': 'data/validate/gene.csv',
+    'protein': 'data/validate/protein.csv',
+    }    
+
 
 def write_output_pieces(output_dir, widget_name, cv_id, md, *, verbose=False):
     output_filename = f"{widget_name}_{urllib.parse.quote(cv_id)}.json"
@@ -35,3 +43,23 @@ def write_output_pieces(output_dir, widget_name, cv_id, md, *, verbose=False):
 
     if verbose:
         print(f"Wrote markdown to {output_filename}")
+
+def get_validation_ids(term):
+    # get list of validation retrieved form portal pages
+    validation_file = ID_FILES.get(term)
+    if validation_file is None:
+        print(f"ERROR: no validation file. Run `make retrieve`.", file=sys.stderr)
+        sys.exit(-1)
+        
+    # load validation; ID is first column
+    validation_ids = set()
+    with open(validation_file, 'r', newline='') as fp:
+        r = csv.DictReader(fp, delimiter=',')
+        for row in r:
+            validation_id = row['id']
+            validation_ids.add(validation_id)
+
+    print(f"Loaded {len(validation_ids)} IDs from {validation_file}.",
+          file=sys.stderr)
+          
+    return(validation_ids)      

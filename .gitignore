@@ -5,3 +5,4 @@ upload_json
 __pycache__
 .DS_Store
 logs
+data/validate
