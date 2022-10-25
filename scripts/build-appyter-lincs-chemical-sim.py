@@ -82,8 +82,7 @@ def main():
     # validate that ID list is contained within actual IDs in database
     ref_file = cfde_common.REF_FILES.get(term)
     if ref_file is None:
-        print(f"ERROR: no ref file for term. Dying terribly.", file=sys.stderr)
-        sys.exit(-1)
+        print(f"Warning: no ref file for term. Dying terribly.", file=sys.stderr)
 
     # load in ref file; ID is first column
     ref_id_list = set()
@@ -108,10 +107,9 @@ def main():
             line = line.strip()
             if line:
                 if line not in ref_id_list:
-                    print(f"ERROR: requested input id {line} not found in ref_id_list", file=sys.stderr)
+                    print(f"Warning: requested input id {line} not found in ref_id_list", file=sys.stderr)
                     print(f"skipping!", file=sys.stderr)
                     continue
-                    #sys.exit(-1)
 
                 id_list.add(line)
 
