@@ -108,6 +108,7 @@ rule compound_json:
          "output_pieces_compound/01-pubchem",
          "output_pieces_compound/02-glycan",
          "output_pieces_compound/03-kg",
+         "output_pieces_compound/03-appyter-lincs-chemical-sim",
          "output_pieces_compound/04-drugcentral",
     output:
         json = "upload_json/compound.json",
@@ -294,21 +295,6 @@ rule anatomy_json_expression_widget:
            --widget-name expression_widget \
            --output-dir {output}
     """
-
-rule compound_json_header:
-    message: "Building Compound links"
-    input:
-        script = "scripts/build-compound-header.py",
-        id_list = "data/inputs/compound_IDs_withmarkdown.txt",
-    output:
-        directory("output_pieces_compound/00-header")
-    params:
-        widget_name = "00-header",
-    shell: """
-        {input.script} compound {input.id_list} \
-            --widget-name {params.widget_name}  \
-            --output-dir {output}
-    """
     
 
 rule compound_json_glytoucan:
@@ -317,6 +303,7 @@ rule compound_json_glytoucan:
         script = "scripts/build-compound-glycan.py",
         id_list = "data/inputs/compound_IDs_GlyTouCan.txt",
         alias_info = "data/inputs/compounds_glygen2pubchem.tsv",
+        validate_csv = expand("data/validate/{term}.csv", term=TERM_TYPES),
     output:
         directory("output_pieces_compound/02-glycan")
     params:
@@ -334,6 +321,7 @@ rule compound_json_kg_widget:
     input:
         script = "scripts/build-markdown-pieces-gene-kg.py",
         id_list = "data/inputs/compound_IDs_for_gene_kg.txt",
+        validate_csv = expand("data/validate/{term}.csv", term=TERM_TYPES),
     output:
         directory("output_pieces_compound/03-kg")
     params:
@@ -344,12 +332,28 @@ rule compound_json_kg_widget:
            --output-dir {output}
     """
 
+rule compound_json_appyter_lincs_chemical_sim:
+    message: "build compound/lincs chemical similarity appyter links for compounds"
+    input:
+        script = "scripts/build-appyter-lincs-chemical-sim.py",
+        id_list = "data/inputs/compound_IDs_for_lincs_chemical_sim_appyter.txt",
+        validate_csv = expand("data/validate/{term}.csv", term=TERM_TYPES),
+    output:
+        directory("output_pieces_compound/03-appyter-lincs-chemical-sim")
+    params:
+        widget_name = "03-appyter-lincs-chemical-sim"
+    shell: """
+        {input.script} compound {input.id_list} \
+           --widget-name {params.widget_name} \
+           --output-dir {output}
+    """
 
 rule compound_json_pubchem:
     message: "Building PubChem links"
     input:
         script = "scripts/build-compound-pubchem.py",
         id_list = "data/inputs/compound_IDs_PubChem.txt",
+        validate_csv = expand("data/validate/{term}.csv", term=TERM_TYPES),
     output:
         directory("output_pieces_compound/01-pubchem")
     params:
@@ -367,6 +371,7 @@ rule compound_json_drugcentral:
         script = "scripts/build-compound-drugcentral.py",
         id_list = "data/inputs/compound_IDs_DrugCentral.txt",
         alias_info = "data/inputs/compounds_pubchem2drugcentral.tsv",
+        validate_csv = expand("data/validate/{term}.csv", term=TERM_TYPES),
     output:
         directory("output_pieces_compound/04-drugcentral")
     params:
