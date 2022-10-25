@@ -4,3 +4,5 @@ upload_json
 .snakemake
 __pycache__
 .DS_Store
+logs
+data/validate

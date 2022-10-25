@@ -7,6 +7,20 @@
 
 TERM_TYPES = ['anatomy', 'compound', 'disease', 'gene', 'protein']
 
+# dictionary mapping terms to list of valid IDs.
+#
+# note: could do further magic by just building the URL directly, but this
+# is simpler to grok, I think.
+VALID_ID_URLS = {
+    'anatomy': 'https://app.nih-cfde.org/ermrest/catalog/1/attribute/CFDE:anatomy/id@sort(id)?accept=csv',
+    'gene': 'https://app.nih-cfde.org/ermrest/catalog/1/attribute/CFDE:gene/id@sort(id)?accept=csv',
+    'protein': 'https://app.nih-cfde.org/ermrest/catalog/1/attribute/CFDE:protein/id@sort(id)?accept=csv',
+    'disease': 'https://app.nih-cfde.org/ermrest/catalog/1/attribute/CFDE:disease/id@sort(id)?accept=csv',
+    'compound': 'https://app.nih-cfde.org/ermrest/catalog/1/attribute/CFDE:compound/id@sort(id)?accept=csv',
+    }
+    
+    
+
 rule all:
     message:
         f"Building content for all {len(TERM_TYPES)} controlled vocab types."
@@ -30,6 +44,26 @@ rule upload:
 
     """
 
+
+rule retrieve: 
+    message:
+        f"retrieve list of ids in the registry"
+    input:
+        expand("data/validate/{term}.csv", term=TERM_TYPES)
+
+
+# use wildcards to pull down the valid IDs file for each term
+rule retrieve_term_wc:
+    output:
+        "data/validate/{term}.csv",
+    params:
+        # construct url by looking up term in VALID_ID_URLS dynamically
+        url = lambda w: VALID_ID_URLS[w.term]
+    shell: """
+        curl -L "{params.url}" -o {output}
+    """
+    
+    
 
 rule gene_json:
     message:
@@ -126,6 +160,7 @@ rule gene_json_alias_widget:
         script = "scripts/build-markdown-pieces-gene-translate.py",
         id_list = "data/inputs/gene_IDs_for_alias_tables.txt",
         alias_info = "data/inputs/Homo_sapiens.gene_info_20220304.txt_conv_wNCBI_AC.txt",
+        validate_csv = expand("data/validate/{term}.csv", term=TERM_TYPES),
     output:
         directory("output_pieces_gene/00-alias")
     params:
