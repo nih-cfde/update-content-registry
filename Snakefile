@@ -160,6 +160,7 @@ rule gene_json_alias_widget:
         script = "scripts/build-markdown-pieces-gene-translate.py",
         id_list = "data/inputs/gene_IDs_for_alias_tables.txt",
         alias_info = "data/inputs/Homo_sapiens.gene_info_20220304.txt_conv_wNCBI_AC.txt",
+        validate_csv = expand("data/validate/{term}.csv", term=TERM_TYPES),
     output:
         directory("output_pieces_gene/00-alias")
     params:
