@@ -25,12 +25,12 @@ def build_id_list():
     os.chdir(__root__)
 
     # get available cids
-    ref_file = cfde_common.REF_FILES.get('compound')
+    ref_file = cfde_common.ID_FILES.get('compound')
     ref_ids = set()
-    with open(ref_file, 'r', newline='') as fp:
+    with open(ref_file2, 'r', newline='') as fp:
         r = csv.DictReader(fp, delimiter='\t')
         for row in r:
-            ref_ids.add(row['id'])
+            ref_ids2.add(row['id'])
 
     # get compounds from appyter
     with urllib.request.urlopen('https://appyters.maayanlab.cloud/storage/DODGE-Chemical-Similarity/L1000_signature_similarity_scores.json') as fr:
@@ -96,6 +96,14 @@ def main():
 
     print(f"Loaded {len(ref_id_list)} reference IDs from {ref_file}",
           file=sys.stderr)
+          
+    # get available cids
+    ref_file2 = cfde_common.ID_FILES.get('compound')
+    ref_ids2 = set()
+    with open(ref_file2, 'r', newline='') as fp:
+        r = csv.DictReader(fp, delimiter='\t')
+        for row in r:
+            ref_ids2.add(row['id'])      
 
     # load up each ID in id_list file - is it in the ref_id_list?
     # if not, complain.
@@ -109,6 +117,8 @@ def main():
                 if line not in ref_id_list:
                     print(f"Warning: requested input id {line} not found in ref_id_list", file=sys.stderr)
                     print(f"skipping!", file=sys.stderr)
+                if line not in ref_ids2:
+                    print(f"Warning: requested input id {line} not found in ref_ids2", file=sys.stderr)
                     continue
 
                 id_list.add(line)
