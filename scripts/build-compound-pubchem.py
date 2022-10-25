@@ -67,12 +67,10 @@ def main():
         for line in fp:
             line = line.strip()
             if line:
+                if line in ref_id_list:
+                    id_list.add(line)
                 if line not in ref_id_list:
-                    print(f"Warning: requested input id {line} not found in ref_id_list", file=sys.stderr)
-                    print(f"skipping!", file=sys.stderr)
-                    continue
-
-                id_list.add(line)
+                    print(f"WARNING: requested input id {line} not found in ref_id_list", file=sys.stderr)
 
     print(f"Loaded {len(id_list)} IDs from {args.id_list}",
           file=sys.stderr)
