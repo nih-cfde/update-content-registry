@@ -176,6 +176,7 @@ rule gene_json_appyter_link:
     input:
         script = "scripts/build-appyter-gene-links.py",
         id_list = "data/inputs/gene_IDs_for_alias_tables.txt",
+        validate_csv = expand("data/validate/{term}.csv", term=TERM_TYPES),
     output:
         directory("output_pieces_gene/01-appyter")
     params:
@@ -191,6 +192,7 @@ rule gene_json_appyter_lincs_geo_reverse_link:
     input:
         script = "scripts/build-appyter-gene-links-lincs-geo-reverse.py",
         id_list = "data/inputs/gene_IDs_for_lincs_reverse_search.txt",
+        validate_csv = expand("data/validate/{term}.csv", term=TERM_TYPES),
     output:
         directory("output_pieces_gene/02-appyter-lincs-geo-reverse")
     params:
@@ -207,6 +209,7 @@ rule gene_json_ucsc_genome_browser_widget:
         script = "scripts/build-markdown-pieces-ucsc-genome-browser-widget.pl",
         id_list = "data/inputs/gene_IDs_for_UCSC_genome_browser_widget.txt",
         coord_info = "data/inputs/homo_sapiens.coords.tsv",
+        validate_csv = expand("data/validate/{term}.csv", term=TERM_TYPES),
     output:
         directory("output_pieces_gene/70-ucsc")
     params:
@@ -224,6 +227,7 @@ rule gene_json_expression_widget:
     input:
         script = "scripts/build-markdown-pieces.py",
         id_list = "data/inputs/gene_IDS_for_gtex.txt",
+        validate_csv = expand("data/validate/{term}.csv", term=TERM_TYPES),
     output:
         directory("output_pieces_gene/10-expression")
     params:
@@ -240,6 +244,7 @@ rule gene_json_transcript_widget:
     input:
         script = "scripts/build-markdown-pieces.py",
         id_list = "data/inputs/gene_IDS_for_gtex.txt",
+        validate_csv = expand("data/validate/{term}.csv", term=TERM_TYPES),
     output:
         directory("output_pieces_gene/20-transcripts")
     params:
@@ -255,6 +260,7 @@ rule gene_json_lincs_widget:
     input:
         script = "scripts/build-markdown-pieces-MetGene.py",
         id_list = "data/inputs/gene_IDs_for_MetGene.txt",
+        validate_csv = expand("data/validate/{term}.csv", term=TERM_TYPES),
     output:
         directory("output_pieces_gene/05-MetGene")
     params:

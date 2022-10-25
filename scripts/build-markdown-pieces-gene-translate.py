@@ -23,9 +23,8 @@ def main():
 
     # validate term
     term = args.term
-    if term not in cfde_common.REF_FILES:
-        print(f"ERROR: unknown term type '{term}'", file=sys.stderr)
-        sys.exit(-1)
+    if term not in cfde_common.ID_FILES:
+        print(f"WARNING: unknown term type '{term}'", file=sys.stderr)
 
     print(f"Running with term: {term}", file=sys.stderr)
 
@@ -38,10 +37,9 @@ def main():
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
 
-    ref_file = cfde_common.REF_FILES.get(term)
+    ref_file = cfde_common.ID_FILES.get(term)
     if ref_file is None:
-        print(f"ERROR: no ref file for term. Dying terribly.", file=sys.stderr)
-        sys.exit(-1)
+        print(f"WARNING: no ref file for term.", file=sys.stderr)
 
     # load in ref file; ID is first column
     ref_id_list = set()
@@ -139,12 +137,11 @@ def main():
         for line in fp:
             line = line.strip()
             if line:
+                if line  in ref_id_list:
+                    id_list.add(line)
                 if line not in ref_id_list:
-                    print(f"ERROR: requested input id {line} not found in ref_id_list", file=sys.stderr)
-                    sys.exit(-1)
-
-                id_list.add(line)
-
+                    print(f"WARNING: requested input id {line} not found in ref_id_list", file=sys.stderr)
+              
     print(f"Loaded {len(id_list)} IDs from {args.id_list}",
           file=sys.stderr)
 
