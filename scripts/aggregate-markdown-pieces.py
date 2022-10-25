@@ -95,7 +95,7 @@ def main():
     print(F"Skipped {n_skipped} files for not ending in .json.", file=sys.stderr)
     print(f"Wrote {len(chunks)} chunks to {args.output_json}", file=sys.stderr)    
     
-    f = open("logs/aggregated.txt", "w")
+    f = open("logs/aggregated.txt", "w+")
     f.write(f"Aggregated {n_loaded} chunks of information for {len(chunks)} IDs  into {args.output_json}.\n")
     f.close()
     
