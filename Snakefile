@@ -337,6 +337,7 @@ rule compound_json_appyter_lincs_chemical_sim:
     input:
         script = "scripts/build-appyter-lincs-chemical-sim.py",
         id_list = "data/inputs/compound_IDs_for_lincs_chemical_sim_appyter.txt",
+        validate_csv = expand("data/validate/{term}.csv", term=TERM_TYPES),
     output:
         directory("output_pieces_compound/03-appyter-lincs-chemical-sim")
     params:
