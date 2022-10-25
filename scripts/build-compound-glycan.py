@@ -21,12 +21,6 @@ def main():
                    help="widget name, used to set the output filename(s)")
     args = p.parse_args()
 
-    # validate term
-    term = args.term
-    if term not in cfde_common.REF_FILES:
-        print(f"ERROR: unknown term type '{term}'", file=sys.stderr)
-        sys.exit(-1)
-
     print(f"Running with term: {term}", file=sys.stderr)
 
     # output dir default
@@ -38,7 +32,7 @@ def main():
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
 
-    ref_file = cfde_common.REF_FILES.get(term)
+    ref_file = cfde_common.ID_FILES.get(term)
     if ref_file is None:
         print(f"ERROR: no ref file for term. Dying terribly.", file=sys.stderr)
         sys.exit(-1)

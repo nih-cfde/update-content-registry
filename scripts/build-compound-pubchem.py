@@ -24,11 +24,6 @@ def main():
                    help="output directory, defaults to 'output_pieces_{termtype}")
     args = p.parse_args()
 
-    # validate term
-    term = args.termtype
-    if term not in cfde_common.REF_FILES:
-        print(f"ERROR: unknown term type '{term}'", file=sys.stderr)
-        sys.exit(-1)
 
     print(f"Running with term: {term}", file=sys.stderr)
 
@@ -42,7 +37,7 @@ def main():
         os.mkdir(output_dir)
 
     # validate that ID list is contained within actual IDs in database
-    ref_file = cfde_common.REF_FILES.get(term)
+    ref_file = cfde_common.ID_FILES.get(term)
     if ref_file is None:
         print(f"ERROR: no ref file for term. Dying terribly.", file=sys.stderr)
         sys.exit(-1)
