@@ -317,6 +317,7 @@ rule compound_json_glytoucan:
         script = "scripts/build-compound-glycan.py",
         id_list = "data/inputs/compound_IDs_GlyTouCan.txt",
         alias_info = "data/inputs/compounds_glygen2pubchem.tsv",
+        validate_csv = expand("data/validate/{term}.csv", term=TERM_TYPES),
     output:
         directory("output_pieces_compound/02-glycan")
     params:
@@ -334,6 +335,7 @@ rule compound_json_kg_widget:
     input:
         script = "scripts/build-markdown-pieces-gene-kg.py",
         id_list = "data/inputs/compound_IDs_for_gene_kg.txt",
+        validate_csv = expand("data/validate/{term}.csv", term=TERM_TYPES),
     output:
         directory("output_pieces_compound/03-kg")
     params:
@@ -350,6 +352,7 @@ rule compound_json_pubchem:
     input:
         script = "scripts/build-compound-pubchem.py",
         id_list = "data/inputs/compound_IDs_PubChem.txt",
+        validate_csv = expand("data/validate/{term}.csv", term=TERM_TYPES),
     output:
         directory("output_pieces_compound/01-pubchem")
     params:
