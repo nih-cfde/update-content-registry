@@ -89,6 +89,7 @@ rule disease_json:
         "output_pieces_disease/00-links",
         "output_pieces_disease/01-genes",
         "output_pieces_disease/02-proteins",
+        "output_pieces_disease/03-pharos",
     output:
         json = "upload_json/disease.json",
     shell: """
@@ -491,4 +492,19 @@ rule disease_json_protein:
         {input.script} disease {input.id_list} {input.alias_info} {input.protein_name_file} \
             --widget-name {params.widget_name} \
             --output-dir {output}
-    """        
+    """ 
+        
+rule disease_json_pharos:
+    message: "build iframe to pharos disease page"
+    input:
+        script = "scripts/build-disease-pharos.py",
+        id_list = "data/inputs/disease_IDs.txt",
+    output:
+        directory("output_pieces_disease/03-pharos")
+    params:
+        widget_name = "03-pharos",
+    shell: """
+        {input.script} disease {input.id_list} \
+            --widget-name {params.widget_name} \
+            --output-dir {output}
+    """         
