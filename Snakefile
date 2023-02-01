@@ -412,7 +412,7 @@ rule protein_json_refseq:
 rule protein_json_pharos:
     message: "build protein markdown for pharos"
     input:
-        script = "scripts/build-protein-refseq.py",
+        script = "scripts/build-protein-pharos.py",
         id_list = "data/inputs/protein_IDs_for_Pharos.txt",
     output:
         directory("output_pieces_protein/01-pharos")
