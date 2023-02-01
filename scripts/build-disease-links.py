@@ -16,7 +16,7 @@ import cfde_common
 ##
 
 def make_markdown(cv_id):
-    return  f"""**Disease Ontology:** [{cv_id}](https://disease-ontology.org/?id={cv_id})\n**Human Disease:** [{cv_id}](https://bioportal.bioontology.org/ontologies/DOID?p=classes&conceptid={cv_id})\n**PHAROS Diseases:** [{cv_id}](https://pharos.nih.gov/diseases/?id={cv_id})\n**Rat Genome Database:** [{cv_id}](https://rgd.mcw.edu/rgdweb/ontology/view.html?acc_id={cv_id})\n**Yeast Genome Database:** [{cv_id}](https://www.yeastgenome.org/disease/{cv_id})\n"""
+    return  f"""**Disease Ontology:** [{cv_id}](https://disease-ontology.org/?id={cv_id})\n**Human Disease:** [{cv_id}](https://bioportal.bioontology.org/ontologies/DOID?p=classes&conceptid={cv_id})\n**PHAROS Disease:** [{cv_id}](https://pharos.nih.gov/diseases/{cv_id})\n**Rat Genome Database:** [{cv_id}](https://rgd.mcw.edu/rgdweb/ontology/view.html?acc_id={cv_id})\n**Yeast Genome Database:** [{cv_id}](https://www.yeastgenome.org/disease/{cv_id})\n"""
 
 
 
