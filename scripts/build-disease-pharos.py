@@ -16,7 +16,7 @@ import cfde_common
 ##
 
 def make_markdown(cv_id):
-    return  f"""::: iframe [**PHAROS Disease Summary:**](https://pharos.nih.gov/diseases/{cv_id}&width=1200&height=450){{width=\"1200\" height=\"450\" style=\"border: 1px solid black;\" caption-style=\"font-size: 24px;\" caption-link=\"https://pharos.nih.gov/diseases/{cv_id}" caption-target=\"_blank\"}} \n:::"""
+    return  f"""::: iframe [**PHAROS Disease Summary:**](https://pharos.nih.gov/diseases/{cv_id}){{width=\"1200\" height=\"450\" style=\"border: 1px solid black;\" caption-style=\"font-size: 24px;\" caption-link=\"https://pharos.nih.gov/diseases/{cv_id}" caption-target=\"_blank\"}} \n:::"""
 
 
 
