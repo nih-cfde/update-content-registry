@@ -105,7 +105,7 @@ def main():
             if ( GLYCOSYLATION == 'NA' ):
             	GLYCOSYLATION_str = f""
             else:
-            	GLYCOSYLATION_str = f"**Glycosylation Summary:**: {GLYCOSYLATION}\n" 
+            	GLYCOSYLATION_str = f"**Glycosylation Summary:** {GLYCOSYLATION}\n" 
             	
             	
             GENE_LOCATION = row['GENE_LOCATION']
@@ -119,7 +119,7 @@ def main():
             
             #print(f"{cv_id}") 
             
-            alias_md = f"""**GlyGen Accession**: [{cv_id}](https://www.glygen.org/protein/{cv_id}))\n**UniProtKB Accession**: [{cv_id}](https://www.uniprot.org/uniprotkb/{cv_id}/entry)\n {REFSEQ_NAME_str}{ENSEMBL_ID_str}{GENE_NAME_str}{GLYCOSYLATION_str}{GENE_LOCATION_str}\n\nMore information for protein [{cv_id}](https://www.glygen.org/protein/{cv_id}) is available on GlyGen.\n"""
+            alias_md = f"""**GlyGen Accession**: [{cv_id}](https://www.glygen.org/protein/{cv_id}))\n**PHAROS Protein Summary**: [{cv_id}](https://pharos.nih.gov/targets/{cv_id})\n**UniProtKB Accession**: [{cv_id}](https://www.uniprot.org/uniprotkb/{cv_id}/entry)\n {REFSEQ_NAME_str}{ENSEMBL_ID_str}{GENE_NAME_str}{GLYCOSYLATION_str}{GENE_LOCATION_str}\n\nMore information for protein [{cv_id}](https://www.glygen.org/protein/{cv_id}) is available on GlyGen.\n"""
 
            
             alias_info[cv_id] = alias_md
