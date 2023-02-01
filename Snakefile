@@ -102,6 +102,7 @@ rule protein_json:
         "build markdown content for protein terms."
     input:
         "output_pieces_protein/00-refseq",
+        "output_pieces_protein/01-pharos",
         "output_pieces_protein/01-disease",
     output:
         json = "upload_json/protein.json",
@@ -407,6 +408,22 @@ rule protein_json_refseq:
             --widget-name {params.widget_name} \
             --output-dir {output}
     """
+        
+rule protein_json_pharos:
+    message: "build protein markdown for pharos"
+    input:
+        script = "scripts/build-protein-refseq.py",
+        id_list = "data/inputs/protein_IDs_for_Pharos.txt",
+    output:
+        directory("output_pieces_protein/01-pharos")
+    params:
+        widget_name = "01-pharos",
+    shell: """
+        {input.script} protein {input.id_list}  \
+            --widget-name {params.widget_name} \
+            --output-dir {output}
+    """
+        
 
 rule protein_json_disease:
     message: "build protein markdown for diseases"
