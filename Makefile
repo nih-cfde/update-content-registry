@@ -1,8 +1,8 @@
 all:
-	snakemake -j 1
+	snakemake -j 1 --use-conda
 
 upload:
-	snakemake -j 1 upload
+	snakemake -j 1 --use-conda upload
 
 update: upload
 

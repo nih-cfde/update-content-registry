@@ -129,7 +129,9 @@ rule gene_json_alias_widget:
     output:
         directory("output_pieces_gene/00-alias")
     params:
-        widget_name = "00-alias",
+        widget_name = "00-alias"
+    conda:
+        "envs/perl.yml"
     shell: """
         {input.script} gene {input.id_list} {input.alias_info} \
             --widget-name alias_table \
