@@ -97,6 +97,12 @@ def main():
                 else:
                     uniprot_ids = []
 
+                ldh_ids = row['SYMBOL']
+                if not isnull(ldh_ids):
+                    ldh_ids = ldh_ids.split('|')
+                else:
+                    ldh_ids = []
+
                 hgncIDString = hgncSymbolString = hgncGeneNameString = ""
                 if hgnc_id:
                     hgncIDString = f"[{hgnc_id}](https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/HGNC:{hgnc_id})";
@@ -126,9 +132,15 @@ def main():
                     for mim_id in mim_ids:
                         x.append(f"[{mim_id}](https://omim.org/entry/{mim_id})")
                     mim_str = ", ".join(x)                    
+                
+                ldh_str = ""
+                if ldh_ids:
+                    x = []
+                    for ldh_id in ldh_ids:
+                        x.append(f"[{ldh_id}](https://genboree.org/cfde-gene/Gene/id/{ldh_id})")
+                    ldh_str = ", ".join(x)
 
-
-                alias_md = f"""**Ensembl ID**: [{ensembl_id}](http://www.ensembl.org/id/{ensembl_id}) \n**Human Gene Nomenclature (HGNC)**: [{hgnc_id}](https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/HGNC:{hgnc_id})\n**NCBI Gene**: [{entrez_id}](https://www.ncbi.nlm.nih.gov/gene/{entrez_id}) \n**OMIM**: {mim_str} \n**RefSeq:** {refseq_str} \n**UniProtKB**: {uniprot_str}\n"""
+                alias_md = f"""**Ensembl ID**: [{ensembl_id}](http://www.ensembl.org/id/{ensembl_id}) \n**Human Gene Nomenclature (HGNC)**: [{hgnc_id}](https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/HGNC:{hgnc_id})\n**NCBI Gene**: [{entrez_id}](https://www.ncbi.nlm.nih.gov/gene/{entrez_id}) \n**OMIM**: {mim_str} \n**RefSeq:** {refseq_str} \n**UniProtKB**: {uniprot_str}\n**CFDE Linked Data Hub**: {ldh_str} \n"""
 
 
                 alias_info[ensembl_id] = alias_md
